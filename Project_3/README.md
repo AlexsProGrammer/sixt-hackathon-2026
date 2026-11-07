@@ -1,6 +1,6 @@
 # Project 3: Predict Turnaround Action Time
 
-**Project owner:** TBD
+**Project owner:** Iulia Pasov
 
 ## Problem
 A turnaround consists of multiple actions (e.g. refueling, charging, special cleaning). We know the total turnaround time but not the time spent on each task.

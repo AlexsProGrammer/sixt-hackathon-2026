@@ -1,6 +1,6 @@
 # Project 4: Predict Turnaround Tasks
 
-**Project owner:** TBD
+**Project owner:** Iulia Pasov
 
 ## Problem
 We would like to know which tasks will be done at turnaround. Those tasks are decided at check-in, but we want to know them before the vehicle is dropped off. This tells us when we expect the car to be ready.
