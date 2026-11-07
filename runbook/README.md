@@ -8,13 +8,13 @@ Hosted as a **private repo on a personal GitHub account** (not in the Sixt org, 
 
 ```bash
 # from the repo root; --private is mandatory, never use --public
-gh repo create <your-github-username>/sixt-hacakthon-2026 --private --source=. --remote=origin --push
+gh repo create sruthi-sixt-26/sixt-hacakthon-2026 --private --source=. --remote=origin --push
 ```
 
 - Visibility: **private**. Verify after creation: `gh repo view --json visibility` must say `PRIVATE`.
 - Personal repos have no teams, so add each participant as a collaborator with **Write** access (they get an email invite and must accept):
   ```bash
-  gh api -X PUT repos/<your-github-username>/sixt-hacakthon-2026/collaborators/<github-username> -f permission=push
+  gh api -X PUT repos/sruthi-sixt-26/sixt-hacakthon-2026/collaborators/<github-username> -f permission=push
   ```
 - Free personal private repos allow collaborators, but branch protection on `main` may be unavailable on the free plan. If so, rely on the PR convention in the root README and review PRs before merging.
 - Participants can fork a private repo only if they have access; ask them not to. Do not post the repo link publicly.

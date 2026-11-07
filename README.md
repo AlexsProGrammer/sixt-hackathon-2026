@@ -7,7 +7,7 @@ Welcome! This is the **private, invite-only** repository for the hackathon. Each
 1. **Accept your invite.** You will receive a GitHub invitation by email. Accept it, otherwise you will see a 404 on this repo. Make sure 2FA is enabled on your GitHub account.
 2. **Clone the repo.**
    ```bash
-   git clone https://github.com/<organizer-github-username>/sixt-hacakthon-2026.git
+   git clone https://github.com/sruthi-sixt-26/sixt-hacakthon-2026.git
    cd sixt-hacakthon-2026
    ```
 3. **Pick your project.** Read the README in each folder and agree on one with your team:
