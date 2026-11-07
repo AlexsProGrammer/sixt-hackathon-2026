@@ -1,5 +1,7 @@
 # Project 5: Meta-Evaluation Framework for LLM-as-Judge Agentic Systems
 
+**Project owner:** Jigyasa Singhal
+
 ## Problem
 An AI model checks the replies written by another AI model. If the AI judge says a reply is good, it is sent to the customer automatically. But nobody has really verified whether this judge is reliable. Recent 2026 research found that many AI judges look reliable on the surface but are not. A judge can agree with itself every time on the same case and still be consistently unfair or biased in one direction. A judge can look consistent and still be wrong.
 

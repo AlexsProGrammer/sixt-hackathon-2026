@@ -1,5 +1,7 @@
 # Project 1: Structured Extraction from Documents
 
+**Project owner:** Sruthi Radhakrishnan
+
 ## Problem
 Documents are where business data hides. Getting that content out reliably means layout detection, OCR, table reconstruction and figure handling, producing structured output (mostly JSON or form fields). Today this needs a lot of human oversight, manual effort and causes cognitive overload.
 

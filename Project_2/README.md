@@ -1,5 +1,7 @@
 # Project 2: Nowcasting / Forecasting Mileage
 
+**Project owner:** Julian Hackinger
+
 ## Problem
 For the majority of the fleet, odometer updates only arrive once vehicles are returned. Mileage information can therefore be very outdated (up to four weeks) for long-term customers who report mileage monthly. Current mileage is needed for valuation and fleet disposal decisions, and future mileage needs to be forecast.
 

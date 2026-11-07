@@ -23,13 +23,13 @@ gh repo create sruthi-sixt-26/sixt-hacakthon-2026 --private --source=. --remote=
 
 ## 2. Project overview
 
-| Folder | Topic | Volunteer | Data |
+| Folder | Topic | Project owner | Data |
 | --- | --- | --- | --- |
-| Project_1 | Structured Extraction from Documents | Organizer | Public datasets, sample scenarios |
-| Project_2 | Nowcasting / Forecasting Mileage | Organizer | Mock or anonymized vehicle status sample |
-| Project_3 | Predict Turnaround Action Time | Organizer | Mock or random sample |
-| Project_4 | Predict Turnaround Tasks | Organizer | Mock or random sample |
-| Project_5 | Meta-Evaluation of LLM-as-Judge | Organizer | Bitext (5 languages) + fictional policy, hidden test set |
+| Project_1 | Structured Extraction from Documents | Sruthi Radhakrishnan | Public datasets, sample scenarios |
+| Project_2 | Nowcasting / Forecasting Mileage | Julian Hackinger | Mock or anonymized vehicle status sample |
+| Project_3 | Predict Turnaround Action Time | TBD | Mock or random sample |
+| Project_4 | Predict Turnaround Tasks | TBD | Mock or random sample |
+| Project_5 | Meta-Evaluation of LLM-as-Judge | Jigyasa Singhal | Bitext (5 languages) + fictional policy, hidden test set |
 | Project_J | Placeholder | TBD | TBD |
 
 ## 3. Checklist
