@@ -8,6 +8,13 @@ Copy this file to `Project_<n>/SUBMISSION.md` and fill it in. Keep it short.
 ## Problem and approach
 What you tried to solve, the main idea, and why you chose it. Mention assumptions.
 
+## Models and why
+Any model is allowed, open-weight or closed (API). If your project uses models, show the ones you tried on the same held-out data, and why you chose yours. Add your project-specific settings here too (Project 1: your confidence threshold).
+
+| Model | Open-weight or closed | Where it runs | Main metric(s) | Cost and time per item | Chosen? |
+| --- | --- | --- | --- | --- | --- |
+| <name> | <open / closed> | <local / API provider> | <your project's metrics> | <cost, seconds> | <yes / no, why> |
+
 ## Results
 Your numbers, measured on held-out data, with a baseline to compare against (for example a naive model). Use the metrics named in your project README. Say honestly what did not work and what the limits are.
 

@@ -44,7 +44,7 @@ The hackathon is on **Friday, 13 November 2026**. You get the GitHub invite on T
 
    | Folder | Topic |
    | --- | --- |
-   | [Project_1](Project_1/README.md) | Structured Extraction from Documents |
+   | [Project_1](Project_1/README.md) | Structured Extraction from Documents: teach a machine to say "I don't know" |
    | [Project_2](Project_2/README.md) | Nowcasting / Forecasting Mileage |
    | [Project_3-4](Project_3-4/README.md) | Turnaround: Predict Action Time and Predict Tasks (one topic for now) |
    | [Project_5](Project_5/README.md) | Meta-Evaluation Framework for LLM-as-Judge Agentic Systems |
