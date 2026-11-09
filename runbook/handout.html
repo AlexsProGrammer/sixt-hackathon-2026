@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>SIXT Hackathon 2026 – Handout (print double-sided)</title>
+<style>
+  @page { size: A4; margin: 10mm 12mm; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; font-size: 9.5pt; line-height: 1.35; color: #1a1a1a; margin: 0; }
+  header { background: #ff5f00; color: #000; padding: 8px 12px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 17pt; margin: 0; }
+  header div { font-size: 9pt; text-align: right; font-weight: 600; }
+  h2 { font-size: 11pt; margin: 10px 0 3px; border-bottom: 2px solid #ff5f00; padding-bottom: 1px; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { text-align: left; padding: 2.5px 5px; border-bottom: 1px solid #ddd; vertical-align: top; }
+  th { background: #f4f4f4; }
+  ul, ol { margin: 2px 0; padding-left: 16px; }
+  code { background: #f4f4f4; padding: 0 3px; border-radius: 2px; font-size: 8.8pt; }
+  .tbd { background: #fff3a8; padding: 0 2px; }
+  .hl td { background: #ffe3d1; font-weight: 600; }
+  footer { margin-top: 8px; font-size: 8pt; color: #555; border-top: 1px solid #ddd; padding-top: 3px; }
+  .page2 { break-before: page; page-break-before: always; }
+</style>
+</head><body>
+<!-- Page 1 (front): agenda and contacts -->
+<div>
+<header><h1>SIXT Hackathon 2026</h1>
+<div>Friday, 13 November 2026<br>HQ Pullach, Academy</div></header>
+
+<h2>Agenda</h2>
+<table>
+<tr><th style="width:24%">Time</th><th>Item</th></tr>
+<tr><td>08:15 – 09:00</td><td>Registration</td></tr>
+<tr><td>09:00 – 09:30</td><td>Kick-off: welcome from SIXT DS, meet the topic owners, TUM and our technical sponsor, general instructions</td></tr>
+<tr><td>09:30 – 13:00</td><td>Hacking, block 1</td></tr>
+<tr class="hl"><td>10:00</td><td>Topic selection closes: one or two topics per team, submitted in the form. Thank you!</td></tr>
+<tr><td>Time to be confirmed</td><td>Lunch</td></tr>
+<tr class="hl"><td>13:45 – 16:45</td><td>Hacking, block 2 &mdash; hacking ends at 16:45, so please have your repo ready (code, <code>SUBMISSION.md</code>, and a 1-min demo video or slides). Please also prepare a pitch of 3 min max, in case you are selected as a finalist</td></tr>
+<tr><td>16:45 – 17:45</td><td>Team reviews and finalist selection: topic owners look at your submission and may come to you with a clarifying question. No formal pitch during the reviews. No hacking during reviews. The 6 finalists are announced at the end</td></tr>
+<tr><td>17:45 – 18:20</td><td>Final pitches: 6 finalist teams, 3 min pitch + 2 min Q&amp;A each</td></tr>
+<tr><td>18:20 – 18:35</td><td>Prizes (end time to be confirmed)</td></tr>
+</table>
+
+<h2>Who to reach out to</h2>
+<table>
+<tr><th style="width:44%">If you have a question about&hellip;</th><th>Reach out to</th></tr>
+<tr><td>Project 1: Structured Extraction from Documents</td><td>Sruthi Radhakrishnan, Ihsan Soydemir</td></tr>
+<tr><td>Project 2: Nowcasting / Forecasting Mileage</td><td>Julian Hackinger, Ernest Quintana</td></tr>
+<tr><td>Project 3-4: Predict Turnaround Action Time and Tasks (one topic for now)</td><td>Iulia Pasov</td></tr>
+<tr><td>Project 5: Meta-Evaluation of LLM-as-Judge</td><td>Jigyasa Singhal</td></tr>
+<tr><td>Project 6: Placeholder <span class="tbd">[title TBD]</span></td><td>Sara Michetti, Julian Mehne</td></tr>
+<tr><td>Project 7: TUM x SIXT topic <span class="tbd">[title TBD]</span></td><td>TUM <span class="tbd">[name]</span></td></tr>
+<tr><td>Repo, GitHub invite, git problems</td><td>Sruthi Radhakrishnan</td></tr>
+<tr><td>Venue, Wi-Fi, food, general organisation</td><td>Jessica vom Brocke</td></tr>
+<tr><td>Thesis, working student, internship opportunities</td><td>Your topic owner, Jessica vom Brocke and our HR colleagues on site</td></tr>
+<tr><td>Anything else</td><td>Ask any organizer on site. We are here all day</td></tr>
+</table>
+
+<h2>Good to know</h2>
+<ul>
+<li>Teams have 1 to 3 people. Bring your own LLM coding agent, whichever you like.</li>
+<li>Public or mock data only. No secrets in git (use <code>.env</code>). Do not share the repo outside the hackathon.</li>
+<li>Work only in your project folder. Everyone must clone the repo or fork it into their own GitHub account and work there. Please do not create branches in this repo, we keep it simple. Easy steps are in the repo README.</li>
+<li>Judging criteria and deliverables are on the back of this sheet.</li>
+</ul>
+
+<h2>Choose your topic by 10:00</h2>
+<p>Each team (1 to 3 people) picks <b>one or two topics</b> and submits it in the form <b>by 10:00</b>. Please stick to this time, as we cannot take changes after that. Since you received the topics yesterday, we hope you can decide before you arrive. Thank you!</p>
+<p><span class="tbd">[FORM LINK / QR CODE]</span></p>
+</div>
+<!-- Page 2 (back): judging criteria and deliverables -->
+<div class="page2">
+<header><h1>Judging criteria &amp; deliverables</h1><div>SIXT Hackathon 2026</div></header>
+
+<h2>What to hand in (by 16:45, in the GitHub repo)</h2>
+<ul>
+<li><b>Code</b> in your project folder (in your clone or fork), and <b>enter the link to your GitHub repo in the form</b> (public, or private with your topic owner added as a collaborator by email or GitHub username). The repo link is your submission.</li>
+<li><b><code>SUBMISSION.md</code></b> in your project folder: approach, results, how to run.</li>
+<li><b>Either a 1-minute demo video</b> (<code>submission/demo.mp4</code>, under 50 MB) <b>or a small set of slides</b> (<code>submission/slides.pdf</code>, max 5 slides), included in the same repo. Your choice. It counts as a deliverable alongside the code.</li>
+<li><b>Evaluation results</b>, with a baseline for comparison if one exists.</li>
+<li>Whatever extra your project README asks for. No real data, no secrets.</li>
+</ul>
+
+<h2>How you are judged (100 points)</h2>
+<table>
+<tr><th style="width:30%">Criterion</th><th style="width:9%">Points</th><th>What we look for</th></tr>
+<tr><td>Problem understanding</td><td>15</td><td>You grasp the business problem and its constraints</td></tr>
+<tr><td>Quality of approach</td><td>25</td><td>Sound, justified method; compared against a baseline if one exists</td></tr>
+<tr><td>Results</td><td>25</td><td>Measured evidence for your approach, honestly evaluated</td></tr>
+<tr><td>Business relevance &amp; reusability</td><td>15</td><td>Could SIXT use it? Clear next steps</td></tr>
+<tr><td>Code &amp; reproducibility</td><td>10</td><td>Runs from <code>SUBMISSION.md</code>, readable, clean</td></tr>
+<tr><td>Presentation &amp; demo</td><td>10</td><td>Clear story, working demo, good answers</td></tr>
+</table>
+<p>Up to <b>+5 bonus</b> for an exceptional insight or particularly clean engineering.</p>
+
+<h2>How the evening works</h2>
+<ol>
+<li><b>16:45 – 17:45 Reviews and finalist selection:</b> your topic owner looks at your submission (code, video or slides) and may ask a clarifying question. If your owner is not on site, they review it remotely from your GitHub link. There is no formal team pitch during the reviews, so please make your submission clear. The topic owners then select 6 finalist teams across all topics. If a topic has no submission that meets the owner's expectations, the next best submission from another topic takes the place.</li>
+<li><b>17:45 – 18:20 Final pitches</b> (the finalists are announced just before) by the 6 finalist teams, <b>3 min pitch + 2 min Q&amp;A each</b>, scored by the jury on the same criteria.</li>
+</ol>
+
+<h2>Reminder</h2>
+<p><b>Choose one or two topics per team (name one as your primary topic) and submit them in the form by 10:00</b> <span class="tbd">[FORM LINK / QR CODE]</span>. We cannot take changes after that, thank you!</p>
+</body></html>
