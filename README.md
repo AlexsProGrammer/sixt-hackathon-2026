@@ -4,33 +4,43 @@ Welcome! This is the **private, invite-only** repository for the hackathon. Each
 
 ## Before you arrive (Thursday 12 November)
 
-You get the GitHub invite on Thursday 12 November at 09:00. Accept it and you can get started right away.
+The hackathon is on **Friday, 13 November 2026**. You get the GitHub invite on Thursday 12 November at 09:00. Please do the following beforehand so you can spend the day on the problem, not on setup:
 
-The hackathon is on **Friday, 13 November 2026**. Please do this beforehand so you can spend the day on the problem, not on installing tools:
-
-- [ ] Accept the GitHub invite and enable 2FA.
-- [ ] Clone (or fork) this repo, see step 2 below, and confirm it works.
+- [ ] **Accept the GitHub invite** (check your email, otherwise you will see a 404 on this repo). Enabling 2FA is optional but recommended: it protects this private repo if your account is compromised.
+- [ ] **Fork or clone this repo** (step 1 below, both are fine).
 - [ ] Install **git** and **Python 3.11+** (and `uv` or `venv`). Your project README may list extra tools.
-- [ ] Have your **own LLM coding agent** ready (whichever you are comfortable with). SIXT does not provide LLM access.
-- [ ] Read the README of every project, pick your top choice and think about how you would approach it.
-- [ ] Talk to your teammates (teams have 1 to 3 people; if you are on your own, you can join an existing team of up to 3, ask an organizer) and decide on your topic. Submit your team and **one or two topics per team** in the form (name one as your primary topic), together with the link to your fork, **by 10:00 on 13 November** _[form link TBD]_. We cannot take changes after that time. Since you have the topics a day ahead, we hope you can decide before you arrive.
+- [ ] Have your **own LLM coding agent** ready (whichever you are comfortable with). LLM API access from SIXT is still to be decided. If it is provided, you can request a key on site.
+- [ ] Read the README of every project and pick your top choice.
+- [ ] Agree on your team (1 to 3 people; if you are on your own, ask an organizer to join a team) and your topic(s). **Submit team, topic and fork link in the form by 10:00 on 13 November** _[form link TBD]_. We cannot take changes after that time.
+  - Choose **one topic**, plus optionally **one backup topic** (name your primary). The maximum is 2. We really recommend one, but if you have the will to take on a second, we will make the way for you.
 - [ ] Questions before the day? Email the owner of the project directly.
-- [ ] Bring a laptop and charger, plus a lot of cool energy :) 
+- [ ] Bring a laptop and charger, plus a lot of cool energy :)
 
-## Step-by-step: how to get started
+## Get started
 
-1. **Accept your invite.** You will receive a GitHub invitation by email. Accept it, otherwise you will see a 404 on this repo. Make sure 2FA is enabled on your GitHub account.
-2. **Get the repo: clone it or fork it.** Everyone must clone the repo or fork it into their own GitHub account and work there. **Do not push branches to this repo**, we keep it simple.
+1. **Get your own copy of the repo.** Do **not** push to this repo. Choose **one** option (both work, you need a repo of your own either way, because its link goes into the form):
 
+   **Option A: Fork (recommended, 2 commands)**
    ```bash
    gh repo fork sruthi-sixt-26/sixt-hacakthon-2026 --clone
    cd sixt-hacakthon-2026
    ```
-   Or click **Fork** on the repo page on GitHub, then `git clone` your fork. Your fork is private by default. For a team, one person forks and adds the teammates as collaborators on the fork (Settings, Collaborators). Your repo link goes into the form (see step 8). Your repo must be readable by the organizers: either make it public, or add your topic owner(s) as collaborators by email or GitHub username. GitHub does not let you make a fork of a private repo public, so if you want a public repo, create a new one and copy your project folder into it.
+   No `gh`? Click **Fork** on this repo's GitHub page, then `git clone <your fork url>`.
 
-   Check it worked: `git remote -v` and `ls` should show the project folders.
+   **Option B: Clone and push to a new repo of your own**
+   ```bash
+   git clone https://github.com/sruthi-sixt-26/sixt-hacakthon-2026.git
+   cd sixt-hacakthon-2026
+   git remote rename origin upstream
+   gh repo create my-sixt-hackathon --private --source=. --remote=origin --push
+   ```
+   No `gh`? Create an empty repo on GitHub, then `git remote add origin <your repo url>` and `git push -u origin main`.
 
-3. **Pick your project.** Read the README in each folder and agree on one with your team:
+   **Check it worked:** `git remote -v` shows your repo as `origin`, and `ls` shows the project folders.
+
+   **Share access:** your repo must be readable by the organizers and your topic owner. Either make it public, or add them and `sruthi-sixt-26` as collaborators (Settings, Collaborators). For a team, one person creates the repo and adds the teammates. A fork of a private repo cannot be made public; if you want a public repo, use Option B.
+
+2. **Pick your project(s)**, then **delete all other project folders** in your repo. Keep one (or two at most, see above).
 
    | Folder | Topic |
    | --- | --- |
@@ -41,19 +51,50 @@ The hackathon is on **Friday, 13 November 2026**. Please do this beforehand so y
    | [Project_7](Project_7/README.md) | TUM x SIXT topic, to be announced (not yet open for selection) |
    | [Project_6](Project_6/README.md) | Placeholder, to be announced (not yet open for selection) |
 
-4. **Work in your own project folder.** Work only inside your project folder, in your fork (or clone). Teammates share the fork, so run `git pull` before each work session to get their changes.
+   ```bash
+   git rm -r Project_2 Project_5 Project_6 Project_7   # example: keeping Project_1 and Project_3-4
+   git commit -m "Keep only my project folders"
+   git push
+   ```
 
-5. **Set up your environment.** Follow the setup section in your project README (Python version, dependencies, data download).
-6. **Build.** Commit early and often, and push regularly. If `git push` is rejected, run `git pull` first and push again.
+3. **Set up your environment.** Follow the setup section in your project README (Python version, dependencies, data download).
+4. **Build.** Work only inside your project folder. Commit early and push regularly. Teammates share the fork, so run `git pull` before each session.
+
    ```bash
    git add Project_<n>/
    git commit -m "Short description"
    git pull
    git push
    ```
-7. **Ask for help.** On the day, ask any organizer or your topic owner on site. Before the day, email the owner of your project (see the README in each project folder).
-8. **Submit.** Before the deadline, make sure your repo contains your code, a short `SUBMISSION.md` in your project folder (approach, results, how to run), **either** a **1-minute demo video** (`submission/demo.mp4`, under 50 MB) **or** a **small set of slides** (`submission/slides.pdf`, max 5 slides) in your project folder (your choice), and anything else your project README asks for. Push everything to your fork and **enter the link to your GitHub repo in the form**. Fork first, so you have the link when you submit your topic by 10:00; you can keep pushing to the same repo until 16:45. **The repo link is your submission**: what is in the repo at the deadline is what we review. Make sure the organizers and your topic owner can open it: either make the repo public, or add your topic owner(s) as collaborators by email or GitHub username (and `sruthi-sixt-26`). If you work on two topics, put each in its own project folder and say which is your primary topic. Use [SUBMISSION_TEMPLATE.md](SUBMISSION_TEMPLATE.md) as a starting point for `SUBMISSION.md`.
-9. **Present.** Demo your results to the jury.
+
+5. **Ask for help.** On the day, ask any organizer or your topic owner on site. Before the day, email the owner of your project (see the README in each project folder).
+6. **Submit** before the deadline (**16:45**). Push everything to your fork; **the repo link you entered in the form is your submission**, and what is in the repo at the deadline is what we review. It must contain:
+   - your code,
+   - a short `SUBMISSION.md` in your project folder (approach, results, how to run), see [SUBMISSION_TEMPLATE.md](SUBMISSION_TEMPLATE.md),
+   - **either** a **1-minute demo video** (`submission/demo.mp4`, under 50 MB) **or** a **small set of slides** (`submission/slides.pdf`, max 5 slides),
+   - anything else your project README asks for.
+
+   If you work on a backup topic too, keep each in its own project folder and say which is your primary one.
+7. **Present.** Demo your results to the jury.
+
+## Let your coding agent do it
+
+You can hand the setup to your coding agent (Claude Code, Cursor, Copilot, etc.). Accept the invite and check that `git` and `gh auth status` work first, then open a terminal in an empty folder and paste:
+
+```text
+Set up my SIXT hackathon repo.
+1. Get me my own copy of sruthi-sixt-26/sixt-hacakthon-2026: fork it with
+   gh repo fork sruthi-sixt-26/sixt-hacakthon-2026 --clone (or, if I prefer cloning, clone it and
+   push to a new private repo of my own). Never push to the original repo.
+2. I chose <Project_N> (and optionally <Project_M> as backup). Delete every other
+   Project_* folder with git rm -r, commit and push to my fork.
+3. Read my project's README.md and set up the environment it describes
+   (Python 3.11+, uv or venv, dependencies, data download).
+4. Tell me what you did, and what the project README says the task is.
+Rules: only public or mock data, never commit secrets or .env, work only inside my project folder.
+```
+
+Afterwards, keep the agent inside your project folder, and make sure it never commits secrets or real data (see Rules).
 
 ## Rules
 
