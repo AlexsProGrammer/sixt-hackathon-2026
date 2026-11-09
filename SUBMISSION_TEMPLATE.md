@@ -1,0 +1,21 @@
+# Submission: <project and team name>
+
+Copy this file to `Project_<n>/SUBMISSION.md` and fill it in. Keep it short.
+
+## Authors
+**Team name:** <your team name>
+
+## Problem and approach
+What you tried to solve, the main idea, and why you chose it. Mention assumptions.
+
+## Results
+Your numbers, measured on held-out data, with a baseline to compare against (for example a naive model). Use the metrics named in your project README. Say honestly what did not work and what the limits are.
+
+## How to run
+Exact commands, from a fresh clone: Python version, install, data location, how to reproduce the results. No secrets: list the environment variables you need (names only).
+
+## Demo
+Path to `submission/demo.mp4` (1 min, under 50 MB) **or** `submission/slides.pdf` (max 5 slides).
+
+## Next steps
+What you would do with more time, and how SIXT could use this.
