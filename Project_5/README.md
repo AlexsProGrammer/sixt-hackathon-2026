@@ -2,6 +2,8 @@
 
 **Project owner:** Jigyasa Singhal
 
+**Questions before the hackathon:** email the project owner directly: jigyasa.singhal@sixt.com. On the day, ask on site.
+
 ## Problem
 An AI model checks the replies written by another AI model. If the AI judge says a reply is good, it is sent to the customer automatically. But nobody has really verified whether this judge is reliable. Recent 2026 research found that many AI judges look reliable on the surface but are not. A judge can agree with itself every time on the same case and still be consistently unfair or biased in one direction. A judge can look consistent and still be wrong.
 
@@ -20,6 +22,8 @@ Public data only: the Bitext customer-support dataset, translated into 5 languag
 - A working rules-plus-AI judge.
 - Insights into why judges fail.
 
+**Results are judged on:** score on the hidden test set (both judges), kappa and consistency before/after, and how reusable your method is.
+
 ## Background reading
 - *A Judge Should Know What Changed* (arXiv:2608.24419)
 - *Reliability without Validity* (arXiv:2606.19544)
@@ -27,7 +31,15 @@ Public data only: the Bitext customer-support dataset, translated into 5 languag
 - *Rubric Artifacts in LLM-as-a-Judge* (arXiv:2609.02942)
 
 ## Setup
-_To be added by organizers (starter toolkit, baseline judge)._
+Do this **before the hackathon day** (repo is shared on 12 Nov).
+
+- `git` and **Python 3.11+**, with a virtual environment (`python -m venv .venv` or `uv venv`).
+- Your own LLM coding agent. No LLM access is provided by SIXT.
+- Create `requirements.txt` / `pyproject.toml` in this folder for your own dependencies. Never commit secrets (use `.env`).
+- Install the libraries you want for evaluation (e.g. scikit-learn for Cohen's kappa). Skim the background reading above.
+- Data: starter toolkit and baseline judge will be added by the organizers; the test set is hidden. _[TBD: location]_
+- Check: you can clone or fork the repo and run `python --version` in your environment.
 
 ## Submission
 Code, a `SUBMISSION.md` in this folder (method, before/after results, how to run).
+Also **either** a **1-minute demo video** (`submission/demo.mp4`, under 50 MB) **or** a **small set of slides** (`submission/slides.pdf`, max 5 slides) in your project folder, included in your repo.
