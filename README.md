@@ -7,7 +7,11 @@ Welcome! This is the repo for the SIXT Hackathon, **Friday 13 November 2026**. E
 
 <p align="center"><img src="assets/exist-first.svg" alt="Just make it exist first, you can make it good later" width="420"></p>
 
-Three steps: **1.** read the projects, **2.** fill in the Team + Topic Registration form, **3.** do a little prep before you arrive
+Three steps:
+
+- **1.** Read the projects
+- 🔥 **2. Fill in the Team + Topic Registration form, the most important one!**
+- **3.** Do a little prep before you arrive
 
 ## 1. Read the projects at a glance
 
