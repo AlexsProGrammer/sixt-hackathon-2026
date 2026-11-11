@@ -5,11 +5,11 @@
     <text x="510" y="30">YOU CAN MAKE IT GOOD LATER</text>
   </g>
   <!-- rough circle -->
-  <ellipse cx="118" cy="100" rx="40" ry="38" fill="#5fb8b0"/>
+  <ellipse cx="118" cy="100" rx="40" ry="38" fill="#ffb27a"/>
   <path d="M140 66 C 100 56, 70 90, 84 118 C 98 146, 146 142, 160 108 C 170 84, 156 66, 134 68" fill="none" stroke="#111" stroke-width="3.5" stroke-linecap="round"/>
   <!-- arrow -->
   <path d="M225 100 H 395" stroke="#111" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 9"/>
   <path d="M385 88 L 402 100 L 385 112" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
   <!-- clean circle -->
-  <circle cx="510" cy="100" r="40" fill="#5fb8b0" stroke="#111" stroke-width="3.5"/>
+  <circle cx="510" cy="100" r="40" fill="#ffb27a" stroke="#111" stroke-width="3.5"/>
 </svg>
