@@ -1,14 +1,16 @@
 # Project 5: SIXT + TUM
 
-Imagine you are a detective helping a company. You get a box of spreadsheets and questions like: "How much did we sell?" and "What needs restocking?"
+Build an AI-assisted workflow that answers business questions from linked company data.
 
-Your job is to teach a computer, with help from AI, to find the right files, follow the rules and calculate the answers. Hand in a CSV: a simple table with one question number and one answer on each row.
+Inputs: each stage provides 25 CSV tables, 200 questions and business rules.
 
-Later, you get a new box of data to see whether your method works again.
+Task: identify the relevant records, combine tables, apply the rules and calculate one answer per question. Run your method again on the separate final-stage dataset.
 
-For now, try the three tiny solved examples. Ioannis will reveal the real data, questions and full instructions later.
+Submission: a CSV with the columns question_id and answer, supported by an explanation of your method and a presentation. The marking scheme shows the scoring and small-model bonus.
 
-[Three-page preview](STUDENT_GUIDE.pdf) · [Three solved toy examples](examples/README.md)
+Release: only the three invented toy examples are available now. Ioannis will release the competition data, questions and full instructions later.
+
+[Six-slide preview: two figures, task summary and one slide per toy example](STUDENT_GUIDE.pdf) · [Example CSVs and explanations](examples/README.md)
 
 For now, only explore the toy examples; setup instructions arrive with the challenge.
 
