@@ -126,7 +126,7 @@ This takes about **5 minutes** and means more time for the fun part, no stress i
 3. **Set up (under 5 min).** In your project folder run `bash setup.sh`. It creates a Python environment (`.venv`), installs the dependencies and runs a quick check. Prefer another language? Skip it and follow the project README.
    - Project 4 needs **Python 3.14+**; the others need 3.11+. Use `PYTHON=python3.x bash setup.sh` to pick a version.
    - Projects 1 and 3 copy `.env.example` to `.env`. Add the LLM key handed out on site there (git-ignored, never commit it).
-   - Project 2 prints "No data yet" until you put the organizers' CSV in `data/`. That is expected.
+   - Project 2 runs on a small `example_file.csv` until you get the full data. Put it in `data/` when you do.
 4. **Build.** Stay in your project folder. Commit and push often, `git pull` before each session.
 5. **Ask for help.** Any organizer or your topic owner, on site.
 6. **Submit by 16:45.** Your repo link from the Team + Topic Registration form is your submission. It needs:
