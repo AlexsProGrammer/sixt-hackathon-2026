@@ -1,4 +1,4 @@
-# Problem 7: SIXT + TUM Enterprise Data Agent Challenge
+# Project 5: Enterprise Data Agent Challenge (TUM x SIXT collaboration)
 
 **Project owner:** Ioannis Tzachristas (TUM) · [ioannis.tzachristas@tum.de](mailto:ioannis.tzachristas@tum.de) · [LinkedIn](https://www.linkedin.com/in/ioannis-tzachristas-83a00522a/). On the day, ask on site.
 

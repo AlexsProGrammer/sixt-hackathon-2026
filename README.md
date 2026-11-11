@@ -47,8 +47,8 @@ The hackathon is on **Friday, 13 November 2026**. This repository goes public on
    | [Project_1](Project_1/README.md) | Structured Extraction from Documents: teach a machine to say "I don't know" |
    | [Project_2](Project_2/README.md) | Nowcasting / Forecasting Mileage |
    | [Project_3](Project_3/README.md) | Meta-Evaluation Framework for LLM-as-Judge Agentic Systems |
-   | [Project_4](Project_4/README.md) | Placeholder, to be announced (not yet open for selection) |
-   | [Project_5](Project_5/README.md) | TUM x SIXT topic, to be announced (not yet open for selection) |
+   | [Project_4](Project_4/README.md) | Fleet Allocation Challenge |
+   | [Project_5](Project_5/README.md) | Enterprise Data Agent Challenge (TUM x SIXT collaboration) |
 
    ```bash
    git rm -r Project_2 Project_3 Project_4 Project_5   # example: keeping Project_1
@@ -116,7 +116,7 @@ sixt-hacakthon-2026/
 ├── CodeRabbit_Python/ <- optional AI code review setup (see its README)
 ├── arxiv_templates/ <- templates for the optional arXiv-style publication (coming later)
 ├── Project_1/, Project_2/, Project_3/
-├── Project_4/       <- placeholder, not yet open
-├── Project_5/       <- TUM x SIXT topic, not yet open
+├── Project_4/       <- Fleet Allocation Challenge
+├── Project_5/       <- Enterprise Data Agent Challenge (TUM x SIXT collaboration)
 └── SUBMISSION_TEMPLATE.md
 ```
