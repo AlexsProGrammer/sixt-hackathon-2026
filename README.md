@@ -123,7 +123,7 @@ This takes about **5 minutes** and means more time for the fun part, no stress i
    git commit -m "Keep only my project folder"
    git push
    ```
-3. **Set up (about 10 min).** In your project folder run `bash setup.sh`. It creates a Python environment (`.venv`), installs the dependencies and runs a quick check. Prefer another language? Skip it and follow the project README.
+3. **Set up (under 5 min).** In your project folder run `bash setup.sh`. It creates a Python environment (`.venv`), installs the dependencies and runs a quick check. Prefer another language? Skip it and follow the project README.
    - Project 4 needs **Python 3.14+**; the others need 3.11+. Use `PYTHON=python3.x bash setup.sh` to pick a version.
    - Projects 1 and 3 copy `.env.example` to `.env`. Add the LLM key handed out on site there (git-ignored, never commit it).
    - Project 2 prints "No data yet" until you put the organizers' CSV in `data/`. That is expected.
