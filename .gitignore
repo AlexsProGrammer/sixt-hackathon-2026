@@ -11,3 +11,8 @@ node_modules/
 .ipynb_checkpoints/
 data/raw/
 Project_1/data/
+!.env.example
+Project_2/data/
+quickstart_answers.csv
+Project_1/preds.jsonl
+Project_4/plans/baseline.csv
