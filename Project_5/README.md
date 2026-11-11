@@ -4,7 +4,7 @@
 
 **P7 student guidance is available now.** Competition datasets, answer keys and organizer materials are not included in this repository. Stage data will be provided separately when the organizers authorize release.
 
-**Hackathon:** Friday, 13 November 2026, HQ Pullach, Academy. All times below are local **CET (Europe/Berlin)**. Teams have 1 to 3 people; follow the main repository's topic-selection instructions by 10:00.
+**Hackathon:** Friday, 13 November 2026, HQ Pullach, Academy. All times below are local **CET (Europe/Berlin)**. Teams have 1 to 3 people; register through the form in the main repository's README (deadline Thursday 12 November, 17:00); topics are assigned by matching.
 
 **Turn business questions into correct answers. Build a method, calculate the answers from the supplied company data, and submit a CSV.**
 
@@ -154,7 +154,7 @@ An unknown, empty or duplicate ID, incorrect header, or malformed CSV row reject
 
 ## Setup before the event
 
-Install **git and Python 3.11+** and create a virtual environment (`python -m venv .venv` or `uv venv`). Bring your own model access or local models; do not rely on SIXT providing LLM access. If claiming the bonus, your coding assistant must also meet the 40B rule. Create `requirements.txt` or `pyproject.toml` for your method and keep credentials in environment variables or a git-ignored `.env`.
+Install **git and Python 3.11+** and create a virtual environment (`python -m venv .venv` or `uv venv`). Bring your own model access or local models; SIXT provides LLM API keys for tasks that need one, but this challenge does not require them. If claiming the bonus, your coding assistant must also meet the 40B rule. Create `requirements.txt` or `pyproject.toml` for your method and keep credentials in environment variables or a git-ignored `.env`.
 
 Work inside `Project_5/` in your own team repository, not the organizers' source repository. Use the **Fork** button on [the source repository](https://github.com/sruthi-sixt-26/sixt-hackathon-2026), then clone your fork. Follow the main README to register your repository link and give the organizers access. Before arriving, check that you can run `python --version`, load the toy CSVs and push a commit to your own repository.
 

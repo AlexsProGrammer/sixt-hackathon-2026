@@ -40,9 +40,9 @@ Owners and contact emails are in each project README.
 - [ ] Review data for each project (public or mock only)
 - [ ] Fill in each project's "Setup" section
 - [ ] Prepare the Project 3 starter toolkit, baseline judge and hidden test set (keep the hidden set outside this repo)
-- [ ] Create the topic form (one or two topics per team, max 5 teams per topic, closes 10:00 on 13 Nov; asks for team members, primary topic and the link to the team's GitHub repo) and add its link to the handout and README
+- [ ] Registration form (https://forms.cloud.microsoft/e/S2dvqjeFBX): team name and top 3 topics in order, closes Thursday 12 Nov 17:00. Run the matching program (one topic per team) and publish the results in the repo by 18:00. Link is in the handout and README
 - [ ] Put owner emails in the root README and handout
-- [ ] Tell participants to bring their own LLM coding agent (no SIXT LLM access); check each project works that way
+- [ ] Tell participants to bring their own LLM coding agent; SIXT provides LLM API keys for tasks that need one (Project_3, Project_4 setup lines say so); check each project works that way
 - [ ] Define judging criteria and jury
 - [ ] Print the handout (`runbook/handout.pdf`, 2 pages, double-sided), one per team
 
@@ -52,7 +52,7 @@ Owners and contact emails are in each project README.
 - [ ] Visit teams on a schedule stay close touch and remind them on deadlines
 
 ### After the event
-- [ ] Export repo links from the form, score, announce results
+- [ ] Collect repo links from teams, score, announce results
 - [ ] Remove collaborators and archive the repo
 - [ ] Follow up with interested students
 
@@ -60,19 +60,19 @@ Owners and contact emails are in each project README.
 
 | | |
 | --- | --- |
-| Date | Friday, 13 November 2026 (repo invites and topics sent 12 Nov, 09:00) |
+| Date | Friday, 13 November 2026 (repo public and topics available Thursday 12 Nov, 09:00) |
 | Location | HQ Pullach, Academy |
-| Team size / topics | 1 to 3 people; max 5 teams per topic |
-| Topic selection | One team can work on one or two topics, form closes 10:00 on 13 Nov. Link: **[TBD]** |
-| LLM tools | Participants bring their own |
+| Team size / topics | 1 to 3 people; max 5 teams per topic (set as the capacity in the matching program) |
+| Topic selection | Team registers with name and top 3 topics, form closes Thursday 12 Nov 17:00; matching assigns one topic per team, results in the repo Thursday 18:00. Form: https://forms.cloud.microsoft/e/S2dvqjeFBX |
+| LLM tools | Participants bring their own coding agent; SIXT provides LLM API keys for tasks that need one |
 | Help | On site; before the event email the topic owner |
 
 Keep this in sync with `runbook/handout.html`.
 
 ### Topic selection and balancing
 Expect 40 to 50 participants, so about 14 to 25 teams. Encourage teams of 2 to 3.
-- **09:45:** check counts, announce topics with room, help undecided people.
-- **10:00:** form closes; rebalance until about 10:15.
+- **Thursday 17:00:** form closes. Matching runs; results published by 18:00.
+- **Friday 09:45 to 10:15:** check results against who is present (late registrations, no-shows, swaps). No strict 10:00 cut-off.
 
 **Not enough people for a topic (decide before 12 Nov):**
 1. Set a go / no-go rule (recommended: a topic runs with at least 2 teams) and announce it at kick-off.
@@ -97,7 +97,7 @@ To prepare:
 
 ### Principles
 - Judge what teams built and can show, not slideware. Same criteria for every project.
-- A team on two topics names one primary topic; it counts towards that topic's cap of 5 teams and the go / no-go rule, and is reviewed and scored there (the second topic's owner may read along). Team counts below are by primary topic.
+- Each team has one assigned topic from the matching; it is reviewed and scored there. Team counts below are by assigned topic.
 - Stage 1: topic owners review their teams and pick 6 finalists overall. Stage 2: the jury scores finalists at the pitches. Jurors score independently before discussing.
 
 ### Scoring (100 points)
@@ -125,7 +125,7 @@ To prepare:
 - **Late:** a repo with no pushes by the deadline (or a link that cannot be opened) loses the Code and Results points that cannot be verified.
 
 ### Process
-1. **16:45:** submission = the team's GitHub repo (link collected in the form) with code, `SUBMISSION.md`, and **either** a 1-min demo video (`submission/demo.mp4`, under 50 MB) **or** slides (`submission/slides.pdf`, max 5).
+1. **16:45:** submission = the team's GitHub repo (link handed in by the team) with code, `SUBMISSION.md`, and **either** a 1-min demo video (`submission/demo.mp4`, under 50 MB) **or** slides (`submission/slides.pdf`, max 5).
 2. **16:45 – 17:45 reviews:** owners read each submission and ask clarifying questions (remote owners use the GitHub links). Owners fill in the score sheet.
 3. **17:45:** owners pick 6 finalists across all topics. If a topic has no submission meeting the owner's standard, the next best from another topic takes its place.
 4. **17:45 – 18:20 final pitches:** 3 min + 2 min Q&A each; jury scores independently.

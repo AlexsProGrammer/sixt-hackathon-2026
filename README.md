@@ -11,14 +11,14 @@ The hackathon is on **Friday, 13 November 2026**. This repository goes public on
 - [ ] Install **git** and **Python 3.11+** (and `uv` or `venv`). Your project README may list extra tools.
 - [ ] Have your **own LLM coding agent** ready (whichever you are comfortable with). SIXT provides LLM API keys for projects that need one; you can request a key on site.
 - [ ] Read the README of every project and pick your top choice.
-- [ ] Agree on your team (1 to 3 people; if you are on your own, ask an organizer to join a team) and your topic(s). **Submit team, topic and fork link in the form by 10:00 on 13 November** _[form link TBD]_. We cannot take changes after that time.
-  - Choose **one topic**, plus optionally **one backup topic** (name your primary). The maximum is 2. We really recommend one, but if you have the will to take on a second, we will make the way for you.
+- [ ] Agree on your team (1 to 3 people; if you are on your own, ask an organizer to join a team) and give it a **team name**.
+- [ ] **Register your team in the [registration form](https://forms.cloud.microsoft/e/S2dvqjeFBX) by Thursday 12 November, 17:00.** Pick your **top 3 topics** in order (1st, 2nd, 3rd choice) and enter your team name. We then run a matching program that gives **each team one topic**. The results are published by **18:00 on Thursday** in this repository.
 - [ ] Questions before the day? Email the owner of the project directly.
 - [ ] Bring a laptop and charger, plus a lot of cool energy :)
 
 ## Get started
 
-1. **Get your own copy of the repo.** Do **not** push to this repo. Choose **one** option (both work, you need a repo of your own either way, because its link goes into the form):
+1. **Get your own copy of the repo.** Do **not** push to this repo. Choose **one** option (both work, you need a repo of your own either way, because you hand in its link as your submission):
 
    **Option A: Fork (recommended, 2 commands)**
    ```bash
@@ -40,7 +40,7 @@ The hackathon is on **Friday, 13 November 2026**. This repository goes public on
 
    **Share access:** your repo must be readable by the organizers and your topic owner. Either make it public, or add them and `sruthi-sixt-26` as collaborators (Settings, Collaborators). For a team, one person creates the repo and adds the teammates. Once this repo is public, a fork of it is public too and cannot be made private; if you want a private repo, use Option B.
 
-2. **Pick your project(s)**, then **delete all other project folders** in your repo. Keep one (or two at most, see above).
+2. **Once the matching results are published (Thursday 18:00), find your assigned project**, then **delete all other project folders** in your repo. You can do this on Thursday evening or on the day. Until then, read all the project READMEs and rank your top 3.
 
    | Folder | Topic |
    | --- | --- |
@@ -51,7 +51,7 @@ The hackathon is on **Friday, 13 November 2026**. This repository goes public on
    | [Project_5](Project_5/README.md) | Enterprise Data Agent Challenge (TUM x SIXT collaboration) |
 
    ```bash
-   git rm -r Project_2 Project_3 Project_4 Project_5   # example: keeping Project_1
+   git rm -r Project_2 Project_3 Project_4 Project_5   # example: matched to Project_1
    git commit -m "Keep only my project folders"
    git push
    ```
@@ -67,13 +67,12 @@ The hackathon is on **Friday, 13 November 2026**. This repository goes public on
    ```
 
 5. **Ask for help.** On the day, ask any organizer or your topic owner on site. Before the day, email the owner of your project (see the README in each project folder).
-6. **Submit** before the deadline (**16:45**). Push everything to your fork; **the repo link you entered in the form is your submission**, and what is in the repo at the deadline is what we review. It must contain:
+6. **Submit** before the deadline (**16:45**). Push everything to your fork; **the link to your repo is your submission** (hand it in to the organizers as instructed on the day), and what is in the repo at the deadline is what we review. It must contain:
    - your code,
    - a short `SUBMISSION.md` in your project folder (approach, results, how to run), see [SUBMISSION_TEMPLATE.md](SUBMISSION_TEMPLATE.md),
    - **either** a **1-minute demo video** (`submission/demo.mp4`, under 50 MB) **or** a **small set of slides** (`submission/slides.pdf`, max 5 slides),
    - anything else your project README asks for.
 
-   If you work on a backup topic too, keep each in its own project folder and say which is your primary one.
 7. **Present.** Demo your results to the jury.
 
 ## Let your coding agent do it
@@ -85,7 +84,7 @@ Set up my SIXT hackathon repo.
 1. Get me my own copy of sruthi-sixt-26/sixt-hacakthon-2026: fork it with
    gh repo fork sruthi-sixt-26/sixt-hacakthon-2026 --clone (or, if I prefer cloning, clone it and
    push to a new private repo of my own). Never push to the original repo.
-2. I chose <Project_N> (and optionally <Project_M> as backup). Delete every other
+2. My team was matched to <Project_N>. Delete every other
    Project_* folder with git rm -r, commit and push to my fork.
 3. Read my project's README.md and set up the environment it describes
    (Python 3.11+, uv or venv, dependencies, data download).
