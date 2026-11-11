@@ -165,6 +165,7 @@ Then keep the agent in your project folder and read what it commits.
 ## Good to know
 
 - **Publication.** You can turn your work into an arXiv-style paper. Ask the TUM people. Templates will be in [arxiv_templates/](arxiv_templates/README.md). Reach out even after the hackathon.
+- **AI code review (optional).** Curious about AI-based code reviews? Try CodeRabbit on your own fork, the [setup guide](CodeRabbit_Python/README.md) takes a few minutes and comes with a small sample project to play with.
 
 ## Repository layout
 
