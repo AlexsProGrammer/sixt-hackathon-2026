@@ -154,7 +154,7 @@ An unknown, empty or duplicate ID, incorrect header, or malformed CSV row reject
 
 ## Setup before the event
 
-<p align="center"><img src="../assets/time-quick-setup.svg" alt="About 10 minutes" width="420"></p>
+<img src="../assets/time-quick-setup.svg" alt="About 10 minutes" width="360">
 
 **Quick setup (about 10 min):** `bash setup.sh` in this folder. It makes a virtual environment and solves a toy question with `quickstart.py`. Python is our starting point; any language is fine.
 

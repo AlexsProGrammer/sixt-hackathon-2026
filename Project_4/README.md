@@ -336,7 +336,7 @@ That is the Level 0 task.
 
 ## Setup
 
-<p align="center"><img src="../assets/time-quick-setup.svg" alt="About 10 minutes" width="420"></p>
+<img src="../assets/time-quick-setup.svg" alt="About 10 minutes" width="360">
 
 **Quick setup (about 10 min):** `bash setup.sh` in this folder. It makes a virtual environment, installs the packages and runs `starter.py`. Python is our starting point; any language is fine.
 Do this **before the hackathon day** (repo is shared on 12 Nov).

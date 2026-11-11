@@ -53,7 +53,7 @@ Schema (one row per status update):
 
 ## Setup
 
-<p align="center"><img src="../assets/time-quick-setup.svg" alt="About 10 minutes" width="420"></p>
+<img src="../assets/time-quick-setup.svg" alt="About 10 minutes" width="360">
 
 **Quick setup (about 10 min):** `bash setup.sh` in this folder. It makes a virtual environment and runs `starter.py` (a naive baseline and simple flags to beat) once you put the organizers' CSV in `data/` (git-ignored). Python is our starting point; any language is fine.
 Do this **before the hackathon day** (repo is shared on 12 Nov).

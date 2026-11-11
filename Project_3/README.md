@@ -58,7 +58,7 @@ not the list.
 
 ## Setup
 
-<p align="center"><img src="../assets/time-quick-setup.svg" alt="About 10 minutes" width="420"></p>
+<img src="../assets/time-quick-setup.svg" alt="About 10 minutes" width="360">
 
 **Quick setup (about 10 min):** `bash setup.sh` in this folder. It makes a virtual environment, creates `.env` from `.env.example` for your LLM key and scores the starting judge. Python is our starting point; any language is fine.
 Do this **before the hackathon day**.

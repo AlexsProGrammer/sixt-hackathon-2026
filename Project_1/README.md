@@ -64,7 +64,7 @@ One confident mistake can wipe out the saving. That is why knowing when you are 
 
 ## Quick start
 
-<p align="center"><img src="../assets/time-quick-setup.svg" alt="About 10 minutes" width="420"></p>
+<img src="../assets/time-quick-setup.svg" alt="About 10 minutes" width="360">
 
 **Quick setup (about 10 min):** `bash setup.sh` in this folder. It makes a virtual environment, downloads the data (add `--accept-licenses` to accept the dataset licences) and runs the baseline. Copy `.env.example` to `.env` for your LLM key. Python is our starting point; any language is fine.
 

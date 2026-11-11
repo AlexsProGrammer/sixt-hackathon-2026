@@ -9,7 +9,7 @@ Welcome! This is the repo for the SIXT Hackathon, **Friday 13 November 2026**. E
 
 ## Fill in the Team + Topic Registration form (do this first)
 
-<p align="center"><img src="assets/time-register.svg" alt="About 3 minutes" width="420"></p>
+<img src="assets/time-register.svg" alt="About 3 minutes" width="360">
 
 We would love to know who is coming, it only takes about 3 minutes, and nothing is final, so just pick what sounds fun right now :)
 
@@ -26,7 +26,7 @@ What we will ask:
 
 ## Before you arrive
 
-<p align="center"><img src="assets/time-before-you-arrive.svg" alt="About 5 minutes" width="420"></p>
+<img src="assets/time-before-you-arrive.svg" alt="About 5 minutes" width="360">
 
 This takes about **5 minutes** and means more time for the fun part, no stress if you can't tick everything off
 
@@ -41,6 +41,8 @@ This takes about **5 minutes** and means more time for the fun part, no stress i
 - [ ] Bring a laptop, a charger and good energy :)
 
 ## The projects at a glance
+
+<img src="assets/time-projects.svg" alt="About 10 minutes" width="360">
 
 Read this first, then the full README of each project, then rank your top 3.
 
