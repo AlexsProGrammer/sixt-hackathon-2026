@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 170" width="640" height="170" role="img" aria-label="Just make it exist first, you can make it good later">
+  <rect width="640" height="170" rx="14" fill="#ffffff"/>
+  <g font-family="'Comic Sans MS','Segoe Print','Chalkboard SE',Arial,sans-serif" font-size="15" font-weight="700" fill="#111" text-anchor="middle" letter-spacing="1">
+    <text x="130" y="30">JUST MAKE IT EXIST FIRST</text>
+    <text x="510" y="30">YOU CAN MAKE IT GOOD LATER</text>
+  </g>
+  <!-- rough circle -->
+  <ellipse cx="118" cy="100" rx="40" ry="38" fill="#5fb8b0"/>
+  <path d="M140 66 C 100 56, 70 90, 84 118 C 98 146, 146 142, 160 108 C 170 84, 156 66, 134 68" fill="none" stroke="#111" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- arrow -->
+  <path d="M225 100 H 395" stroke="#111" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 9"/>
+  <path d="M385 88 L 402 100 L 385 112" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- clean circle -->
+  <circle cx="510" cy="100" r="40" fill="#5fb8b0" stroke="#111" stroke-width="3.5"/>
+</svg>
