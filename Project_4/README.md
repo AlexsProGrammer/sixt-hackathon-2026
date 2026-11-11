@@ -2,7 +2,7 @@
 
 **Project owners:** Sara Michetti, Julian Mehne
 
-**Questions before the hackathon:** email the project owners directly: sara.michetti@sixt.com, julian.mehne@sixt.com. On the day, ask on site.
+**Questions before the hackathon:** email the project owners directly: sara.michetti@sixt.com, julian.mehne@sixt.com. On the day, technical support is available on site and domain expertise remotely; the on-site team will coordinate.
 
 ## 1. The task
 
