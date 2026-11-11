@@ -9,18 +9,18 @@ Welcome! This is the repo for the SIXT Hackathon, **Friday 13 November 2026**. E
 
 ## Fill in the Team + Topic Registration form (do this first)
 
-We would love to know who is coming. It takes a few minutes. Nothing is final, so pick what sounds fun right now.
+We would love to know who is coming, it only takes a few minutes, and nothing is final, so just pick what sounds fun right now :)
 
 > **[Open the Team + Topic Registration form](https://forms.cloud.microsoft/e/S2dvqjeFBX)**
-> Please fill it in by **Thursday 12 November, 17:00** if you can. We will share the matches here by **18:00**.
+> If you can, please fill it in by **Thursday 12 November, 17:00** and we will share the matches here by **18:00**
 
 What we will ask:
 
-1. **A team name.** Teams have 1 to 3 people. Coming alone is fine. Want teammates? Tell an organizer, we will help.
-2. **Your top 3 topics.** See the [projects at a glance](#the-projects-at-a-glance). Topics are here from **Thu 09:00**. There are no wrong choices.
-3. **Your repo link.** [Fork this repo](#get-started) first. It takes about two minutes. Stuck? Ask us.
+1. **A team name**, teams have 1 to 3 people, coming alone is fine, and if you want teammates just tell an organizer
+2. **Your top 3 topics** from the [projects at a glance](#the-projects-at-a-glance), they are here from **Thu 09:00** and there are no wrong choices
+3. **Your repo link**, [fork this repo](#get-started) first, it takes about two minutes, and if you get stuck just ask us
 
-**Running late? No problem.** The form stays open until **Fri 13 Nov, 10:00**. Late teams get the topics that still have room.
+**Running late? No problem!** The form stays open until **Fri 13 Nov, 10:00** and late teams get the topics that still have room
 
 ## Before you arrive
 
