@@ -98,7 +98,7 @@ To prepare:
 ### Principles
 - Judge what teams built and can show, not slideware. Same criteria for every project.
 - Each team has one assigned topic from the matching; it is reviewed and scored there. Team counts below are by assigned topic.
-- Stage 1: topic owners review their teams and pick 6 finalists overall. Stage 2: the jury scores finalists at the pitches. Jurors score independently before discussing.
+- Stage 1: topic owners review their teams and pick 5 finalists overall. Stage 2: the jury scores finalists at the pitches. Jurors score independently before discussing.
 
 ### Scoring (100 points)
 
@@ -127,9 +127,9 @@ To prepare:
 ### Process
 1. **16:45:** submission = the team's GitHub repo (link collected in the form) with code, `SUBMISSION.md`, and **either** a 1-min demo video (`submission/demo.mp4`, under 50 MB) **or** slides (`submission/slides.pdf`, max 5).
 2. **16:45 – 17:30 reviews:** owners read each submission and ask clarifying questions (remote owners use the GitHub links). Owners fill in the score sheet.
-3. **17:30:** owners pick 6 finalists across all topics. If a topic has no submission meeting the owner's standard, the next best from another topic takes its place.
-4. **17:30 – 18:05 final pitches:** 3 min + 2 min Q&A each; jury scores independently.
-5. **18:05 prizes:** highest total wins; ties go to the higher Results score, then jury discussion. Give feedback to every team afterwards.
+3. **17:30:** owners pick 5 finalists across all topics. If a topic has no submission meeting the owner's standard, the next best from another topic takes its place.
+4. **17:30 – 18:00 final pitches:** 3 min + 2 min Q&A each; jury scores independently.
+5. **18:00 prize ceremony:** highest total wins; ties go to the higher Results score, then jury discussion. Give feedback to every team afterwards.
 
 ### Jury and prizes
 - Stage 1: topic owners. Stage 2: **[TBD: jury composition]**; owners should not score finalists of their own topic if feasible.

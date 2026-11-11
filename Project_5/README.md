@@ -177,7 +177,7 @@ Use [METHOD_REPORT_TEMPLATE.md](METHOD_REPORT_TEMPLATE.md) to prepare `SUBMISSIO
 - Dataset citation and any external code/model acknowledgements.
 - After organizer coordination: the required report manuscript upload to arXiv, with confirmation supplied to the organizers, as explained below.
 
-The registered team repository is the Hackathon-day submission. Keep the answer files at `Project_5/public_answers.csv` and `Project_5/final_answers.csv`. By 16:45, push all Hackathon-day deliverables; no hacking is allowed during the 16:45-17:30 review period. Six finalists are selected across topics. If selected, give a maximum 3-minute pitch plus 2 minutes of Q&A during 17:30-18:05. Teams choosing a backup topic must name a primary topic and are scored under that primary topic's rubric.
+The registered team repository is the Hackathon-day submission. Keep the answer files at `Project_5/public_answers.csv` and `Project_5/final_answers.csv`. By 16:45, push all Hackathon-day deliverables; no hacking is allowed during the 16:45-17:30 review period. Five finalists are selected across topics. If selected, give a maximum 3-minute pitch plus 2 minutes of Q&A during 17:30-18:00. Teams choosing a backup topic must name a primary topic and are scored under that primary topic's rubric.
 
 ## Required report and coordinated arXiv upload
 
