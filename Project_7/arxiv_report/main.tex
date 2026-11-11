@@ -1,0 +1,180 @@
+% P7 student report starter. Replace every [TODO: ...] before submission.
+% Coordinate authors, content, citation and timing with the organizers first.
+% Never add challenge data, answer CSVs, gold, private evaluation details or
+% organizer files to the manuscript, source archive or ancillary attachments.
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath,booktabs,tabularx,enumitem}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+\urlstyle{same}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\emergencystretch}{2em}
+\setlist{nosep,leftmargin=*}
+\newcommand{\todo}[1]{\textit{[TODO: #1]}}
+
+\title{\todo{Your method title}\\
+  \large SIXT + TUM Hackathon 2026 --- Problem 7}
+\author{\todo{Student author names}\\
+  \small \todo{Actual affiliations and contact email}}
+\date{\todo{Manuscript date}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\todo{In about 150 words, state the task, your method, which work models and
+tools perform, measured results, and the main limitation. Do not invent
+measurements or claim official scores before receiving them.}
+\end{abstract}
+
+\section{Task and data}
+We study Problem 7 of the SIXT + TUM Hackathon: calculate answers from
+synthetic enterprise tables and business rules, then submit one scalar answer
+per question in a two-column CSV. The challenge uses the Enterprise Data Agent
+Challenge 2026 dataset~\cite{tzachristas2026enterprise}. There are two separate
+snapshots, with 25 CSV data tables and 200 scored questions per stage, plus
+10 unscored practice examples in the initial stage.
+
+\todo{Explain the business problem and the main calculation challenges in your
+own words. Describe your use of the supplied rules and metadata. Keep the two
+snapshots separate. Illustrate with public toy examples only.}
+
+\subsection{Dataset identification}
+The bibliography contains the prepared Version 6.0.0 citation. Confirm it
+against the citation supplied with the issued package. Record each issued
+archive below; dataset version and event content revision are separate fields.
+Use the organizers' hash for the exact archive you received.
+
+% Repeat complete fields for both stages. Use \nolinkurl{...} for filenames,
+% hashes and revisions so underscores and long identifiers wrap safely.
+\begin{description}[style=nextline]
+  \item[Initial/public stage]
+    Archive: \todo{filename}; SHA-256: \todo{64-character hash};
+    access date: \todo{YYYY-MM-DD}; dataset version: \todo{issued version};
+    event content version: \todo{issued revision};
+    event policy version: \todo{issued policy}.
+  \item[Final stage]
+    Archive: \todo{filename}; SHA-256: \todo{64-character hash};
+    access date: \todo{YYYY-MM-DD}; dataset version: \todo{issued version};
+    event content version: \todo{issued revision};
+    event policy version: \todo{issued policy}.
+\end{description}
+
+\section{Method}
+\todo{Describe the workflow from a question to the exported answer. Explain
+table selection, joins, record eligibility, dates, currencies, rounding,
+validation and human intervention. State what models do and what Python,
+SQL or other deterministic tools do. Justify the design and discuss a baseline
+where available. A simple diagram of your own workflow is welcome.}
+
+\subsection{Implementation and reproducibility}
+\todo{Give the framework/runtime, dependencies, setup and execution commands,
+model settings, random seeds where relevant, and code revision used for each
+stage. Describe the execution environment. Provide a code link only if it is
+authorized for public sharing and contains no restricted material or secrets.
+Explain how organizers with the issued data can reproduce the workflow.}
+
+\section{Evaluation and results}
+\todo{Describe your validation procedure and distinguish your own checks from
+organizer-reported results. Report only measurements you actually obtained.
+Use ``not measured'' or ``not available'' for missing values. Discuss errors
+without reproducing competition questions or private answer-level feedback.}
+
+\begin{table}[htbp]
+\centering
+\caption{Measured results. Replace placeholders; give score provenance and
+measurement conditions in the text.}
+\begin{tabularx}{\linewidth}{@{}Xll@{}}
+\toprule
+Measure & Public stage & Final stage \\
+\midrule
+Official correct answers (out of 200) & \todo{value} & \todo{value} \\
+Official accuracy (\%) & \todo{value} & \todo{value} \\
+Elapsed workflow time & \todo{value} & \todo{value} \\
+Model tokens used & \todo{value} & \todo{value} \\
+Measured model/API cost (currency) & \todo{value} & \todo{value} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Report hardware, memory use and the scope of timing/cost measurements if
+measured. Do not confuse accuracy with the Hackathon grade. For reference,
+with public and final accuracies $P,F$ expressed from 0 to 100,
+\[
+ D=0.35P+0.65F,\qquad G=0.65D+J+B,
+\]
+where $J$ is the judges' contribution (0--35 points) and $B$ is the verified
+small-model bonus (0 or 15 points). Thus $G$ is at most 115 points.
+\todo{If reporting a grade, use the organizers' confirmed components.}
+
+\section{Model-use declaration}
+\textbf{Complete this section for every team, whether or not claiming the
+bonus.} Reconcile it with the submitted \texttt{MODEL\_DECLARATION.csv}.
+Disclose all generative models used for challenge-specific design, coding,
+planning, analysis, answer generation or validation across both stages,
+including coding assistants, validators and fallback models. Also disclose
+any additional model assistance used to prepare the later manuscript,
+clearly separated from the challenge workflow.
+
+% Duplicate this block once per model. Never put credentials in the report.
+\subsection*{Model \todo{number}: \todo{exact identifier}}
+\begin{description}[style=nextline]
+  \item[Identity and size] Publisher: \todo{publisher}; exact version/revision:
+    \todo{version}; total parameters in billions: \todo{count or unknown};
+    parameter-count source: \todo{publisher/model-card reference and URL}.
+  \item[Role and stage] \todo{Specific task, initial/final/both stages,
+    substantive contribution, coding or fallback use; distinguish any
+    manuscript-only use after the Hackathon.}
+  \item[Configuration] \todo{Framework/runtime and version, local or hosted,
+    quantization, decoding settings, prompts/configuration version and tools.}
+  \item[Usage and evidence] \todo{Measured usage or not measured;
+    evidence supplied to organizers; a sanitized public summary where allowed.
+    Do not embed private prompts, data rows, answers, logs or secrets.}
+\end{description}
+
+\subsection*{Small-model bonus declaration}
+\begin{itemize}
+  \item Bonus claimed for the Hackathon workflow: \todo{yes/no}.
+  \item Every generative model in the challenge workflow has at most
+    40 billion total parameters: \todo{yes/no/unverifiable}.
+  \item Meaningful analytical work performed by qualifying models:
+    \todo{explain, or not applicable}.
+  \item Size and usage evidence supplied to organizers:
+    \todo{identify evidence, without publishing restricted material}.
+  \item Organizer verification outcome: \todo{pending/confirmed/ineligible}.
+\end{itemize}
+For mixture-of-experts models, count all parameters, including inactive
+experts. Quantization does not reduce the parameter count. Each generative
+model must meet the limit; counts are not added across models. Unknown sizes
+cannot establish eligibility. A model-free workflow does not earn the bonus.
+The declaration alone does not establish eligibility; the published P7
+policy and organizer verification apply.
+
+\section{Limitations and business relevance}
+\todo{Discuss failure cases, reliability, human effort, reproducibility,
+efficiency trade-offs and what would change with more time. Explain how the
+approach could be reused in a SIXT-like business setting. Distinguish evidence
+from speculation. Do not imply validation on real SIXT data.}
+
+\section*{Author contributions and acknowledgements}
+\todo{State each student's contribution, acknowledge assistance, cite reused
+code, models and frameworks, and give accurate funding or conflict disclosures
+if applicable. Confirm the author list with coauthors and organizers.}
+
+\section*{Data and code availability}
+The challenge data were supplied separately for the Hackathon. This report
+does not redistribute the datasets, answer CSVs, golden answers, private
+evaluation details or organizer material.
+\todo{State the actual availability of your method code. Include only
+authorized public links. Do not imply an open dataset license or invent a DOI.
+If organizers later provide a verified dataset repository citation, update
+the bibliography accordingly.}
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

@@ -8,7 +8,7 @@
 
 **Turn business questions into correct answers. Build a method, calculate the answers from the supplied company data, and submit a CSV.**
 
-[Printable student guide](STUDENT_GUIDE.pdf) · [Toy examples](examples/README.md) · [Method report template](METHOD_REPORT_TEMPLATE.md)
+[Printable student guide](STUDENT_GUIDE.pdf) · [Toy examples](examples/README.md) · [Method report template](METHOD_REPORT_TEMPLATE.md) · [LaTeX arXiv report template](arxiv_report/README.md)
 
 Companies store information across many systems. A simple question such as “What was net revenue?” can require linking orders, payments and refunds, applying the right business definitions, and converting currencies at the right time. Your team will build an AI-assisted analysis workflow that does this reliably on a fictional company's data.
 
@@ -184,6 +184,8 @@ The registered team repository is the Hackathon-day submission. Keep the answer 
 **This requirement applies to Problem 7.** Submit your method report as `Project_7/SUBMISSION.md` by **16:45 CET on 13 November 2026**, together with the other Hackathon-day deliverables.
 
 To finalize your P7 submission, your team must also prepare the report as an arXiv manuscript and upload it **after coordinating with the organizers**. Agree the upload timing, author list, dataset citation and manuscript content with the organizers before uploading. The later upload date will be confirmed during that coordination; it is not the 16:45 Hackathon deadline.
+
+Use the [simple LaTeX report template](arxiv_report/README.md), which includes the dataset citation, model-use declaration and instructions for compiling and preparing a report-only source archive.
 
 Send the upload confirmation and, when available, the arXiv identifier or link to the organizers. Record them in the publication follow-up section of your report. This later step does not replace the report due at 16:45 or reopen the locked answer CSVs and event results.
 

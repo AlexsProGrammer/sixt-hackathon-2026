@@ -58,6 +58,8 @@ The five human criteria are problem understanding, quality of approach, business
 
 ## 8. Publication follow-up after the Hackathon
 
+Use the [LaTeX arXiv report template](arxiv_report/README.md) to adapt this report into the manuscript. It includes a BibTeX dataset citation and a model-use declaration; keep these consistent with your issued-package metadata and `MODEL_DECLARATION.csv`.
+
 This section may remain pending at the 16:45 deadline. Complete it after coordination; do not delay the Hackathon-day report while preparing the arXiv version.
 
 - Coordination status and organizer contact:
