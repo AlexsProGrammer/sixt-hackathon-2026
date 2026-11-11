@@ -1,0 +1,4 @@
+order_id,status,payment_status
+A,completed,paid
+B,cancelled,paid
+C,shipped,paid
