@@ -126,10 +126,10 @@ To prepare:
 
 ### Process
 1. **16:45:** submission = the team's GitHub repo (link collected in the form) with code, `SUBMISSION.md`, and **either** a 1-min demo video (`submission/demo.mp4`, under 50 MB) **or** slides (`submission/slides.pdf`, max 5).
-2. **16:45 – 17:45 reviews:** owners read each submission and ask clarifying questions (remote owners use the GitHub links). Owners fill in the score sheet.
-3. **17:45:** owners pick 6 finalists across all topics. If a topic has no submission meeting the owner's standard, the next best from another topic takes its place.
-4. **17:45 – 18:20 final pitches:** 3 min + 2 min Q&A each; jury scores independently.
-5. **18:20 prizes:** highest total wins; ties go to the higher Results score, then jury discussion. Give feedback to every team afterwards.
+2. **16:45 – 17:30 reviews:** owners read each submission and ask clarifying questions (remote owners use the GitHub links). Owners fill in the score sheet.
+3. **17:30:** owners pick 6 finalists across all topics. If a topic has no submission meeting the owner's standard, the next best from another topic takes its place.
+4. **17:30 – 18:05 final pitches:** 3 min + 2 min Q&A each; jury scores independently.
+5. **18:05 prizes:** highest total wins; ties go to the higher Results score, then jury discussion. Give feedback to every team afterwards.
 
 ### Jury and prizes
 - Stage 1: topic owners. Stage 2: **[TBD: jury composition]**; owners should not score finalists of their own topic if feasible.
