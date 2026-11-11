@@ -117,7 +117,7 @@ This takes about **5 minutes** and means more time for the fun part, no stress i
 
    **Access:** your repo must be **public** so organizers and your topic owner can read it. A fork is public by default. In a team, one person creates the repo and adds the others as collaborators.
 
-2. **Find your project** once your team and topic match is published (Thu by 18:00), then delete the others:
+2. **Find your project** once your team and topic match is published (Thu by 18:00), then delete the others (recommended, it keeps your repo tidy):
    ```bash
    git rm -r Project_2 Project_3 Project_4 Project_5   # example: matched to Project_1
    git commit -m "Keep only my project folder"
@@ -160,7 +160,7 @@ Then keep the agent in your project folder and read what it commits.
 - **Public or mock data only.** No real SIXT, customer or personal data.
 - **No secrets** in git. Use `.env` (git-ignored).
 - Stay in your project folder. Do not push branches to this repo.
-- A public team repo may only contain your project folder.
+- Your team repo can hold more than your project folder, but your `SUBMISSION.md` must say which project you chose.
 
 ## Good to know
 

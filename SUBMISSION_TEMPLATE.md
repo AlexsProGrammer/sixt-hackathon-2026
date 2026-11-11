@@ -5,6 +5,8 @@ Copy this file to `Project_<n>/SUBMISSION.md` and fill it in. Keep it short.
 ## Authors
 **Team name:** <your team name>
 
+**Project:** <Project number and title, e.g. Project 1: Teach a machine to say "I don't know">
+
 ## Problem and approach
 What you tried to solve, the main idea, and why you chose it. Mention assumptions.
 
