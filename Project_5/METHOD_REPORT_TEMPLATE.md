@@ -1,6 +1,6 @@
 # Problem 7 method report
 
-Copy this file to `Project_7/SUBMISSION.md` in your team's registered repository and submit it by **16:45 CET on 13 November 2026**. Keep it concise and link supporting code and evidence.
+Copy this file to `Project_5/SUBMISSION.md` in your team's registered repository and submit it by **16:45 CET on 13 November 2026**. Keep it concise and link supporting code and evidence.
 
 **P7 submission finalization also requires an arXiv manuscript upload after coordination with the organizers.** The Hackathon-day report and later coordinated upload are both required. Agree the timing, author list, dataset citation and manuscript content before uploading. The later upload does not reopen locked answers or event results.
 
@@ -52,7 +52,7 @@ Cite the dataset exactly as specified in the released stage package. Include ver
 
 ## Presentation preparation
 
-Submit either `submission/demo.mp4` (1 minute, under 50 MB) or `submission/slides.pdf` (at most 5 slides) inside `Project_7/`. Prepare to demonstrate one question flowing through your system, explain your validation evidence, and discuss your design choices and limitations. If selected as a finalist, give a 3-minute pitch plus 2 minutes of Q&A.
+Submit either `submission/demo.mp4` (1 minute, under 50 MB) or `submission/slides.pdf` (at most 5 slides) inside `Project_5/`. Prepare to demonstrate one question flowing through your system, explain your validation evidence, and discuss your design choices and limitations. If selected as a finalist, give a 3-minute pitch plus 2 minutes of Q&A.
 
 The five human criteria are problem understanding, quality of approach, business relevance and reusability, code quality and reproducibility, and presentation and demo. They contribute 35 points together. Explain a baseline where available and how SIXT could reuse your approach.
 

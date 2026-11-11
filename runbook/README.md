@@ -19,9 +19,9 @@
 | --- | --- | --- |
 | Project_1 | Structured Extraction from Documents | Public datasets, sample scenarios |
 | Project_2 | Nowcasting / Forecasting Mileage | Mock or anonymized vehicle status sample |
-| Project_5 | Meta-Evaluation of LLM-as-Judge | Bitext (5 languages) + fictional policy, hidden test set |
-| Project_7 | TUM x SIXT topic | TBD |
-| Project_6 | Placeholder | TBD |
+| Project_3 | Meta-Evaluation of LLM-as-Judge | Bitext (5 languages) + fictional policy, hidden test set |
+| Project_4 | Placeholder | TBD |
+| Project_5 | TUM x SIXT topic | TBD |
 
 Owners and contact emails are in each project README.
 
@@ -30,7 +30,7 @@ Owners and contact emails are in each project README.
 ### Timeline
 | When | What |
 | --- | --- |
-| Until 11 Nov | Finish data and setup sections; collect GitHub usernames; decide Project_6 and define Project_7 |
+| Until 11 Nov | Finish data and setup sections; collect GitHub usernames; decide Project_4 and define Project_5 |
 | 11 Nov | Dry run: fresh clone and setup on a clean machine for every project |
 | 12 Nov, 09:00 | Send repo invites (participants accept the link and can start), topics, agenda and the "Before you arrive" checklist |
 | 13 Nov | Hackathon (agenda in `runbook/handout.html` and `internal-agenda.md`) |
@@ -39,7 +39,7 @@ Owners and contact emails are in each project README.
 ### Before the event
 - [ ] Review data for each project (public or mock only)
 - [ ] Fill in each project's "Setup" section
-- [ ] Prepare the Project 5 starter toolkit, baseline judge and hidden test set (keep the hidden set outside this repo)
+- [ ] Prepare the Project 3 starter toolkit, baseline judge and hidden test set (keep the hidden set outside this repo)
 - [ ] Create the topic form (one or two topics per team, max 5 teams per topic, closes 10:00 on 13 Nov; asks for team members, primary topic and the link to the team's GitHub repo) and add its link to the handout and README
 - [ ] Put owner emails in the root README and handout
 - [ ] Tell participants to bring their own LLM coding agent (no SIXT LLM access); check each project works that way
@@ -76,7 +76,7 @@ Expect 40 to 50 participants, so about 14 to 25 teams. Encourage teams of 2 to 3
 
 **Not enough people for a topic (decide before 12 Nov):**
 1. Set a go / no-go rule (recommended: a topic runs with at least 2 teams) and announce it at kick-off.
-2. Keep active topics few (about 5); open Project_6 and Project_7 only if ready.
+2. Keep active topics few (about 5); open Project_4 and Project_5 only if ready.
 3. Ask before moving anyone; let solo participants join existing teams.
 4. A topic with 1 or 2 teams can still run; finalists are chosen across all topics.
 5. Closed-topic owners can float as mentors.
@@ -117,11 +117,11 @@ To prepare:
 | --- | --- |
 | Project_1 | Field-level precision / recall, schema validity, business KPIs, novelty |
 | Project_2 | Error on held-out vehicles / periods (MAE, MAPE) vs a naive baseline |
-| Project_5 | Score on the hidden test set, kappa and consistency, reusability |
+| Project_3 | Score on the hidden test set, kappa and consistency, reusability |
 
 ### Bonus and penalties
 - **Bonus (up to +5):** exceptional insight or particularly clean engineering.
-- **Disqualification:** real Sixt, customer or personal data; committed secrets; training on the hidden test set (Project_5).
+- **Disqualification:** real Sixt, customer or personal data; committed secrets; training on the hidden test set (Project_3).
 - **Late:** a repo with no pushes by the deadline (or a link that cannot be opened) loses the Code and Results points that cannot be verified.
 
 ### Process

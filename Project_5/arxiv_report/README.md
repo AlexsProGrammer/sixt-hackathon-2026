@@ -4,7 +4,7 @@ Use [main.tex](main.tex) and [references.bib](references.bib) to write your team
 
 ## Two required steps
 
-1. **Hackathon day:** submit `Project_7/SUBMISSION.md` and the other deliverables by **16:45 CET on 13 November 2026**, following the [method report template](../METHOD_REPORT_TEMPLATE.md). Do not delay that submission while preparing the manuscript.
+1. **Hackathon day:** submit `Project_5/SUBMISSION.md` and the other deliverables by **16:45 CET on 13 November 2026**, following the [method report template](../METHOD_REPORT_TEMPLATE.md). Do not delay that submission while preparing the manuscript.
 2. **After the Hackathon:** adapt the report using this LaTeX starter, coordinate the author list, content, dataset citation and upload timing with the organizers, then upload the manuscript to arXiv to finalize your P7 submission. Send the upload confirmation and arXiv identifier/link when available. The later upload date will be agreed with the organizers. It does not reopen locked CSVs or event results.
 
 Contact: **Ioannis Tzachristas**, [ioannis.tzachristas@tum.de](mailto:ioannis.tzachristas@tum.de). Discuss any submission difficulty with the organizers.
