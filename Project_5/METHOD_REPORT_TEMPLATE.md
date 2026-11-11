@@ -1,8 +1,8 @@
-# Problem 7 method report
+# Project 5 method report
 
 Copy this file to `Project_5/SUBMISSION.md` in your team's registered repository and submit it by **16:45 CET on 13 November 2026**. Keep it concise and link supporting code and evidence.
 
-**P7 submission finalization also requires an arXiv manuscript upload after coordination with the organizers.** The Hackathon-day report and later coordinated upload are both required. Agree the timing, author list, dataset citation and manuscript content before uploading. The later upload does not reopen locked answers or event results.
+**Project 5 submission finalization also requires an arXiv manuscript upload after coordination with the organizers.** The Hackathon-day report and later coordinated upload are both required. Agree the timing, author list, dataset citation and manuscript content before uploading. The later upload does not reopen locked answers or event results.
 
 Team name:
 

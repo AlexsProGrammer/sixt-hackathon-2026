@@ -2,7 +2,7 @@
 
 **Project owner:** Ioannis Tzachristas (TUM) · [ioannis.tzachristas@tum.de](mailto:ioannis.tzachristas@tum.de) · [LinkedIn](https://www.linkedin.com/in/ioannis-tzachristas-83a00522a/). On the day, ask on site.
 
-**P7 student guidance is available now.** Competition datasets, answer keys and organizer materials are not included in this repository. Stage data will be provided separately when the organizers authorize release.
+**Project 5 student guidance is available now.** Competition datasets, answer keys and organizer materials are not included in this repository. Stage data will be provided separately when the organizers authorize release.
 
 **Hackathon:** Friday, 13 November 2026, HQ Pullach, Academy. All times below are local **CET (Europe/Berlin)**. Teams have 1 to 3 people; register as described in the main repository's README; topics are assigned by matching.
 
@@ -22,7 +22,7 @@ Small models working with code, SQL, retrieval and other tools are especially we
 2. Use your chosen models and tools to inspect the data, link related records, and calculate an answer for each question.
 3. Check the answers and export the required two-column CSV.
 4. Explain your architecture, methods, validation and limitations in `SUBMISSION.md` and your demo video or slides.
-5. After the Hackathon, coordinate with the organizers and upload your report manuscript to arXiv to finalize your P7 submission.
+5. After the Hackathon, coordinate with the organizers and upload your report manuscript to arXiv to finalize your Project 5 submission.
 
 You may use an existing agent framework, a custom workflow, or a mixture of model calls and ordinary programs. Framework choice alone earns no bonus. There is no requirement to submit a frozen executable solver: the automatically graded deliverable is the answer CSV. Your method and its evidence are assessed separately.
 
@@ -74,7 +74,7 @@ The organizers compare the submitted CSVs with private reference answers. Each c
 
 ### Other judging criteria: up to 35 points
 
-Problem 7 retains the five non-results criteria from the event rubric, with their original relative weights. Judges score each criterion on its original scale; the total out of 75 is multiplied by `35 / 75` to produce `J`, the judging contribution out of 35. The original 25-point “Results” category is replaced by the 65-point dataset component, so answer accuracy is not counted twice.
+Project 5 retains the five non-results criteria from the event rubric, with their original relative weights. Judges score each criterion on its original scale; the total out of 75 is multiplied by `35 / 75` to produce `J`, the judging contribution out of 35. The original 25-point “Results” category is replaced by the 65-point dataset component, so answer accuracy is not counted twice.
 
 | Criterion | Raw maximum | Contribution to base grade | What judges look for |
 |---|---:|---:|---|
@@ -93,7 +93,7 @@ Judge the working method and evidence, not slides alone. For example, raw scores
 
 ### Small-model bonus: 15 points
 
-The bonus is automatic once the organizers verify all the eligibility conditions below; it is not a subjective award for choosing a fashionable framework. For Problem 7, it replaces the event's general up-to-5-point bonus. The two bonuses do not stack.
+The bonus is automatic once the organizers verify all the eligibility conditions below; it is not a subjective award for choosing a fashionable framework. For Project 5, it replaces the event's general up-to-5-point bonus. The two bonuses do not stack.
 
 - Every generative model used for challenge-specific method design, coding, analysis, answer generation or validation must have **at most 40 billion total parameters**. This includes planners, assistants, validators and fallback models.
 - At least one qualifying model must perform a meaningful part of the analysis workflow. Merely reformatting answers already produced by a larger model does not qualify. A wholly manual or model-free solution receives no small-model bonus.
@@ -126,7 +126,7 @@ Total grade = Base grade + Bonus          (0 to 115)
 
 A perfect base grade plus the bonus is **115 points**. Without the bonus, the example team earns **84.225 points**. Keep full precision for ranking; displayed scores may be rounded to two decimals. A displayed `99.22` is a rounded points total, not an accuracy percentage.
 
-Ties on the exact total grade are resolved by higher dataset score, then jury discussion, following the event's Results-first tie policy. Dataset scores and human judging are recorded separately. Problem 7's 115-point maximum is an explicit project-specific exception to the general event rubric; organizers use this published policy for Problem 7 topic reviews and finalist judging.
+Ties on the exact total grade are resolved by higher dataset score, then jury discussion, following the event's Results-first tie policy. Dataset scores and human judging are recorded separately. Project 5's 115-point maximum is an explicit project-specific exception to the general event rubric; organizers use this published policy for Project 5 topic reviews and finalist judging.
 
 ## Answer CSV format
 
@@ -183,9 +183,9 @@ The registered team repository is the Hackathon-day submission. Keep the answer 
 
 ## Required report and coordinated arXiv upload
 
-**This requirement applies to Problem 7.** Submit your method report as `Project_5/SUBMISSION.md` by **16:45 CET on 13 November 2026**, together with the other Hackathon-day deliverables.
+**This requirement applies to Project 5.** Submit your method report as `Project_5/SUBMISSION.md` by **16:45 CET on 13 November 2026**, together with the other Hackathon-day deliverables.
 
-To finalize your P7 submission, your team must also prepare the report as an arXiv manuscript and upload it **after coordinating with the organizers**. Agree the upload timing, author list, dataset citation and manuscript content with the organizers before uploading. The later upload date will be confirmed during that coordination; it is not the 16:45 Hackathon deadline.
+To finalize your Project 5 submission, your team must also prepare the report as an arXiv manuscript and upload it **after coordinating with the organizers**. Agree the upload timing, author list, dataset citation and manuscript content with the organizers before uploading. The later upload date will be confirmed during that coordination; it is not the 16:45 Hackathon deadline.
 
 Use the [simple LaTeX report template](arxiv_report/README.md), which includes the dataset citation, model-use declaration and instructions for compiling and preparing a report-only source archive.
 
@@ -195,4 +195,4 @@ The report upload does **not** authorize publication of the challenge datasets, 
 
 Follow the event's data and integrity rules: use supplied synthetic/public data, never commit real SIXT/customer/personal data or secrets, and do not share the source repository outside the Hackathon. If a late or inaccessible repository prevents verification, the unverifiable dataset or code/reproducibility component receives no points under the event's late policy. Other misconduct follows the event's published disqualification rules.
 
-Problem 7 uses the scoring policy on this page, including its replacement bonus. Older dataset documentation describing 35% public + 65% final as the “official score” refers to `D`, the dataset score only; it is not the full Hackathon grade.
+Project 5 uses the scoring policy on this page, including its replacement bonus. Older dataset documentation describing 35% public + 65% final as the “official score” refers to `D`, the dataset score only; it is not the full Hackathon grade.

@@ -30,7 +30,7 @@ Owners and contact emails are in each project README.
 ### Timeline
 | When | What |
 | --- | --- |
-| Until 11 Nov | Finish data and setup sections; collect GitHub usernames; all 5 topics are final |
+| Until 11 Nov | Finish data and setup sections; all 5 topics are final |
 | 11 Nov | Dry run: fresh clone and setup on a clean machine for every project |
 | 12 Nov, 09:00 | Make the repo public; send the repo link, topics, agenda and the "Before you arrive" checklist (no invites needed) |
 | 13 Nov | Hackathon (agenda in `runbook/handout.html`; organizer agenda on Confluence) |
@@ -60,7 +60,7 @@ Owners and contact emails are in each project README.
 
 | | |
 | --- | --- |
-| Date | Friday, 13 November 2026 (repo public and topics available Thursday 12 Nov, 09:00) |
+| Date | Friday, 13 November 2026 (repo public Thursday 12 Nov, 09:00; topics published by 18:00) |
 | Location | HQ Pullach, Academy |
 | Team size / topics | 1 to 3 people; max 5 teams per topic (set as the capacity in the matching program) |
 | Topic selection | Form (team name, top 3 topics, repo link): round 1 closes Thursday 17:00, results in the repo by 18:00; final deadline Friday 10:00, late teams matched first come, first served. Form: https://forms.cloud.microsoft/e/S2dvqjeFBX |
