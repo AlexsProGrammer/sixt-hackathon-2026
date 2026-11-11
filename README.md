@@ -46,13 +46,12 @@ The hackathon is on **Friday, 13 November 2026**. This repository goes public on
    | --- | --- |
    | [Project_1](Project_1/README.md) | Structured Extraction from Documents: teach a machine to say "I don't know" |
    | [Project_2](Project_2/README.md) | Nowcasting / Forecasting Mileage |
-   | [Project_3-4](Project_3-4/README.md) | Turnaround: Predict Action Time and Predict Tasks (one topic for now) |
    | [Project_5](Project_5/README.md) | Meta-Evaluation Framework for LLM-as-Judge Agentic Systems |
    | [Project_7](Project_7/README.md) | TUM x SIXT topic, to be announced (not yet open for selection) |
    | [Project_6](Project_6/README.md) | Placeholder, to be announced (not yet open for selection) |
 
    ```bash
-   git rm -r Project_2 Project_5 Project_6 Project_7   # example: keeping Project_1 and Project_3-4
+   git rm -r Project_2 Project_5 Project_6 Project_7   # example: keeping Project_1
    git commit -m "Keep only my project folders"
    git push
    ```
@@ -116,7 +115,7 @@ sixt-hacakthon-2026/
 ├── runbook/         <- organizer runbook
 ├── CodeRabbit_Python/ <- optional AI code review setup (see its README)
 ├── arxiv_templates/ <- templates for the optional arXiv-style publication (coming later)
-├── Project_1/, Project_2/, Project_3-4/, Project_5/
+├── Project_1/, Project_2/, Project_5/
 ├── Project_6/       <- placeholder, not yet open
 ├── Project_7/       <- TUM x SIXT topic, not yet open
 └── SUBMISSION_TEMPLATE.md

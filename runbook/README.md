@@ -19,7 +19,6 @@
 | --- | --- | --- |
 | Project_1 | Structured Extraction from Documents | Public datasets, sample scenarios |
 | Project_2 | Nowcasting / Forecasting Mileage | Mock or anonymized vehicle status sample |
-| Project_3-4 | Turnaround: Predict Action Time and Predict Tasks (run as one topic for now, to be adapted after hearing from the owner) | Mock or random sample |
 | Project_5 | Meta-Evaluation of LLM-as-Judge | Bitext (5 languages) + fictional policy, hidden test set |
 | Project_7 | TUM x SIXT topic | TBD |
 | Project_6 | Placeholder | TBD |
@@ -78,10 +77,9 @@ Expect 40 to 50 participants, so about 14 to 25 teams. Encourage teams of 2 to 3
 **Not enough people for a topic (decide before 12 Nov):**
 1. Set a go / no-go rule (recommended: a topic runs with at least 2 teams) and announce it at kick-off.
 2. Keep active topics few (about 5); open Project_6 and Project_7 only if ready.
-3. Projects 3 and 4 already run as one topic (3-4) for now.
-4. Ask before moving anyone; let solo participants join existing teams.
-5. A topic with 1 or 2 teams can still run; finalists are chosen across all topics.
-6. Closed-topic owners can float as mentors.
+3. Ask before moving anyone; let solo participants join existing teams.
+4. A topic with 1 or 2 teams can still run; finalists are chosen across all topics.
+5. Closed-topic owners can float as mentors.
 
 ## 5. Collaboration after the event
 
@@ -119,7 +117,6 @@ To prepare:
 | --- | --- |
 | Project_1 | Field-level precision / recall, schema validity, business KPIs, novelty |
 | Project_2 | Error on held-out vehicles / periods (MAE, MAPE) vs a naive baseline |
-| Project_3-4 | Project 3: error on total turnaround time (MAE). Project 4: precision / recall / F1 per task. Sensible feature importance for both |
 | Project_5 | Score on the hidden test set, kappa and consistency, reusability |
 
 ### Bonus and penalties
