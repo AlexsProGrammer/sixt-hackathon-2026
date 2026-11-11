@@ -23,8 +23,6 @@ Welcome! This is the repo for the SIXT Hackathon, **Friday 13 November 2026**. E
 
 Read this first, then the full README of each project, then rank your top 3.
 
-<!-- TODO before publishing: owners to confirm the "Possibility to collaborate after the hack" lines. -->
-
 ### [Project 1](Project_1/README.md): Teach a machine to say "I don't know"
 *Structured Extraction from Documents*
 
