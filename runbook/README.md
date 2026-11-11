@@ -40,7 +40,7 @@ Owners and contact emails are in each project README.
 - [ ] Review data for each project (public or mock only)
 - [ ] Fill in each project's "Setup" section
 - [ ] Prepare the Project 3 starter toolkit, baseline judge and hidden test set (keep the hidden set outside this repo)
-- [ ] Registration form (https://forms.cloud.microsoft/e/S2dvqjeFBX): team name, top 3 topics, GitHub repo link. Ask teams to fill it in by Thursday 12 Nov 17:00 (a request, so matching is quick); run the matching and publish results in the repo by 18:00. The form stays open until the final deadline, Friday 13 Nov 10:00: second matching for late teams, first come, first served, into topics with room. Link is in the handout and README
+- [ ] Team + Topic Registration form (https://forms.cloud.microsoft/e/S2dvqjeFBX): team name, top 3 topics, GitHub repo link. Ask teams to fill it in by Thursday 12 Nov 17:00 (a request, so matching is quick); run the matching and publish results in the repo by 18:00. The form stays open until the final deadline, Friday 13 Nov 10:00: second matching for late teams, first come, first served, into topics with room. Link is in the handout and README
 - [ ] Put owner emails in the root README and handout
 - [ ] Tell participants to bring their own LLM coding agent; SIXT provides LLM API keys for tasks that need one (Project_3, Project_4 setup lines say so); check each project works that way
 - [ ] Define judging criteria and jury
@@ -125,7 +125,7 @@ To prepare:
 - **Late:** a repo with no pushes by the deadline (or a link that cannot be opened) loses the Code and Results points that cannot be verified.
 
 ### Process
-1. **16:45:** submission = the team's GitHub repo (link collected in the form) with code, `SUBMISSION.md`, and **either** a 1-min demo video (`submission/demo.mp4`, under 50 MB) **or** slides (`submission/slides.pdf`, max 5).
+1. **16:45:** submission = the team's GitHub repo (link collected in the Team + Topic Registration form) with code, `SUBMISSION.md`, and **either** a 1-min demo video (`submission/demo.mp4`, under 50 MB) **or** slides (`submission/slides.pdf`, max 5).
 2. **16:45 – 17:30 reviews:** owners read each submission and ask clarifying questions (remote owners use the GitHub links). Owners fill in the score sheet.
 3. **17:30:** owners pick 5 finalists across all topics. If a topic has no submission meeting the owner's standard, the next best from another topic takes its place.
 4. **17:30 – 18:00 final pitches:** 3 min + 2 min Q&A each; jury scores independently.

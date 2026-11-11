@@ -7,9 +7,9 @@ Welcome! This is the repo for the SIXT Hackathon, **Friday 13 November 2026**. E
 
 <p align="center"><img src="assets/exist-first.svg" alt="Just make it exist first, you can make it good later" width="420"></p>
 
-## Register your team (do this first)
+## Fill in the Team + Topic Registration form (do this first)
 
-> **[Open the registration form](https://forms.cloud.microsoft/e/S2dvqjeFBX)** and fill it in by **Thursday 12 November, 17:00**.
+> **[Open the Team + Topic Registration form](https://forms.cloud.microsoft/e/S2dvqjeFBX)** and fill it in by **Thursday 12 November, 17:00**.
 
 1. Pick a **team name** (1 to 3 people, **solo is fine**; want teammates? tell an organizer and we will help).
 2. Choose your **top 3 topics** from the [projects at a glance](#the-projects-at-a-glance). The topics are in this repo from **Thu 09:00**.
@@ -26,8 +26,8 @@ A little prep now means more time for the fun part, no stress if you can't tick 
 - [ ] Bring your favourite **LLM coding agent**, and if your project needs an API key we will hand one out on site
 - [ ] Skim the [projects at a glance](#the-projects-at-a-glance) below and pick your **top 3**, no need to be sure, just curious, and dive into a project README if one catches your eye
 - [ ] Team of 1 to 3 with a fun **team name**, **solo is totally okay**, and if you'd like teammates just ask an organizer, we're happy to help
-- [ ] **Fork this repo** (step 1 below), its link goes into the form
-- [ ] **Register** your team in the [form](https://forms.cloud.microsoft/e/S2dvqjeFBX) by **Thu 12 Nov, 17:00** (see [Register your team](#register-your-team-do-this-first))
+- [ ] **Fork this repo** (step 1 below), its link goes into the Team + Topic Registration form
+- [ ] Fill in the [Team + Topic Registration form](https://forms.cloud.microsoft/e/S2dvqjeFBX) by **Thu 12 Nov, 17:00** (see [details](#fill-in-the-team--topic-registration-form-do-this-first))
 - [ ] Questions? Email your project owner, they're happy to hear from you
 - [ ] Bring a laptop, a charger and good energy :)
 
@@ -115,7 +115,7 @@ Read this first, then the full README of each project, then rank your top 3.
    - Project 2 prints "No data yet" until you put the organizers' CSV in `data/`. That is expected.
 4. **Build.** Stay in your project folder. Commit and push often, `git pull` before each session.
 5. **Ask for help.** Any organizer or your topic owner, on site.
-6. **Submit by 16:45.** Your repo link from the form is your submission. It needs:
+6. **Submit by 16:45.** Your repo link from the Team + Topic Registration form is your submission. It needs:
    - your code,
    - a short `SUBMISSION.md` ([template](SUBMISSION_TEMPLATE.md)),
    - **either** a 1-minute demo video (`submission/demo.mp4`, under 50 MB) **or** max 5 slides (`submission/slides.pdf`),
