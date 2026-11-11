@@ -117,7 +117,7 @@ This takes about **5 minutes** and means more time for the fun part, no stress i
 
    **Access:** your repo must be **public** so organizers and your topic owner can read it. A fork is public by default. In a team, one person creates the repo and adds the others as collaborators.
 
-2. **Find your project** once your team and topic match is published (Thu by 18:00), then delete the others (recommended, it keeps your repo tidy):
+2. **Find your project** once your team and topic match is published (Thu by 18:00), then delete the other `Project_*` folders (recommended, it keeps your repo tidy). Keep everything else, like the LICENSE, README and handout:
    ```bash
    git rm -r Project_2 Project_3 Project_4 Project_5   # example: matched to Project_1
    git commit -m "Keep only my project folder"
@@ -145,8 +145,9 @@ Set up my SIXT hackathon repo.
 1. Fork sixt-hackathon-2026/sixt-hackathon-2026 into MY OWN GitHub account (not an org)
    with gh repo fork --clone, then cd into the cloned folder.
    Never push to the original. If the fork fails, tell me and stop.
-2. Ask me which project my team was matched to (<Project_N>). Delete every other
-   Project_* folder with git rm -r, then commit and push to my fork's default branch.
+2. Ask me which project my team was matched to (<Project_N>). Delete only the other
+   Project_* folders with git rm -r. Keep everything else (LICENSE, README, runbook,
+   handout, assets). Then commit and push to my fork's default branch.
 3. From inside Project_N/, read README.md and run bash setup.sh.
 4. Tell me what you did and what the task is.
 Rules: public or mock data only, no secrets or .env, stay in my project folder.
