@@ -12,13 +12,13 @@ The hackathon is on **Friday, 13 November 2026**. This repository goes public on
 - [ ] Have your **own LLM coding agent** ready (whichever you are comfortable with). SIXT provides LLM API keys for projects that need one; you can request a key on site.
 - [ ] Read the README of every project and pick your top choice.
 - [ ] Agree on your team (1 to 3 people; if you are on your own, ask an organizer to join a team) and give it a **team name**.
-- [ ] **Register your team in the [registration form](https://forms.cloud.microsoft/e/S2dvqjeFBX) by Thursday 12 November, 17:00.** Pick your **top 3 topics** in order (1st, 2nd, 3rd choice) and enter your team name. We then run a matching program that gives **each team one topic**. The results are published by **18:00 on Thursday** in this repository.
+- [ ] **Register your team in the [registration form](https://forms.cloud.microsoft/e/S2dvqjeFBX) by Thursday 12 November, 17:00:** team name, your top 3 topics in order, and your GitHub repo link (so do step 1 below first). The matching results are published in this repo by **18:00 on Thursday**. If you miss the slot, you can still register until the final deadline, **Friday 13 November, 10:00**; late teams are matched afterwards, first come, first served, to the topics that still have room.
 - [ ] Questions before the day? Email the owner of the project directly.
 - [ ] Bring a laptop and charger, plus a lot of cool energy :)
 
 ## Get started
 
-1. **Get your own copy of the repo.** Do **not** push to this repo. Choose **one** option (both work, you need a repo of your own either way, because you hand in its link as your submission):
+1. **Get your own copy of the repo.** Do **not** push to this repo. Choose **one** option (both work, you need a repo of your own either way, because its link goes into the registration form):
 
    **Option A: Fork (recommended, 2 commands)**
    ```bash
@@ -40,7 +40,7 @@ The hackathon is on **Friday, 13 November 2026**. This repository goes public on
 
    **Share access:** your repo must be readable by the organizers and your topic owner. Either make it public, or add them and `sruthi-sixt-26` as collaborators (Settings, Collaborators). For a team, one person creates the repo and adds the teammates. Once this repo is public, a fork of it is public too and cannot be made private; if you want a private repo, use Option B.
 
-2. **Once the matching results are published (Thursday 18:00), find your assigned project**, then **delete all other project folders** in your repo. You can do this on Thursday evening or on the day. Until then, read all the project READMEs and rank your top 3.
+2. **Once your assigned topic is published, find your project**, then **delete all other project folders** in your repo. Until then, read all the project READMEs and rank your top 3.
 
    | Folder | Topic |
    | --- | --- |
@@ -67,7 +67,7 @@ The hackathon is on **Friday, 13 November 2026**. This repository goes public on
    ```
 
 5. **Ask for help.** On the day, ask any organizer or your topic owner on site. Before the day, email the owner of your project (see the README in each project folder).
-6. **Submit** before the deadline (**16:45**). Push everything to your fork; **the link to your repo is your submission** (hand it in to the organizers as instructed on the day), and what is in the repo at the deadline is what we review. It must contain:
+6. **Submit** before the deadline (**16:45**). Push everything to your fork; **the repo link you entered in the registration form is your submission**, and what is in the repo at the deadline is what we review. It must contain:
    - your code,
    - a short `SUBMISSION.md` in your project folder (approach, results, how to run), see [SUBMISSION_TEMPLATE.md](SUBMISSION_TEMPLATE.md),
    - **either** a **1-minute demo video** (`submission/demo.mp4`, under 50 MB) **or** a **small set of slides** (`submission/slides.pdf`, max 5 slides),

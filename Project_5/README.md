@@ -4,7 +4,7 @@
 
 **P7 student guidance is available now.** Competition datasets, answer keys and organizer materials are not included in this repository. Stage data will be provided separately when the organizers authorize release.
 
-**Hackathon:** Friday, 13 November 2026, HQ Pullach, Academy. All times below are local **CET (Europe/Berlin)**. Teams have 1 to 3 people; register through the form in the main repository's README (deadline Thursday 12 November, 17:00); topics are assigned by matching.
+**Hackathon:** Friday, 13 November 2026, HQ Pullach, Academy. All times below are local **CET (Europe/Berlin)**. Teams have 1 to 3 people; register as described in the main repository's README; topics are assigned by matching.
 
 **Turn business questions into correct answers. Build a method, calculate the answers from the supplied company data, and submit a CSV.**
 
