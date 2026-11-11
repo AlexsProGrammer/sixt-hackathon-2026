@@ -17,7 +17,7 @@ A little prep now means more time for the fun part, no stress if you can't tick 
 - [ ] Skim the [projects at a glance](#the-projects-at-a-glance) below and pick your **top 3**, no need to be sure, just curious, and dive into a project README if one catches your eye
 - [ ] Team of 1 to 3 with a fun **team name**, **solo is totally okay**, and if you'd like teammates just ask an organizer, we're happy to help
 - [ ] **Fork this repo** (step 1 below), its link goes into the form
-- [ ] **Register** in the [form](https://forms.cloud.microsoft/e/S2dvqjeFBX) by **Thu 12 Nov, 17:00** with team name, top 3 topics and repo link, the topics are in this repo from **Thu 09:00** and your team and topic match is published here by **18:00**, and if you're a bit late no worries, you can register until **Fri 13 Nov, 10:00** and we'll match you to a topic with room
+- [ ] **Register** your team and top 3 topics in the [form](https://forms.cloud.microsoft/e/S2dvqjeFBX) (team name, top 3 topics, repo link). The topics are in this repo from **Thu 09:00**. Please fill it in by **Thu 12 Nov, 17:00** so we can match you quickly and publish the matches here by **18:00**. The form stays open until **Fri 13 Nov, 10:00**, and late teams get the topics that still have room
 - [ ] Questions? Email your project owner, they're happy to hear from you
 - [ ] Bring a laptop, a charger and good energy :)
 
