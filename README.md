@@ -7,6 +7,16 @@ Welcome! This is the repo for the SIXT Hackathon, **Friday 13 November 2026**. E
 
 <p align="center"><img src="assets/exist-first.svg" alt="Just make it exist first, you can make it good later" width="420"></p>
 
+## Register your team (do this first)
+
+> **[Open the registration form](https://forms.cloud.microsoft/e/S2dvqjeFBX)** and fill it in by **Thursday 12 November, 17:00**.
+
+1. Pick a **team name** (1 to 3 people, **solo is fine**; want teammates? tell an organizer and we will help).
+2. Choose your **top 3 topics** from the [projects at a glance](#the-projects-at-a-glance). The topics are in this repo from **Thu 09:00**.
+3. Add your **repo link**: [fork this repo](#get-started) first, it takes two minutes.
+
+**What happens next:** we match teams and topics and publish the result in this repo by **Thu 18:00**. 17:00 is a request so that we can match you quickly. The form stays open until **Fri 13 Nov, 10:00**, and late teams get the topics that still have room.
+
 ## Before you arrive
 
 A little prep now means more time for the fun part, no stress if you can't tick everything off
@@ -17,7 +27,7 @@ A little prep now means more time for the fun part, no stress if you can't tick 
 - [ ] Skim the [projects at a glance](#the-projects-at-a-glance) below and pick your **top 3**, no need to be sure, just curious, and dive into a project README if one catches your eye
 - [ ] Team of 1 to 3 with a fun **team name**, **solo is totally okay**, and if you'd like teammates just ask an organizer, we're happy to help
 - [ ] **Fork this repo** (step 1 below), its link goes into the form
-- [ ] **Register** your team and top 3 topics in the [form](https://forms.cloud.microsoft/e/S2dvqjeFBX) (team name, top 3 topics, repo link). The topics are in this repo from **Thu 09:00**. Please fill it in by **Thu 12 Nov, 17:00** so we can match you quickly and publish the matches here by **18:00**. The form stays open until **Fri 13 Nov, 10:00**, and late teams get the topics that still have room
+- [ ] **Register** your team in the [form](https://forms.cloud.microsoft/e/S2dvqjeFBX) by **Thu 12 Nov, 17:00** (see [Register your team](#register-your-team-do-this-first))
 - [ ] Questions? Email your project owner, they're happy to hear from you
 - [ ] Bring a laptop, a charger and good energy :)
 
