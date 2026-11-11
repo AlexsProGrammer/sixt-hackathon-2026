@@ -24,7 +24,7 @@ What we will ask:
 
 ## Before you arrive
 
-A little prep now means more time for the fun part, no stress if you can't tick everything off
+This takes about **5 minutes** and means more time for the fun part, no stress if you can't tick everything off
 
 - [ ] Have a **GitHub account** ready
 - [ ] Install **git** and a language you like, we start with **Python 3.11+** but anything works
