@@ -5,7 +5,7 @@ Welcome! This is the repo for the SIXT Hackathon, **Friday 13 November 2026**. E
 > **The goal is not a perfect solution. It is *a* solution.**
 > We will guide you and help you hack. Come fresh with your ideas, and let's build something cool.
 
-<p align="center"><img src="assets/exist-first.svg" alt="Just make it exist first, you can make it good later" width="420"></p>
+<p align="center"><img src="assets/exist-first.svg" alt="First make it exist, then make it good" width="420"></p>
 
 Three steps:
 

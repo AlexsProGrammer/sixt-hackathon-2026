@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 170" width="640" height="170" role="img" aria-label="Just make it exist first, you can make it good later">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 170" width="640" height="170" role="img" aria-label="First make it exist, then make it good">
   <rect width="640" height="170" rx="14" fill="#ffffff"/>
   <g font-family="'Comic Sans MS','Segoe Print','Chalkboard SE',Arial,sans-serif" font-size="15" font-weight="700" fill="#111" text-anchor="middle" letter-spacing="1">
-    <text x="130" y="30">JUST MAKE IT EXIST FIRST</text>
-    <text x="510" y="30">YOU CAN MAKE IT GOOD LATER</text>
+    <text x="130" y="30">FIRST, MAKE IT EXIST</text>
+    <text x="510" y="30">THEN, MAKE IT GOOD</text>
   </g>
   <!-- rough circle -->
   <ellipse cx="118" cy="100" rx="40" ry="38" fill="#ff5f00"/>
