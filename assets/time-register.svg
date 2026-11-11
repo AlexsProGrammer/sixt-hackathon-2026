@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 64" width="640" height="64" role="img" aria-label="Registration: about 3 minutes">
+  <rect x="2" y="2" width="636" height="60" rx="14" fill="#ffffff" stroke="#111" stroke-width="3"/>
+  <!-- clock -->
+  <circle cx="44" cy="32" r="18" fill="#5fb8b0" stroke="#111" stroke-width="3"/>
+  <path d="M44 20 V32 L52 38" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g font-family="'Comic Sans MS','Segoe Print','Chalkboard SE',Arial,sans-serif" font-weight="700" fill="#111">
+    <text x="82" y="39" font-size="19" letter-spacing="1">REGISTRATION</text>
+    <text x="616" y="39" font-size="22" text-anchor="end" fill="#2c8c83">ABOUT 3 MIN</text>
+  </g>
+</svg>

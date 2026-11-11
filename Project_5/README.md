@@ -154,6 +154,8 @@ An unknown, empty or duplicate ID, incorrect header, or malformed CSV row reject
 
 ## Setup before the event
 
+<p align="center"><img src="../assets/time-quick-setup.svg" alt="About 10 minutes" width="420"></p>
+
 **Quick setup (about 10 min):** `bash setup.sh` in this folder. It makes a virtual environment and solves a toy question with `quickstart.py`. Python is our starting point; any language is fine.
 
 Install **git and Python 3.11+** and create a virtual environment (`python -m venv .venv` or `uv venv`). Bring your own model access or local models; SIXT provides LLM API keys for tasks that need one, but this challenge does not require them. If claiming the bonus, your coding assistant must also meet the 40B rule. Create `requirements.txt` or `pyproject.toml` for your method and keep credentials in environment variables or a git-ignored `.env`.
