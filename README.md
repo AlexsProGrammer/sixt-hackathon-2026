@@ -9,13 +9,18 @@ Welcome! This is the repo for the SIXT Hackathon, **Friday 13 November 2026**. E
 
 ## Fill in the Team + Topic Registration form (do this first)
 
-> **[Open the Team + Topic Registration form](https://forms.cloud.microsoft/e/S2dvqjeFBX)** and fill it in by **Thursday 12 November, 17:00**.
+We would love to know who is coming and what you would like to work on, so we can put you on a project you will enjoy. It only takes a few minutes, and nothing here is final: if you are unsure, just pick what sounds interesting right now.
 
-1. Pick a **team name** (1 to 3 people, **solo is fine**; want teammates? tell an organizer and we will help).
-2. Choose your **top 3 topics** from the [projects at a glance](#the-projects-at-a-glance). The topics are in this repo from **Thu 09:00**.
-3. Add your **repo link**: [fork this repo](#get-started) first, it takes two minutes.
+> **[Open the Team + Topic Registration form](https://forms.cloud.microsoft/e/S2dvqjeFBX)**
+> If you can, please fill it in by **Thursday 12 November, 17:00**. That helps us match you quickly. We will share the matches here by **18:00**.
 
-**What happens next:** we match teams and topics and publish the result in this repo by **Thu 18:00**. 17:00 is a request so that we can match you quickly. The form stays open until **Fri 13 Nov, 10:00**, and late teams get the topics that still have room.
+Here is what we will ask you:
+
+1. **A team name.** Teams are 1 to 3 people. Coming alone is completely fine. If you would like teammates, tell an organizer and we will gladly help you find some.
+2. **Your top 3 topics.** Have a look at the [projects at a glance](#the-projects-at-a-glance). The topics are in this repo from **Thu 09:00**. There are no wrong choices.
+3. **Your repo link.** [Fork this repo](#get-started) first, it takes about two minutes. Stuck on this step? Ask us, we are happy to help.
+
+**Running late? No problem.** The form stays open until **Fri 13 Nov, 10:00**. Teams who register later get matched to the topics that still have room, so you will not be left out.
 
 ## Before you arrive
 
