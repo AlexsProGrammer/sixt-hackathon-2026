@@ -4,14 +4,14 @@
 
 ## 1. Repository setup
 
-- **Private repo on a personal GitHub account** (not the Sixt org, never public). Verify: `gh repo view --json visibility` says `PRIVATE`.
-- Add each participant as a collaborator with Write access (they must accept the email invite):
+- **Source repo: `sixt-hackathon-2026/sixt-hackathon-2026`.** Private until **Thu 12 Nov**, then switch it to public (Settings, Danger Zone, Change visibility). Verify: `gh repo view --json visibility` says `PUBLIC`.
+- No participant invites or collaborators are needed once it is public. Before it goes public, add any organizer who needs access (they must accept the email invite):
   ```bash
   gh api -X PUT repos/<owner>/<repo>/collaborators/<github-username> -f permission=push
   ```
 - Participants clone or fork, and their own team repo must be public (forks are public by default), so no collaborator access is needed. Test on day one that forking works on the free plan. Branch protection may be unavailable on the free plan, so rely on the convention that participants do not push to this repo.
 - Public or mock data only. No internal code, real data, credentials or internal URLs in files or commit messages.
-- After the event: remove collaborators and archive the repo.
+- After the event: archive the repo (read-only).
 
 ## 2. Projects
 
@@ -32,9 +32,9 @@ Owners and contact emails are in each project README.
 | --- | --- |
 | Until 11 Nov | Finish data and setup sections; collect GitHub usernames; all 5 topics are final |
 | 11 Nov | Dry run: fresh clone and setup on a clean machine for every project |
-| 12 Nov, 09:00 | Send repo invites (participants accept the link and can start), topics, agenda and the "Before you arrive" checklist |
+| 12 Nov, 09:00 | Make the repo public; send the repo link, topics, agenda and the "Before you arrive" checklist (no invites needed) |
 | 13 Nov | Hackathon (agenda in `runbook/handout.html`; organizer agenda on Confluence) |
-| Following week | Remove collaborators, archive repo, follow up with interested students |
+| Following week | Archive repo, follow up with interested students |
 
 ### Before the event
 - [ ] Review data for each project (public or mock only)
@@ -53,7 +53,7 @@ Owners and contact emails are in each project README.
 
 ### After the event
 - [ ] Collect repo links from teams, score, announce results
-- [ ] Remove collaborators and archive the repo
+- [ ] Archive the repo
 - [ ] Follow up with interested students
 
 ## 4. Event details
