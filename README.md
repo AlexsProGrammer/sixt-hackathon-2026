@@ -9,18 +9,18 @@ Welcome! This is the repo for the SIXT Hackathon, **Friday 13 November 2026**. E
 
 ## Fill in the Team + Topic Registration form (do this first)
 
-We would love to know who is coming and what you would like to work on, so we can put you on a project you will enjoy. It only takes a few minutes, and nothing here is final: if you are unsure, just pick what sounds interesting right now.
+We would love to know who is coming. It takes a few minutes. Nothing is final, so pick what sounds fun right now.
 
 > **[Open the Team + Topic Registration form](https://forms.cloud.microsoft/e/S2dvqjeFBX)**
-> If you can, please fill it in by **Thursday 12 November, 17:00**. That helps us match you quickly. We will share the matches here by **18:00**.
+> Please fill it in by **Thursday 12 November, 17:00** if you can. We will share the matches here by **18:00**.
 
-Here is what we will ask you:
+What we will ask:
 
-1. **A team name.** Teams are 1 to 3 people. Coming alone is completely fine. If you would like teammates, tell an organizer and we will gladly help you find some.
-2. **Your top 3 topics.** Have a look at the [projects at a glance](#the-projects-at-a-glance). The topics are in this repo from **Thu 09:00**. There are no wrong choices.
-3. **Your repo link.** [Fork this repo](#get-started) first, it takes about two minutes. Stuck on this step? Ask us, we are happy to help.
+1. **A team name.** Teams have 1 to 3 people. Coming alone is fine. Want teammates? Tell an organizer, we will help.
+2. **Your top 3 topics.** See the [projects at a glance](#the-projects-at-a-glance). Topics are here from **Thu 09:00**. There are no wrong choices.
+3. **Your repo link.** [Fork this repo](#get-started) first. It takes about two minutes. Stuck? Ask us.
 
-**Running late? No problem.** The form stays open until **Fri 13 Nov, 10:00**. Teams who register later get matched to the topics that still have room, so you will not be left out.
+**Running late? No problem.** The form stays open until **Fri 13 Nov, 10:00**. Late teams get the topics that still have room.
 
 ## Before you arrive
 
