@@ -10,5 +10,5 @@ PY="${PYTHON:-python3}"
 pip install -q --upgrade pip && pip install -q -r requirements.txt
 mkdir -p data
 if ls data/*.csv >/dev/null 2>&1; then python starter.py
-else echo "No data yet: put the organizers' CSV into Project_2/data/ (git-ignored), then run: python starter.py"; fi
+else echo "No organizer data in data/ yet, running on the small example_file.csv instead (put the full CSV into Project_2/data/, git-ignored, when you get it)"; python starter.py; fi
 echo; echo "Ready. Activate with: . .venv/bin/activate. Next: open starter.py (naive baseline and simple flags to beat)."

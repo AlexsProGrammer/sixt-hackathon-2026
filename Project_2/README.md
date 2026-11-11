@@ -18,7 +18,7 @@ The two are linked: a good mileage predictor gives an expected value, and a repo
   - **Rule-based proxy labels:** build weak labels from physically implausible cases (e.g. mileage decreasing between readings, daily mileage rate above a plausible maximum) to sanity-check or lightly supervise the flagging.
 
 ## Data
-Datasets will be provided for the teams that choose this topic. Do not use real data outside the provided sample. Identifiers are anonymized or salt-hashed.
+A small example file, [example_file.csv](example_file.csv) (57 rows, one vehicle, same columns as below), is in this folder so you can try things now. The full datasets will be provided for the teams that choose this topic. Do not use real data outside the provided sample. Identifiers are anonymized or salt-hashed.
 
 Schema (one row per status update):
 - `vhcl_anon_id`: anonymized internal vehicle ID (vehicle number is also salt-hashed)
@@ -55,13 +55,13 @@ Schema (one row per status update):
 
 <img src="../assets/time-quick-setup.svg" alt="Under 5 minutes" width="360">
 
-**Quick setup (under 5 min):** `bash setup.sh` in this folder. It makes a virtual environment and runs `starter.py` (a naive baseline and simple flags to beat) once you put the organizers' CSV in `data/` (git-ignored). Python is our starting point; any language is fine.
+**Quick setup (under 5 min):** `bash setup.sh` in this folder. It makes a virtual environment and runs `starter.py` (a naive baseline and simple flags to beat) on the small `example_file.csv`, or on the organizers' CSV once you put it in `data/` (git-ignored). Python is our starting point; any language is fine.
 Do this **before the hackathon day** (repo is shared on 12 Nov).
 
 - `git` and **Python 3.11+**, with a virtual environment (`python -m venv .venv` or `uv venv`).
 - Your own LLM coding agent, so you can work with the tool you are most comfortable with. SIXT provides LLM API keys for tasks that need one.
 - Create `requirements.txt` / `pyproject.toml` in this folder for your own dependencies. Never commit secrets (use `.env`).
-- Data: datasets will be added by the organizers for teams that choose this topic in their repos
+- Data: try the small `example_file.csv` now; the full datasets will be added by the organizers for teams that choose this topic in their repos
 - Check: you can clone or fork the repo and run `python --version` in your environment.
 
 ## Submission
