@@ -1,12 +1,12 @@
 # SIXT Hackathon 2026
 
-Welcome! This is the **private, invite-only** repository for the hackathon. Each project has its own folder with a README describing the problem, approach, data and expected outcome.
+Welcome! This is the repository for the hackathon. It is private and invite-only until **Thursday 12 November 2026**, when it becomes **public**; it will be **archived (read-only) after the hackathon**. Each project has its own folder with a README describing the problem, approach, data and expected outcome.
 
 ## Before you arrive (Thursday 12 November)
 
-The hackathon is on **Friday, 13 November 2026**. You get the GitHub invite on Thursday 12 November at 09:00. Please do the following beforehand so you can spend the day on the problem, not on setup:
+The hackathon is on **Friday, 13 November 2026**. This repository goes public on Thursday 12 November, so no GitHub invite is needed. Please do the following beforehand so you can spend the day on the problem, not on setup:
 
-- [ ] **Accept the GitHub invite** (check your email, otherwise you will see a 404 on this repo). Enabling 2FA is optional but recommended: it protects this private repo if your account is compromised.
+- [ ] **Have a GitHub account** and check you can open this repo (if you see a 404 before it goes public on Thursday, come back then). Enabling 2FA is optional but recommended.
 - [ ] **Fork or clone this repo** (step 1 below, both are fine).
 - [ ] Install **git** and **Python 3.11+** (and `uv` or `venv`). Your project README may list extra tools.
 - [ ] Have your **own LLM coding agent** ready (whichever you are comfortable with). LLM API access from SIXT is still to be decided. If it is provided, you can request a key on site.
@@ -38,7 +38,7 @@ The hackathon is on **Friday, 13 November 2026**. You get the GitHub invite on T
 
    **Check it worked:** `git remote -v` shows your repo as `origin`, and `ls` shows the project folders.
 
-   **Share access:** your repo must be readable by the organizers and your topic owner. Either make it public, or add them and `sruthi-sixt-26` as collaborators (Settings, Collaborators). For a team, one person creates the repo and adds the teammates. A fork of a private repo cannot be made public; if you want a public repo, use Option B.
+   **Share access:** your repo must be readable by the organizers and your topic owner. Either make it public, or add them and `sruthi-sixt-26` as collaborators (Settings, Collaborators). For a team, one person creates the repo and adds the teammates. Once this repo is public, a fork of it is public too and cannot be made private; if you want a private repo, use Option B.
 
 2. **Pick your project(s)**, then **delete all other project folders** in your repo. Keep one (or two at most, see above).
 
