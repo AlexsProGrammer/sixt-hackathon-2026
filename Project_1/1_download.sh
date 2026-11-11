@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Downloads the Project 1 datasets from their original hosts into data/raw/ (about 135 MB; git-ignored).
+# Downloads the Project 1 datasets (ExtractBench + CUAD by default, about 60 MB) from their original hosts into data/raw/ (git-ignored).
 # Usage: bash 1_download.sh [--accept-licenses] [--only extractbench|cuad|invoicebenchmark|drew_ipp] [--force]
+#   Optional extra invoice sets: --only invoicebenchmark, --only drew_ipp (then python 2_prepare.py --sources extractbench cuad invoicebenchmark drew_ipp)
 # Needs bash, curl, git, unzip, shasum.
 set -euo pipefail
 
@@ -35,7 +36,7 @@ DREW_COMMIT="446bab08662790cb39457792243bff5704373b95"
 licence_notice() {
   cat <<'EOF'
 
-Project 1 uses four public datasets. You download them yourself from the original hosts.
+Project 1 uses two public datasets (plus two optional invoice sets, see the end of this notice). You download them yourself from the original hosts.
 Their licences, summarised (read the originals; this is not legal advice):
 
   ExtractBench   Apache-2.0. Source PDFs are real public records (SEC and regulatory filings,
@@ -46,6 +47,7 @@ Their licences, summarised (read the originals; this is not legal advice):
                  give no assurance about their licence status.
                  https://www.atticusprojectai.org/cuad
                  https://www.atticusprojectai.org/legal
+  Optional extras (only if you download them with --only):
   InvoiceBenchmark
                  MIT (dataset card, by Jakob Neugebauer).
                  https://huggingface.co/datasets/jngb-labs/InvoiceBenchmark
@@ -147,8 +149,10 @@ get_hf_repo() { # name url commit [drop-dir: a folder of LFS images we do not ne
 
 want extractbench    && get_extractbench
 want cuad            && get_cuad
-want invoicebenchmark && get_hf_repo invoicebenchmark "$IB_REPO" "$IB_COMMIT" output/png   # we use its real PDFs, not the 32 MB of PNGs
-want drew_ipp        && get_hf_repo drew-ipp-invoices "$DREW_REPO" "$DREW_COMMIT"
+# The two invoice sets are optional extras: not downloaded unless asked for with --only.
+want_opt() { [ "$ONLY" = "$1" ]; }
+want_opt invoicebenchmark && get_hf_repo invoicebenchmark "$IB_REPO" "$IB_COMMIT" output/png   # we use its real PDFs, not the 32 MB of PNGs
+want_opt drew_ipp        && get_hf_repo drew-ipp-invoices "$DREW_REPO" "$DREW_COMMIT"
 
 echo
 echo "Done. Downloaded data (untrusted, do not run code from inside it):"

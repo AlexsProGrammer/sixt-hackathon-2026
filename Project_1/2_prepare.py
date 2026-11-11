@@ -147,6 +147,7 @@ def load_drew_ipp() -> Iterator[dict]:
 
 LOADERS = {"extractbench": load_extractbench, "cuad": load_cuad,
            "invoicebenchmark": load_invoicebenchmark, "drew_ipp": load_drew_ipp}
+DEFAULT_SOURCES = ["extractbench", "cuad"]   # one contract set + one forms/scans set; invoice sets are opt-in
 
 
 # ---------------------------------------------------------------- split and write
@@ -169,7 +170,8 @@ def write(path: Path, records: list) -> int:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--sources", nargs="+", choices=list(LOADERS), default=list(LOADERS))
+    ap.add_argument("--sources", nargs="+", choices=list(LOADERS), default=DEFAULT_SOURCES,
+                    help="default: extractbench cuad (the invoice sets are optional extras)")
     a = ap.parse_args()
     records = []
     for name in a.sources:
