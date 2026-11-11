@@ -60,7 +60,7 @@ Owners and contact emails are in each project README.
 
 | | |
 | --- | --- |
-| Date | Friday, 13 November 2026 (repo public Thursday 12 Nov, 09:00; topics published by 18:00) |
+| Date | Friday, 13 November 2026 (repo public Thursday 12 Nov, 09:00; topics available from 09:00; matching results published by 18:00) |
 | Location | HQ Pullach, Academy |
 | Team size / topics | 1 to 3 people; max 5 teams per topic (set as the capacity in the matching program) |
 | Topic selection | Form (team name, top 3 topics, repo link): round 1 closes Thursday 17:00, results in the repo by 18:00; final deadline Friday 10:00, late teams matched first come, first served. Form: https://forms.cloud.microsoft/e/S2dvqjeFBX |
