@@ -18,7 +18,7 @@
 | Folder | Topic | Data |
 | --- | --- | --- |
 | Project_1 | Structured Extraction from Documents | Public datasets, sample scenarios |
-| Project_2 | Nowcasting / Forecasting Mileage | Mock or anonymized vehicle status sample |
+| Project_2 | Mileage Forecasting & Erroneous Mileage Detection | Mock or anonymized vehicle status sample |
 | Project_3 | Meta-Evaluation of LLM-as-Judge | Bitext (5 languages) + fictional policy, hidden test set |
 | Project_4 | Fleet Allocation Challenge | Mock fleet data (in Project_4/data) |
 | Project_5 | Enterprise Data Agent Challenge (TUM x SIXT collaboration) | Provided separately by TUM |
