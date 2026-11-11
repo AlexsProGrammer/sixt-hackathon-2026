@@ -57,6 +57,8 @@ not the list.
 - The unseen test cases are not in this repo. Trying to obtain or train on them means disqualification.
 
 ## Setup
+
+**Quick setup (about 10 min):** `bash setup.sh` in this folder. It makes a virtual environment, creates `.env` from `.env.example` for your LLM key and scores the starting judge. Python is our starting point; any language is fine.
 Do this **before the hackathon day**.
 
 - `git` and **Python 3.11+**, with a virtual environment (`python3 -m venv .venv` or `uv venv`). The starter pack itself

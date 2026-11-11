@@ -63,6 +63,10 @@ One confident mistake can wipe out the saving. That is why knowing when you are 
 | true null | no value, field truly absent | one review (no saving, no loss) |
 
 ## Quick start
+
+**Quick setup (about 10 min):** `bash setup.sh` in this folder. It makes a virtual environment, downloads the data (add `--accept-licenses` to accept the dataset licences) and runs the baseline. Copy `.env.example` to `.env` for your LLM key. Python is our starting point; any language is fine.
+
+Or step by step:
 ```bash
 bash 1_download.sh        # about 60 MB, asks you to accept the dataset licences
 python 2_prepare.py       # builds data/unified/dev.jsonl and test_public.jsonl

@@ -9,7 +9,7 @@
   ```bash
   gh api -X PUT repos/<owner>/<repo>/collaborators/<github-username> -f permission=push
   ```
-- Participants clone or fork (forks of a private repo stay private; teams that want a public repo create a new one with only their project folder; otherwise they add their topic owner as collaborator by email or GitHub username). Test on day one that forking works on the free plan. Branch protection may be unavailable on the free plan, so rely on the convention that participants do not push to this repo.
+- Participants clone or fork, and their own team repo must be public (forks are public by default), so no collaborator access is needed. Test on day one that forking works on the free plan. Branch protection may be unavailable on the free plan, so rely on the convention that participants do not push to this repo.
 - Public or mock data only. No internal code, real data, credentials or internal URLs in files or commit messages.
 - After the event: remove collaborators and archive the repo.
 
@@ -33,7 +33,7 @@ Owners and contact emails are in each project README.
 | Until 11 Nov | Finish data and setup sections; collect GitHub usernames; all 5 topics are final |
 | 11 Nov | Dry run: fresh clone and setup on a clean machine for every project |
 | 12 Nov, 09:00 | Send repo invites (participants accept the link and can start), topics, agenda and the "Before you arrive" checklist |
-| 13 Nov | Hackathon (agenda in `runbook/handout.html` and `internal-agenda.md`) |
+| 13 Nov | Hackathon (agenda in `runbook/handout.html`; organizer agenda on Confluence) |
 | Following week | Remove collaborators, archive repo, follow up with interested students |
 
 ### Before the event

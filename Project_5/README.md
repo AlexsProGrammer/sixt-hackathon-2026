@@ -154,9 +154,11 @@ An unknown, empty or duplicate ID, incorrect header, or malformed CSV row reject
 
 ## Setup before the event
 
+**Quick setup (about 10 min):** `bash setup.sh` in this folder. It makes a virtual environment and solves a toy question with `quickstart.py`. Python is our starting point; any language is fine.
+
 Install **git and Python 3.11+** and create a virtual environment (`python -m venv .venv` or `uv venv`). Bring your own model access or local models; SIXT provides LLM API keys for tasks that need one, but this challenge does not require them. If claiming the bonus, your coding assistant must also meet the 40B rule. Create `requirements.txt` or `pyproject.toml` for your method and keep credentials in environment variables or a git-ignored `.env`.
 
-Work inside `Project_5/` in your own team repository, not the organizers' source repository. Use the **Fork** button on [the source repository](https://github.com/sruthi-sixt-26/sixt-hackathon-2026), then clone your fork. Follow the main README to register your repository link and give the organizers access. Before arriving, check that you can run `python --version`, load the toy CSVs and push a commit to your own repository.
+Work inside `Project_5/` in your own team repository, not the organizers' source repository. Use the **Fork** button on [the source repository](https://github.com/sixt-hackathon-2026/sixt-hackathon-2026), then clone your fork. Follow the main README to register your repository link and give the organizers access. Before arriving, check that you can run `python --version`, load the toy CSVs and push a commit to your own repository.
 
 - Practise loading and joining CSV tables and exporting `question_id,answer` results.
 - Choose your model and check its total parameter count if you plan to claim the bonus.

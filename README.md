@@ -9,14 +9,16 @@ Welcome! This is the repo for the SIXT Hackathon, **Friday 13 November 2026**. E
 
 ## Before you arrive
 
-- [ ] Have a **GitHub account**.
-- [ ] Install **git** and a language you like. We start with **Python 3.11+**, but any language works.
-- [ ] Bring your own **LLM coding agent**. SIXT provides LLM API keys if your project needs one. Ask on site.
-- [ ] Read all project READMEs and pick your **top 3**.
-- [ ] Form a **team** of 1 to 3 and choose a team name. Solo? Ask an organizer.
-- [ ] **Fork this repo** (step 1 below). Its link goes into the form.
-- [ ] **Register** in the [form](https://forms.cloud.microsoft/e/S2dvqjeFBX) by **Thu 12 Nov, 17:00**: team name, top 3 topics, repo link. Topics are published here by **18:00**. Late? Register until **Fri 13 Nov, 10:00**. Late teams get the topics that still have room.
-- [ ] Questions? Email your project owner.
+A little prep now means more time for the fun part, no stress if you can't tick everything off
+
+- [ ] Have a **GitHub account** ready
+- [ ] Install **git** and a language you like, we start with **Python 3.11+** but anything works
+- [ ] Bring your favourite **LLM coding agent**, and if your project needs an API key we will hand one out on site
+- [ ] Skim the [projects at a glance](#the-projects-at-a-glance) below and pick your **top 3**, no need to be sure, just curious, and dive into a project README if one catches your eye
+- [ ] Team of 1 to 3 with a fun **team name**, **solo is totally okay**, and if you'd like teammates just ask an organizer, we're happy to help
+- [ ] **Fork this repo** (step 1 below), its link goes into the form
+- [ ] **Register** in the [form](https://forms.cloud.microsoft/e/S2dvqjeFBX) by **Thu 12 Nov, 17:00** with team name, top 3 topics and repo link, topics are published here by **18:00**, and if you're a bit late no worries, you can register until **Fri 13 Nov, 10:00** and we'll match you to a topic with room
+- [ ] Questions? Email your project owner, they're happy to hear from you
 - [ ] Bring a laptop, a charger and good energy :)
 
 ## The projects at a glance
@@ -26,12 +28,16 @@ Read this first, then the full README of each project, then rank your top 3.
 ### [Project 1](Project_1/README.md): Teach a machine to say "I don't know"
 *Structured Extraction from Documents*
 
+**SIXT Tech Team:** Sruthi Radhakrishnan, Ihsan Soydemir
+
 - **What it solves:** Right now people type contract and form data into our systems by hand. AI can do it in seconds, but one confident wrong value costs way more than a minute of human time. Build an extractor that books what it's sure about and hands the rest to a person.
 - **Possibility to collaborate after the hack:** Yes
 - **Business value:** Less typing, fewer expensive mistakes, and a clear number for how much each document saves.
 
 ### [Project 2](Project_2/README.md): Where is that car's odometer *right now*?
 *Mileage Forecasting & Erroneous Mileage Detection*
+
+**SIXT Tech Team:** Julian Hackinger, Ernest Quintana
 
 - **What it solves:** On long-term rentals we only see the mileage when the car comes back, sometimes 4 weeks late. Yet valuation and defleet decisions need it today. Predict current and future mileage, and spot the reports that look fishy.
 - **Possibility to collaborate after the hack:** Yes
@@ -40,6 +46,8 @@ Read this first, then the full README of each project, then rank your top 3.
 ### [Project 3](Project_3/README.md): Judge the Judge
 *Meta-Evaluation of LLM-as-Judge*
 
+**SIXT Tech Team:** Jigyasa Singhal
+
 - **What it solves:** We use AI judges to decide if a chatbot change is an improvement. But they miss sneaky edits, like a dropped "as long as the car isn't reserved", that turn into promises we can't keep. Build a recipe that makes any judge catch them.
 - **Possibility to collaborate after the hack:** Yes
 - **Business value:** Chatbot releases we can actually trust, and no accidental promises to customers.
@@ -47,12 +55,16 @@ Read this first, then the full README of each project, then rank your top 3.
 ### [Project 4](Project_4/README.md): Right car, right station, next 14 days
 *Fleet Allocation Challenge*
 
+**SIXT Tech Team:** Sara Michetti, Julian Mehne
+
 - **What it solves:** Some stations are drowning in cars while others run dry. Decide what to add, remove or move between stations to make the most profit, using only 8 weeks of history to guess demand.
 - **Possibility to collaborate after the hack:** Yes
 - **Business value:** Fewer missed rentals, higher utilization, and lower holding and transfer costs.
 
 ### [Project 5](Project_5/README.md): From business question to correct answer
 *Enterprise Data Agent Challenge (TUM x SIXT)*
+
+**TUM Team:** Ioannis Tzachristas
 
 - **What it solves:** "What was net revenue?" sounds simple, but it means joining orders, payments and refunds, applying the right rules and the right exchange rates. Build an AI workflow that gets the numbers right, ideally with small, cheap models.
 - **Possibility to collaborate after the hack:** Yes (thesis and arXiv publication)
@@ -64,22 +76,22 @@ Read this first, then the full README of each project, then rank your top 3.
 
    **Option A: Fork (recommended)**
    ```bash
-   gh repo fork sruthi-sixt-26/sixt-hacakthon-2026 --clone
-   cd sixt-hacakthon-2026
+   gh repo fork sixt-hackathon-2026/sixt-hackathon-2026 --clone
+   cd sixt-hackathon-2026
    ```
    No `gh`? Click **Fork** on GitHub, then `git clone <your fork url>`.
 
    **Option B: Clone and push to your own new repo**
    ```bash
-   git clone https://github.com/sruthi-sixt-26/sixt-hacakthon-2026.git
-   cd sixt-hacakthon-2026
+   git clone https://github.com/sixt-hackathon-2026/sixt-hackathon-2026.git
+   cd sixt-hackathon-2026
    git remote rename origin upstream
-   gh repo create my-sixt-hackathon --private --source=. --remote=origin --push
+   gh repo create my-sixt-hackathon --public --source=. --remote=origin --push
    ```
 
    **Check:** `git remote -v` shows your repo as `origin`.
 
-   **Access:** organizers and your topic owner must be able to read your repo. Make it public, or add them and `sruthi-sixt-26` as collaborators. A fork of this repo is always public, so use Option B for a private repo. In a team, one person creates the repo and adds the others.
+   **Access:** your repo must be **public** so organizers and your topic owner can read it. A fork is public by default. In a team, one person creates the repo and adds the others as collaborators.
 
 2. **Find your project** once topics are published, then delete the others:
    ```bash
@@ -106,13 +118,15 @@ Let your coding agent do it, but understand what it does. Check that `git` and `
 
 ```text
 Set up my SIXT hackathon repo.
-1. Fork sruthi-sixt-26/sixt-hacakthon-2026 with gh repo fork --clone.
-   Never push to the original.
-2. My team was matched to <Project_N>. Delete every other Project_* folder
-   with git rm -r, then commit and push to my fork.
-3. Read my project's README.md and set up its environment.
+1. Fork sixt-hackathon-2026/sixt-hackathon-2026 into MY OWN GitHub account (not an org)
+   with gh repo fork --clone, then cd into the cloned folder.
+   Never push to the original. If the fork fails, tell me and stop.
+2. Ask me which project my team was matched to (<Project_N>). Delete every other
+   Project_* folder with git rm -r, then commit and push to my fork's default branch.
+3. From inside Project_N/, read README.md and run bash setup.sh.
 4. Tell me what you did and what the task is.
 Rules: public or mock data only, no secrets or .env, stay in my project folder.
+Do not ask for or fill in API keys, they are handed out on site.
 ```
 
 Then keep the agent in your project folder and read what it commits.
@@ -131,7 +145,7 @@ Then keep the agent in your project folder and read what it commits.
 ## Repository layout
 
 ```
-sixt-hacakthon-2026/
+sixt-hackathon-2026/
 ├── README.md              <- you are here
 ├── Project_1/ ... Project_5/
 ├── SUBMISSION_TEMPLATE.md
