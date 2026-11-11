@@ -7,44 +7,13 @@ Welcome! This is the repo for the SIXT Hackathon, **Friday 13 November 2026**. E
 
 <p align="center"><img src="assets/exist-first.svg" alt="Just make it exist first, you can make it good later" width="420"></p>
 
-## Fill in the Team + Topic Registration form (do this first)
+Three steps: **1.** read the projects, **2.** fill in the Team + Topic Registration form, **3.** do a little prep before you arrive
 
-<img src="assets/time-register.svg" alt="About 3 minutes" width="360">
-
-We would love to know who is coming, it only takes about 3 minutes, and nothing is final, so just pick what sounds fun right now :)
-
-> **[Open the Team + Topic Registration form](https://forms.cloud.microsoft/e/S2dvqjeFBX)**
-> If you can, please fill it in by **Thursday 12 November, 17:00** and we will share the matches here by **18:00**
-
-What we will ask:
-
-1. **A team name**, teams have 1 to 3 people, coming alone is fine, and if you want teammates just tell an organizer
-2. **Your top 3 topics** from the [projects at a glance](#the-projects-at-a-glance), they are here from **Thu 09:00** and there are no wrong choices
-3. **Your repo link**, [fork this repo](#get-started) first, it takes about two minutes, and if you get stuck just ask us
-
-**Running late? No problem!** The form stays open until **Fri 13 Nov, 10:00** and late teams get the topics that still have room
-
-## Before you arrive
-
-<img src="assets/time-before-you-arrive.svg" alt="About 5 minutes" width="360">
-
-This takes about **5 minutes** and means more time for the fun part, no stress if you can't tick everything off
-
-- [ ] Have a **GitHub account** ready
-- [ ] Install **git** and a language you like, we start with **Python 3.11+** but anything works
-- [ ] Bring your favourite **LLM coding agent**, and if your project needs an API key we will hand one out on site
-- [ ] Skim the [projects at a glance](#the-projects-at-a-glance) below and pick your **top 3**, no need to be sure, just curious, and dive into a project README if one catches your eye
-- [ ] Team of 1 to 3 with a fun **team name**, **solo is totally okay**, and if you'd like teammates just ask an organizer, we're happy to help
-- [ ] **Fork this repo** (step 1 below), its link goes into the Team + Topic Registration form
-- [ ] Fill in the [Team + Topic Registration form](https://forms.cloud.microsoft/e/S2dvqjeFBX) by **Thu 12 Nov, 17:00** (see [details](#fill-in-the-team--topic-registration-form-do-this-first))
-- [ ] Questions? Email your project owner, they're happy to hear from you
-- [ ] Bring a laptop, a charger and good energy :)
-
-## The projects at a glance
+## 1. Read the projects at a glance
 
 <img src="assets/time-projects.svg" alt="About 10 minutes" width="360">
 
-Read this first, then the full README of each project, then rank your top 3.
+Have a look at each project, open the full README of any that catches your eye, then pick your top 3.
 
 ### [Project 1](Project_1/README.md): Teach a machine to say "I don't know"
 *Structured Extraction from Documents*
@@ -90,6 +59,36 @@ Read this first, then the full README of each project, then rank your top 3.
 - **What it solves:** "What was net revenue?" sounds simple, but it means joining orders, payments and refunds, applying the right rules and the right exchange rates. Build an AI workflow that gets the numbers right, ideally with small, cheap models.
 - **Possibility to collaborate after the hack:** Yes (thesis and arXiv publication)
 - **Business value:** Trustworthy numbers on demand, without needing a data expert or a huge model every time.
+
+## 2. Fill in the Team + Topic Registration form
+
+<img src="assets/time-register.svg" alt="About 3 minutes" width="360">
+
+We would love to know who is coming, it only takes about 3 minutes, and nothing is final, so just pick what sounds fun right now :)
+
+> **[Open the Team + Topic Registration form](https://forms.cloud.microsoft/e/S2dvqjeFBX)**
+> If you can, please fill it in by **Thursday 12 November, 17:00** and we will share the matches here by **18:00**
+
+What we will ask:
+
+1. **A team name**, teams have 1 to 3 people, coming alone is fine, and if you want teammates just tell an organizer
+2. **Your top 3 topics** from the [projects at a glance](#1-read-the-projects-at-a-glance), they are here from **Thu 09:00** and there are no wrong choices
+3. **Your repo link**, [fork this repo](#get-started) first, it takes about two minutes, and if you get stuck just ask us
+
+**Running late? No problem!** The form stays open until **Fri 13 Nov, 10:00** and late teams get the topics that still have room
+
+## 3. Before you arrive
+
+<img src="assets/time-before-you-arrive.svg" alt="About 5 minutes" width="360">
+
+This takes about **5 minutes** and means more time for the fun part, no stress if you can't tick everything off
+
+- [ ] Have a **GitHub account** ready
+- [ ] Install **git** and a language you like, we start with **Python 3.11+** but anything works
+- [ ] Bring your favourite **LLM coding agent**, and if your project needs an API key we will hand one out on site
+- [ ] **Fork this repo** (see [Get started](#get-started)), its link goes into the Team + Topic Registration form
+- [ ] Questions? Email your project owner, they're happy to hear from you
+- [ ] Bring a laptop, a charger and good energy :)
 
 ## Get started
 
