@@ -338,7 +338,7 @@ That is the Level 0 task.
 Do this **before the hackathon day** (repo is shared on 12 Nov).
 
 - `git` and **Python 3.14 or newer**, with a virtual environment (`python -m venv .venv` or `uv venv`).
-- Your own LLM coding agent. No LLM access is provided by SIXT.
+- Your own LLM coding agent, so you can work with the tool you are most comfortable with. SIXT provides LLM API keys for tasks that need one.
 - Install the dependencies: `pip install -r Project_6/requirements.txt`. Add your own to that file. Never commit secrets (use `.env`).
 - Data: in `Project_6/data/`. Try `python Project_6/starter.py` to check your setup.
 - Check: you can clone or fork the repo and run `python --version` in your environment.

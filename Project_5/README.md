@@ -61,8 +61,8 @@ Do this **before the hackathon day**.
 
 - `git` and **Python 3.11+**, with a virtual environment (`python3 -m venv .venv` or `uv venv`). The starter pack itself
   needs only the standard library; add your own dependencies to a `requirements.txt` in this folder.
-- Your own LLM coding agent.
-- **LLM API access** for the judge: see the root README (to be confirmed by the organizers). The judge talks to any
+- Your own LLM coding agent, so you can work with the tool you are most comfortable with.
+- **LLM API access** for the judge: SIXT provides LLM API keys for this task. The judge talks to any
   OpenAI-compatible endpoint, configured with three environment variables: `JUDGE_LLM_BASE_URL`, `JUDGE_LLM_API_KEY`,
   `JUDGE_LLM_MODEL`. Keep keys in `.env` (git-ignored), never in code.
 - Check that the kit runs, no LLM needed:

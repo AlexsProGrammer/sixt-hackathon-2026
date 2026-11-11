@@ -9,7 +9,7 @@ The hackathon is on **Friday, 13 November 2026**. This repository goes public on
 - [ ] **Have a GitHub account** and check you can open this repo (if you see a 404 before it goes public on Thursday, come back then). Enabling 2FA is optional but recommended.
 - [ ] **Fork or clone this repo** (step 1 below, both are fine).
 - [ ] Install **git** and **Python 3.11+** (and `uv` or `venv`). Your project README may list extra tools.
-- [ ] Have your **own LLM coding agent** ready (whichever you are comfortable with). LLM API access from SIXT is still to be decided. If it is provided, you can request a key on site.
+- [ ] Have your **own LLM coding agent** ready (whichever you are comfortable with). SIXT provides LLM API keys for projects that need one; you can request a key on site.
 - [ ] Read the README of every project and pick your top choice.
 - [ ] Agree on your team (1 to 3 people; if you are on your own, ask an organizer to join a team) and your topic(s). **Submit team, topic and fork link in the form by 10:00 on 13 November** _[form link TBD]_. We cannot take changes after that time.
   - Choose **one topic**, plus optionally **one backup topic** (name your primary). The maximum is 2. We really recommend one, but if you have the will to take on a second, we will make the way for you.
