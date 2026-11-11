@@ -1,31 +1,63 @@
-# Project 2: Nowcasting / Forecasting Mileage
+# Project 2: Mileage Forecasting & Erroneous Mileage Detection
 
 **Project owners:** Julian Hackinger, Ernest Quintana
 
-**Questions before the hackathon:** email the project owners directly: julian.hackinger@sixt.com, ernest.quintana@sixt.com. On the day, ask on site.
+**Questions before the hackathon:** email the project owners directly: julian.hackinger@sixt.com, ernest.quintana@sixt.com. On the day, technical support is available on site and domain expertise remotely; the on-site team will coordinate.
 
 ## Problem
-For the majority of the fleet, odometer updates only arrive once vehicles are returned. Mileage information can therefore be very outdated (up to four weeks) for long-term customers who report mileage monthly. Current mileage is needed for valuation and fleet disposal decisions, and future mileage needs to be forecast.
+**A. Mileage prediction / nowcasting / forecasting.** For long-term rentals we only get an odometer reading when the vehicle is returned, which can lag up to four weeks for customers on monthly reporting. Current mileage is needed for valuation and defleet decisions. We need to **nowcast** current mileage and **forecast** future mileage.
+
+**B. Erroneous mileage detection.** Reported mileage is sometimes wrong (on purpose or by accident). Using the same features, we want a model or rule set that flags reports that don't match a vehicle's expected usage pattern.
+
+The two are linked: a good mileage predictor gives an expected value, and a report that deviates sharply from it is a natural candidate to flag. A single team can reasonably attempt both in one day if scoped as "build the predictor, then flag residual outliers". They could also be separated.
 
 ## Approach
-- Nowcast the current mileage using information on the current rental status.
-- Forecast future mileage using historical driving patterns.
+- **A.** Nowcast the current mileage using information on the current rental status. Forecast future mileage using historical driving patterns.
+- **B.** There is no ready-made "this report was wrong" label in the data. Two workable approaches for a one-day scope:
+  - **Residual-based flagging:** train the predictor, then flag reports whose actual value deviates from the prediction beyond a threshold (e.g. z-score or quantile cutoff on residuals). Unsupervised, no labels needed.
+  - **Rule-based proxy labels:** build weak labels from physically implausible cases (e.g. mileage decreasing between readings, daily mileage rate above a plausible maximum) to sanity-check or lightly supervise the flagging.
 
 ## Data
-Ideally based on vehicle status data. A mock or anonymized sample will be provided. Do not use real data outside the provided sample.
+Datasets will be provided for the teams that choose this topic. Do not use real data outside the provided sample. Identifiers are anonymized or salt-hashed.
+
+Schema (one row per status update):
+- `vhcl_anon_id`: anonymized internal vehicle ID (vehicle number is also salt-hashed)
+- `acriss_code_anonymized`: anonymized ACRISS code ([LINK](https://www.sixt.de/mietwagenleitfaden/acriss-code/))
+- `vehicle_level`: vehicle category (size, cost, power and luxury; e.g. Standard, Intermediate, Full Size)
+- `vehicle_type`: two-character vehicle type and body style (doors, wagon, SUV; e.g. Off Road, Limousine)
+- `model_year`: model year of the vehicle
+- `driven_wheels`: drivetrain configuration (4x4, AWD, FWD, RWD)
+- `power_ps`: horse power
+- `cubic_capacity_liter`: cubic capacity in liters
+- `status_code_anonymized`: 1 = new vehicle, 2 = active vehicle, 3 = vehicle in defleet process, 4 = sold vehicle
+- `vhcl_fct_taken_datm`: status taken timestamp (does not always have a new mileage)
+- `vhcl_current_mileage`: mileage at `vhcl_fct_taken_datm`
+- `repair_status`: whether the vehicle is currently on repair
+- `on_rent_status`: whether the vehicle is currently on rent
+- `rental_product`: if on rent, which type of product
+- `one_way_flg`: if on rent, whether on a one-way rental
+- `rntl_handover_date`: rental handover (start of rental)
+- `rntl_return_date`: rental return (end of rental)
+- `vhcl_max_mileage`: maximum mileage set in the system
+- `brnc_code`: salt-hashed branch code (individual SIXT branch)
+- `brnc_pool_code`: salt-hashed pool code (a pool of branches; e.g. all branches within one city)
+- `brnc_region_code`: salt-hashed region code (a US sub-region; e.g. Northern California)
+- `brnc_state_code`: salt-hashed state code (a US state)
+- `uti_plan`: utilization projected/planned for that month
 
 ## Expected outcome
-A model that nowcasts and forecasts mileage of a vehicle fleet.
+- **A.** A model that nowcasts and forecasts mileage of a vehicle fleet.
+- **B.** A model or rule set that flags mileage reports that deviate from expected usage.
 
-**Results are judged on:** error on held-out vehicles / periods (e.g. MAE, MAPE) for nowcast and forecast, compared to a naive baseline.
+**Results are judged on:** error on held-out vehicles / periods (e.g. MAE, MAPE) for nowcast and forecast, compared to a naive baseline; and how plausible the flagged reports are.
 
 ## Setup
 Do this **before the hackathon day** (repo is shared on 12 Nov).
 
 - `git` and **Python 3.11+**, with a virtual environment (`python -m venv .venv` or `uv venv`).
-- Your own LLM coding agent. No LLM access is provided by SIXT.
+- Your own LLM coding agent, so you can work with the tool you are most comfortable with. SIXT provides LLM API keys for tasks that need one.
 - Create `requirements.txt` / `pyproject.toml` in this folder for your own dependencies. Never commit secrets (use `.env`).
-- Data: a mock or anonymized sample will be added by the organizers. _[TBD: location]_
+- Data: datasets will be added by the organizers for teams that choose this topic in their repos
 - Check: you can clone or fork the repo and run `python --version` in your environment.
 
 ## Submission
