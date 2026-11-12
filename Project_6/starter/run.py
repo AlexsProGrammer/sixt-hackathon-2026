@@ -14,6 +14,8 @@ import numpy as np
 import pandas as pd
 
 HERE = Path(__file__).resolve().parent
+TASKS = ["quick_exterior_cleaning", "normal_exterior_cleaning", "special_cleaning", "interior_cleaning",
+         "damage_check", "refuel", "electric_charging", "quick_damage_repair", "tyre_check"]
 ap = argparse.ArgumentParser()
 ap.add_argument("--solution", default=str(HERE / "solution.py"))
 ap.add_argument("--data", default=str(HERE.parent / "data"))
@@ -39,6 +41,8 @@ def run_once():
     print(f"ran in {time.time() - t0:.0f}s")
     assert list(pred.turnaround_id) == list(test.turnaround_id), "predictions must be in the same order as the input"
     assert {"turnaround_id", "total_turnaround_min"} <= set(pred.columns), "missing columns"
+    missing = [f"dur_{t}" for t in TASKS if f"dur_{t}" not in pred.columns]
+    assert not missing, f"missing per-task estimates (required): {missing}"
     return pred
 
 

@@ -33,10 +33,11 @@ We run your code on a **hidden test set** from the days after the validation day
 4. **Reproducibility and clarity.** Our run must give the same values as yours; someone else should be able to follow your approach.
 
 ## What you submit
-- `solution.py` in this `starter/` folder, with `fit(train, branches)` and `predict(model, df, branches)` (see the template).
+- `solution.py` in `starter/`, with `fit(train, branches)` and `predict(model, df, branches)` (see the template).
 - `SUBMISSION.md`: approach, results on validation, feature importance, how to run, per-task estimate table.
 - Either a 1-minute demo (`submission/demo.mp4`, under 50 MB) or up to 5 slides (`submission/slides.pdf`).
-Put them in your project folder in the repo. Dependencies go in `requirements.txt`.
+Put them in your project folder in the repo. Dependencies go in `requirements.txt` (in this folder).
+Your predictions must include a `dur_<task>` column for every task: a total without task estimates is not accepted.
 
 ## What a good result looks like
 The baseline is a floor, not a target. It scores worse than guessing each task's average time.
@@ -44,16 +45,14 @@ The baseline is a floor, not a target. It scores worse than guessing each task's
 - **Good:** total MAE under about 15 min, and positive per-task skill.
 - **Strong:** per-task MAE under about 5 min on most tasks, with clearly positive skill on every task.
 
-A submission needs both: a good total estimate with no per-task estimates is not accepted.
-
 ## Rules
 - Your code must be **deterministic**: fix random seeds; two runs must give identical values. We re-run it and compare.
-- Must run in under 10 minutes on a laptop, no network, nothing outside `starter/` and `data/` except your `requirements.txt`.
+- Must run in under 10 minutes on a laptop, no network, nothing outside `starter/` and `data/` except `requirements.txt`.
 - No hard-coded labels or durations that you did not learn from the data files.
 - The hidden test set is not in this repo. Do not try to obtain it.
 
 ## Setup (before the day)
-`git`, Python 3.11+, a virtual environment, `pip install -r starter/requirements.txt`, your own LLM coding agent (none is
+`git`, Python 3.11+, a virtual environment, `bash setup.sh` (or `pip install -r requirements.txt`), your own LLM coding agent (none is
 provided). Never commit secrets. Check it works:
 ```
 cd starter
@@ -61,4 +60,4 @@ python run.py --repeat            # baseline: writes predictions.csv for validat
 python evaluate.py predictions.csv ../data/validation_labels.csv --task-truth ../data/validation_labels.csv --flags ../data/validation.csv \
     --train-truth ../data/validation_labels.csv
 ```
-The baseline (sum of task flags) is the bar to beat.
+The baseline (linear regression of the total on the task flags) is the bar to beat.
