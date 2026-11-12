@@ -1,0 +1,159 @@
+{
+  "at_threshold_0": {
+    "threshold": 0.0,
+    "n_fields": 6962,
+    "accepted": 0,
+    "correct": 0,
+    "wrong": 0,
+    "hallucinated": 0,
+    "missed": 2865,
+    "true_null": 4097,
+    "precision": 1.0,
+    "recall": 0.0,
+    "coverage": 0.0,
+    "accepted_rate": 0.0,
+    "hallucination_rate": 0.0
+  },
+  "headline": {
+    "target_precision": 0.99,
+    "coverage_at_target_precision": 0.0,
+    "threshold_at_target": null,
+    "reached_target": false
+  },
+  "coverage_at_precision": {
+    "0.99": 0.0,
+    "0.95": 0.0,
+    "0.9": 0.0,
+    "0.8": 0.0
+  },
+  "business": {
+    "review_cost": 1.0,
+    "error_cost": 100.0,
+    "threshold": null,
+    "saving": 0.0,
+    "saving_pct": 0.0
+  },
+  "schema_validity": 0.8920454545454546,
+  "by_source": {
+    "cuad": {
+      "threshold": 0.0,
+      "n_fields": 5289,
+      "accepted": 0,
+      "correct": 0,
+      "wrong": 0,
+      "hallucinated": 0,
+      "missed": 1688,
+      "true_null": 3601,
+      "precision": 1.0,
+      "recall": 0.0,
+      "coverage": 0.0,
+      "accepted_rate": 0.0,
+      "hallucination_rate": 0.0
+    },
+    "extractbench": {
+      "threshold": 0.0,
+      "n_fields": 1673,
+      "accepted": 0,
+      "correct": 0,
+      "wrong": 0,
+      "hallucinated": 0,
+      "missed": 1177,
+      "true_null": 496,
+      "precision": 1.0,
+      "recall": 0.0,
+      "coverage": 0.0,
+      "accepted_rate": 0.0,
+      "hallucination_rate": 0.0
+    }
+  },
+  "by_condition": {
+    "perception:P1": {
+      "threshold": 0.0,
+      "n_fields": 18,
+      "accepted": 0,
+      "correct": 0,
+      "wrong": 0,
+      "hallucinated": 0,
+      "missed": 18,
+      "true_null": 0,
+      "precision": 1.0,
+      "recall": 0.0,
+      "coverage": 0.0,
+      "accepted_rate": 0.0,
+      "hallucination_rate": 0.0
+    },
+    "perception:P2": {
+      "threshold": 0.0,
+      "n_fields": 1050,
+      "accepted": 0,
+      "correct": 0,
+      "wrong": 0,
+      "hallucinated": 0,
+      "missed": 697,
+      "true_null": 353,
+      "precision": 1.0,
+      "recall": 0.0,
+      "coverage": 0.0,
+      "accepted_rate": 0.0,
+      "hallucination_rate": 0.0
+    },
+    "perception:P3": {
+      "threshold": 0.0,
+      "n_fields": 620,
+      "accepted": 0,
+      "correct": 0,
+      "wrong": 0,
+      "hallucinated": 0,
+      "missed": 427,
+      "true_null": 193,
+      "precision": 1.0,
+      "recall": 0.0,
+      "coverage": 0.0,
+      "accepted_rate": 0.0,
+      "hallucination_rate": 0.0
+    }
+  },
+  "curve": [
+    {
+      "threshold": 0.0,
+      "n_fields": 6962,
+      "accepted": 0,
+      "correct": 0,
+      "wrong": 0,
+      "hallucinated": 0,
+      "missed": 2865,
+      "true_null": 4097,
+      "precision": 1.0,
+      "recall": 0.0,
+      "coverage": 0.0,
+      "accepted_rate": 0.0,
+      "hallucination_rate": 0.0
+    }
+  ],
+  "at_threshold": {
+    "threshold": 0.95,
+    "n_fields": 6962,
+    "accepted": 0,
+    "correct": 0,
+    "wrong": 0,
+    "hallucinated": 0,
+    "missed": 2865,
+    "true_null": 4097,
+    "precision": 1.0,
+    "recall": 0.0,
+    "coverage": 0.0,
+    "accepted_rate": 0.0,
+    "hallucination_rate": 0.0
+  },
+  "declared": {
+    "threshold": 0.95,
+    "precision": 1.0,
+    "coverage": 0.0,
+    "hallucination_rate": 0.0,
+    "accepted": 0,
+    "wrong": 0,
+    "hallucinated": 0,
+    "band": null,
+    "net_saving_pct": 0.0
+  }
+}
