@@ -64,6 +64,15 @@ Have a look at each project, open the full README of any that catches your eye, 
 - **Possibility to collaborate after the hack:** Yes (thesis and arXiv publication)
 - **Business value:** Trustworthy numbers on demand, without needing a data expert or a huge model every time.
 
+### [Project 6](Project_6/README.md): Task Time Detective
+*Turnaround Task Duration Estimation*
+
+**SIXT Tech Team:** Iulia Pasov
+
+- **What it solves:** When a car comes back we clean, check, refuel or charge it, but we only know which tasks were done and the total time until it was ready, not how long each task took. Work out each task's duration from totals alone, and predict when a returned car will be ready.
+- **Possibility to collaborate after the hack:** Yes
+- **Business value:** Better staff planning at branches, and reliable "your car is ready at" times for customers.
+
 ## 2. Fill in the Team + Topic Registration form
 
 <img src="assets/time-register.svg" alt="About 3 minutes" width="360">
@@ -119,7 +128,7 @@ This takes about **5 minutes** and means more time for the fun part, no stress i
 
 2. **Find your project** once your team and topic match is published (Thu by 18:00), then delete the other `Project_*` folders (recommended, it keeps your repo tidy). Keep everything else, like the LICENSE, README and handout:
    ```bash
-   git rm -r Project_2 Project_3 Project_4 Project_5   # example: matched to Project_1
+   git rm -r Project_2 Project_3 Project_4 Project_5 Project_6   # example: matched to Project_1
    git commit -m "Keep only my project folder"
    git push
    ```
@@ -173,7 +182,7 @@ Then keep the agent in your project folder and read what it commits.
 ```
 sixt-hackathon-2026/
 ├── README.md              <- you are here
-├── Project_1/ ... Project_5/
+├── Project_1/ ... Project_6/
 ├── SUBMISSION_TEMPLATE.md
 ├── arxiv_templates/       <- optional paper templates
 ├── CodeRabbit_Python/     <- optional AI code review
