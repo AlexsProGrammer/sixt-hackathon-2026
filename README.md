@@ -143,7 +143,7 @@ This takes about **5 minutes** and means more time for the fun part, no stress i
    - a short `SUBMISSION.md` ([template](SUBMISSION_TEMPLATE.md)),
    - **either** a 1-minute demo video (`submission/demo.mp4`, under 50 MB) **or** max 5 slides (`submission/slides.pdf`),
    - anything else your project README asks for.
-7. **Present** to the jury.
+7. **Present** to the jury (finalist teams)
 
 ## Let your coding agent do the setup
 
@@ -186,5 +186,5 @@ sixt-hackathon-2026/
 ├── SUBMISSION_TEMPLATE.md
 ├── arxiv_templates/       <- optional paper templates
 ├── CodeRabbit_Python/     <- optional AI code review
-└── runbook/               <- organizer runbook
+└── runbook/               <- runbook
 ```
