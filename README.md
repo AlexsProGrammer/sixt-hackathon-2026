@@ -88,7 +88,7 @@ What we will ask:
 2. **Your top 3 topics** from the [projects at a glance](#1-read-the-projects-at-a-glance), they are here from **Thu 09:00** and there are no wrong choices
 3. **Your repo link**, [fork this repo](#get-started) first, it takes about two minutes, and if you get stuck just ask us
 
-**Running late? No problem!** The form stays open until **Fri 13 Nov, 10:00** and late teams get the topics that still have room
+**Running late? No problem!** The form stays open until **Fri 13 Nov, 9:30** (hint: you can only start hacking once your topic is confirmed, so register early to start sooner) and late teams get the topics that still have room
 
 ## 3. Before you arrive
 
