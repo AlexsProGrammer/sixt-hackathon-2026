@@ -19,31 +19,34 @@ times, so look at the data closely.
 
 ## Data (`data/`, see `data/DATA_DESCRIPTION.md`)
 - `train.csv`: about 34,000 turnarounds with total time, no per-task times.
-- `validation.csv` + `validation_labels.csv`: 7 later days, a full week including the weekend (about 2,800 turnarounds) **with the true total and the true duration of
-  each task**, so you can check your estimates. Use it however you like.
+- `validation.csv` + `validation_labels.csv`: one later full week, Monday to Sunday (about 2,800 turnarounds) **with the true total and the
+  true duration of each task**, so you can check your estimates. Use it however you like.
+  Every turnaround has interior cleaning and exactly one exterior cleaning, so the totals alone barely separate the two.
 - `branch_data.csv`: branch opening hours and staff.
-We run your code on a **hidden test set** from the days after the validation days.
+We run your code on a **hidden test set** from the three weeks after the validation week.
 
 ## How results are judged (on the hidden test set)
 1. **Per-task duration error (main).** Your estimate for each task performed, compared to the true duration: MAE per task, the
-   mean across tasks (every task counts equally, rare ones too), and a skill score vs predicting each task's average time
-   (the reference is each task's average duration in `validation_labels.csv`; we use the same reference on the hidden test).
+   mean across tasks (every task counts equally, rare ones too), and the weighted error (WAPE: total absolute error divided by
+   total true task minutes). `evaluate.py` also prints a skill score per task against always guessing the task's average duration
+   in `validation_labels.csv`; it is harsh for tasks whose duration barely varies, so we use it for information only.
 2. **Total turnaround error.** MAE of `total_turnaround_min`.
 3. **Plausibility and feature importance.** No negative or impossible durations; effects a branch manager would believe.
 4. **Reproducibility and clarity.** Our run must give the same values as yours; someone else should be able to follow your approach.
+
+## What good looks like (total MAE and per-task WAPE, on validation and on the hidden test)
+- **Baseline** (`solution.py` as given): total MAE about 99 min, WAPE about 0.55. It is a floor, not a target: it is worse than
+  guessing each task's average duration.
+- **Good:** total MAE under 15 min.
+- **Strong:** total MAE under 5 min and WAPE under 0.2.
+Reproducibility and plausibility are required for any of these to count.
 
 ## What you submit
 - `solution.py` in `starter/`, with `fit(train, branches)` and `predict(model, df, branches)` (see the template).
 - `SUBMISSION.md`: approach, results on validation, feature importance, how to run, per-task estimate table.
 - Either a 1-minute demo (`submission/demo.mp4`, under 50 MB) or up to 5 slides (`submission/slides.pdf`).
-Put them in your project folder in the repo. Dependencies go in `requirements.txt` (in this folder).
+Put them in your project folder in the repo. Dependencies go in `requirements.txt` (in this folder), with pinned versions (`package==x.y.z`).
 Your predictions must include a `dur_<task>` column for every task: a total without task estimates is not accepted.
-
-## What a good result looks like
-The baseline is a floor, not a target. It scores worse than guessing each task's average time.
-- **Baseline:** total MAE about 99 min on validation, mean per-task skill about -0.84.
-- **Good:** total MAE under about 15 min, and positive per-task skill.
-- **Strong:** per-task MAE under about 5 min on most tasks, with clearly positive skill on every task.
 
 ## Rules
 - Your code must be **deterministic**: fix random seeds; two runs must give identical values. We re-run it and compare.

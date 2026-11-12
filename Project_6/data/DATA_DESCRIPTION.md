@@ -7,7 +7,7 @@ period; the hidden test set comes after validation.
 | Column | Meaning |
 |---|---|
 | `turnaround_id` | unique id |
-| `return_ts` | time the vehicle was returned |
+| `return_ts` | time the vehicle came back; while a branch is closed, vehicles can be left in the key drop box |
 | `branch`, `vehicle_class`, `powertrain` | where, what kind of car (`petrol_diesel`, `hybrid`, `bev`) |
 | `rental_days`, `km_driven` | rental length and distance |
 | `return_hour`, `weekday` | derived from `return_ts` (0 = Monday) |
