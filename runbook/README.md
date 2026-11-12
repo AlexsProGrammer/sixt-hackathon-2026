@@ -22,6 +22,7 @@
 | Project_3 | Meta-Evaluation of LLM-as-Judge | Bitext (5 languages) + fictional policy, hidden test set |
 | Project_4 | Fleet Allocation Challenge | Mock fleet data (in Project_4/data) |
 | Project_5 | Enterprise Data Agent Challenge (TUM x SIXT collaboration) | Provided separately by TUM |
+| Project_6 | Turnaround Task Duration Estimation | Synthetic turnaround data (in Project_6/data), hidden test set |
 
 Owners and contact emails are in each project README.
 
@@ -30,7 +31,7 @@ Owners and contact emails are in each project README.
 ### Timeline
 | When | What |
 | --- | --- |
-| Until 11 Nov | Finish data and setup sections; all 5 topics are final |
+| Until 11 Nov | Finish data and setup sections; all 6 topics are final |
 | 11 Nov | Dry run: fresh clone and setup on a clean machine for every project |
 | 12 Nov, 09:00 | Make the repo public; send the repo link, topics, agenda and the "Before you arrive" checklist (no invites needed) |
 | 13 Nov | Hackathon (agenda in `runbook/handout.html`; organizer agenda on Confluence) |
