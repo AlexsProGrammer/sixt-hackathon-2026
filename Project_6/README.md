@@ -19,7 +19,7 @@ times, so look at the data closely.
 
 ## Data (`data/`, see `data/DATA_DESCRIPTION.md`)
 - `train.csv`: about 34,000 turnarounds with total time, no per-task times.
-- `validation.csv` + `validation_labels.csv`: 3 later days (about 1,000 turnarounds) **with the true total and the true duration of
+- `validation.csv` + `validation_labels.csv`: 7 later days, a full week including the weekend (about 2,800 turnarounds) **with the true total and the true duration of
   each task**, so you can check your estimates. Use it however you like.
 - `branch_data.csv`: branch opening hours and staff.
 We run your code on a **hidden test set** from the days after the validation days.
@@ -41,7 +41,7 @@ Your predictions must include a `dur_<task>` column for every task: a total with
 
 ## What a good result looks like
 The baseline is a floor, not a target. It scores worse than guessing each task's average time.
-- **Baseline:** total MAE about 72 min on validation, mean per-task skill about -0.78.
+- **Baseline:** total MAE about 99 min on validation, mean per-task skill about -0.84.
 - **Good:** total MAE under about 15 min, and positive per-task skill.
 - **Strong:** per-task MAE under about 5 min on most tasks, with clearly positive skill on every task.
 
