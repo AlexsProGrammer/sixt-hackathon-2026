@@ -4,8 +4,10 @@
 - At most MAX_RETRIES retries per request, and one wait budget shared by the whole run (WAIT_BUDGET_S).
   Retry-After is honoured in seconds or as an HTTP date.
 - A 429 that cannot be retried within the budget stops all further requests of the run (shared stop event).
-- Reply cache: SHA-256 over endpoint, model, temperature, sample_idx, prompt version and the full messages.
-  Only successfully parsed objects are stored, written atomically (tempfile + os.replace).
+- Reply cache: SHA-256 over endpoint, model, temperature, sample_idx, prompt version and the full messages
+  (plus input_kind / attachment_sha256 when not the text default, so old text keys stay valid).
+  Layout v2: <root>/replies/<model_slug>/<prompt_version>/<key[:2]>/<key>.json; the legacy <root>/<key[:2]>/<key>.json
+  is read as a fallback. Only successfully parsed objects are stored, written atomically (tempfile + os.replace).
 - Parsing is strict: empty replies, non-JSON, and non-object JSON raise ParseError. Nothing is silently replaced.
 """
 from __future__ import annotations
@@ -26,6 +28,9 @@ TIMEOUT_S = 300
 MAX_RETRIES = 1
 WAIT_BUDGET_S = 60.0
 RETRY_STATUSES = (429, 500, 502, 503, 504)
+
+
+_LAST = threading.local()  # usage block of the last successful post_chat in this thread (best effort metadata)
 
 
 class TransportError(Exception):
@@ -144,6 +149,8 @@ def post_chat(cfg: dict, messages: list[dict], temperature: float, *, timeout: f
         content = payload["choices"][0]["message"]["content"]
     except (ValueError, KeyError, IndexError, TypeError):
         raise TransportError("bad_response", "response has no usable choices[0].message.content") from None
+    usage = payload.get("usage") if isinstance(payload, dict) else None
+    _LAST.usage = usage if isinstance(usage, dict) else None
     return content if content is not None else ""
 
 
@@ -180,30 +187,54 @@ def call_with_retry(cfg: dict, messages: list[dict], temperature: float, state: 
             attempt += 1
 
 
-class ReplyCache:
-    """Disk cache for parsed model objects. Corrupt entries are reported and treated as misses."""
+def model_slug(model: str | None) -> str:
+    """Filesystem-safe model name: '/' and ':' become '__'."""
+    slug = (model or "").strip().replace("/", "__").replace(":", "__").replace("\\", "__")
+    return slug or "_unknown"
 
-    def __init__(self, root: Path | None, state: RunState | None = None):
+
+def _safe_part(value: str | None) -> str:
+    part = (value or "").strip().replace("/", "_").replace("\\", "_")
+    return part if part and part not in (".", "..") else "_unknown"
+
+
+class ReplyCache:
+    """Disk cache for parsed model objects. Corrupt entries are reported and treated as misses.
+
+    layout="v2": <root>/replies/<model_slug>/<prompt_version>/<key[:2]>/<key>.json, with a read-only fallback to the
+    legacy flat layout <root>/<key[:2]>/<key>.json. layout="legacy" keeps the flat layout for reads and writes.
+    """
+
+    def __init__(self, root: Path | None, state: RunState | None = None, *, layout: str = "v2"):
+        if layout not in ("v2", "legacy"):
+            raise ValueError(f"unknown cache layout: {layout}")
         self.root = Path(root) if root else None
         self.state = state
+        self.layout = layout
 
     @staticmethod
     def make_key(*, endpoint: str, model: str, temperature: float, sample_idx: int,
-                 prompt_version: str, messages: list[dict]) -> str:
-        canonical = json.dumps({"endpoint": endpoint, "model": model, "temperature": temperature,
-                                "sample_idx": sample_idx, "prompt_version": prompt_version,
-                                "messages": messages}, sort_keys=True, ensure_ascii=False)
+                 prompt_version: str, messages: list[dict],
+                 input_kind: str = "text", attachment_sha256: str | None = None) -> str:
+        fields = {"endpoint": endpoint, "model": model, "temperature": temperature,
+                  "sample_idx": sample_idx, "prompt_version": prompt_version, "messages": messages}
+        # Added only when not the default, so keys of plain text jobs equal the pre-v2 keys.
+        if input_kind != "text":
+            fields["input_kind"] = input_kind
+        if attachment_sha256:
+            fields["attachment_sha256"] = attachment_sha256
+        canonical = json.dumps(fields, sort_keys=True, ensure_ascii=False)
         return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
-    def _path(self, key: str) -> Path:
+    def _legacy_path(self, key: str) -> Path:
         return self.root / key[:2] / f"{key}.json"
 
-    def get(self, key: str) -> dict | None:
-        if self.root is None:
-            return None
-        path = self._path(key)
-        if not path.exists():
-            return None
+    def _path(self, key: str, model: str | None = None, prompt_version: str | None = None) -> Path:
+        if self.layout == "legacy":
+            return self._legacy_path(key)
+        return (self.root / "replies" / model_slug(model) / _safe_part(prompt_version) / key[:2] / f"{key}.json")
+
+    def _read(self, path: Path) -> dict | None:
         try:
             entry = json.loads(path.read_text(encoding="utf-8"))
             if not isinstance(entry, dict) or not isinstance(entry.get("answer"), dict):
@@ -214,10 +245,24 @@ class ReplyCache:
                 self.state.warn(f"corrupt cache entry ignored: {path.name[:12]}... ({type(e).__name__})")
             return None
 
-    def put(self, key: str, entry: dict) -> None:
+    def get(self, key: str, model: str | None = None, prompt_version: str | None = None) -> dict | None:
+        if self.root is None:
+            return None
+        path = self._path(key, model, prompt_version)
+        if path.exists():
+            return self._read(path)
+        if self.layout == "v2":
+            legacy = self._legacy_path(key)  # read-only fallback until the migration is confirmed
+            if legacy.exists():
+                return self._read(legacy)
+        return None
+
+    def put(self, key: str, entry: dict, model: str | None = None, prompt_version: str | None = None) -> None:
         if self.root is None:
             return
-        target = self._path(key)
+        model = model or entry.get("model")
+        prompt_version = prompt_version or entry.get("prompt_version")
+        target = self._path(key, model, prompt_version)
         target.parent.mkdir(parents=True, exist_ok=True)
         fd, tmp = tempfile.mkstemp(dir=target.parent, suffix=".tmp")
         try:
@@ -249,15 +294,25 @@ def execute_job(job: dict, *, cfg: dict, cache: ReplyCache, state: RunState, tem
         key = ReplyCache.make_key(endpoint=cfg["LLM_BASE_URL"].rstrip("/"), model=cfg["LLM_MODEL"],
                                   temperature=temp, sample_idx=job["sample_idx"],
                                   prompt_version=prompt_version, messages=messages)
-        entry = cache.get(key)
+        model = cfg["LLM_MODEL"]
+        entry = cache.get(key, model, prompt_version)
         if entry is not None:
             state.bump("cache_hits")
             answer = entry["answer"]
         else:
+            _LAST.usage = None
+            t0 = time.monotonic()
             reply = call_with_retry(cfg, messages, temp, state)
+            elapsed = round(time.monotonic() - t0, 3)
             answer = parse_reply(reply)
-            cache.put(key, {"answer": answer, "prompt_version": prompt_version, "model": cfg["LLM_MODEL"],
-                            "temperature": temp, "sample_idx": job["sample_idx"]})
+            new_entry = {"answer": answer, "prompt_version": prompt_version, "model": model,
+                         "temperature": temp, "sample_idx": job["sample_idx"], "input_kind": "text",
+                         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                         "elapsed_s": elapsed}
+            usage = getattr(_LAST, "usage", None)
+            if usage:
+                new_entry["usage"] = usage
+            cache.put(key, new_entry, model, prompt_version)
         result.update(answer=answer, ok=True)
     except TransportError as e:
         result["error"] = e.kind + (f":{e.status}" if e.status else "")
