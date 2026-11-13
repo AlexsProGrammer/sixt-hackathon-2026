@@ -23,3 +23,5 @@ Project_1/results/*.jsonl
 Project_1/cache/
 Project_1/temp/*
 .kilo/*
+Project_1/results/**/*.jsonl
+Project_1/results/*.log

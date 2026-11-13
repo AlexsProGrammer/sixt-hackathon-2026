@@ -1,0 +1,16 @@
+{
+  "contract_version": 1,
+  "run_id": "07f36e261f39",
+  "threshold": 1.0,
+  "abstain_all": true,
+  "method": "all_abstain: no threshold gives positive saving at error cost 100",
+  "pipeline": null,
+  "error_cost": 100.0,
+  "n_docs": 6,
+  "n_fields": 199,
+  "accepted": 0,
+  "wrong": 0,
+  "hallucinated": 0,
+  "net_saving_pct": 0.0,
+  "n_abstained_after_errors": null
+}
