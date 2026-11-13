@@ -45,6 +45,7 @@ def load_env(path: Path = HERE / ".env") -> list[str]:
     return loaded
 
 
+
 def llm_config() -> dict:
     """The three LLM settings. Raises RuntimeError naming the missing variables (never their values)."""
     cfg = {k: os.environ.get(k, "").strip() for k in LLM_VARS}
@@ -52,8 +53,9 @@ def llm_config() -> dict:
     if missing:
         raise RuntimeError("LLM config missing: " + ", ".join(missing)
                            + " (set in the environment or in Project_1/.env)")
+    if not cfg["LLM_BASE_URL"].lower().startswith(("https://", "http://")):
+        raise RuntimeError("LLM_BASE_URL has no http:// or https:// scheme (fix the value in Project_1/.env)")
     return cfg
-
 
 def page_path(stored: str) -> Path:
     """Map a record's page path to a local file. Records store Windows separators ('raw\\extractbench\\...').
