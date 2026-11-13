@@ -1,0 +1,1221 @@
+{
+  "n_docs": 307,
+  "n_groups": 259,
+  "n_fields": 12562,
+  "outcomes": {
+    "correct": 3618,
+    "wrong": 1287,
+    "hallucinated": 334,
+    "missed": 1353,
+    "true_null": 5970
+  },
+  "predictions": {
+    "n": 5239,
+    "correct": 3618,
+    "wrong": 1287,
+    "hallucinated": 334,
+    "precision": 0.6905898072151174,
+    "wilson95_err_upper": 0.32206329634716185
+  },
+  "by_source_kind_grounded": [
+    {
+      "key": "extractbench / number / False",
+      "n": 181,
+      "correct": 176,
+      "wrong": 5,
+      "hallucinated": 0,
+      "precision": 0.9723756906077348,
+      "wilson95_err_upper": 0.06302781407264325
+    },
+    {
+      "key": "extractbench / number / True",
+      "n": 65,
+      "correct": 52,
+      "wrong": 13,
+      "hallucinated": 0,
+      "precision": 0.8,
+      "wilson95_err_upper": 0.31270362289297426
+    },
+    {
+      "key": "cuad / span / False",
+      "n": 77,
+      "correct": 21,
+      "wrong": 49,
+      "hallucinated": 7,
+      "precision": 0.2727272727272727,
+      "wilson95_err_upper": 0.8141564445988116
+    },
+    {
+      "key": "extractbench / boolean / False",
+      "n": 853,
+      "correct": 794,
+      "wrong": 59,
+      "hallucinated": 0,
+      "precision": 0.9308323563892146,
+      "wilson95_err_upper": 0.08819869296889325
+    },
+    {
+      "key": "extractbench / json / True",
+      "n": 75,
+      "correct": 7,
+      "wrong": 68,
+      "hallucinated": 0,
+      "precision": 0.09333333333333334,
+      "wilson95_err_upper": 0.9540520606710553
+    },
+    {
+      "key": "extractbench / string / True",
+      "n": 738,
+      "correct": 668,
+      "wrong": 64,
+      "hallucinated": 6,
+      "precision": 0.9051490514905149,
+      "wilson95_err_upper": 0.11813849881697347
+    },
+    {
+      "key": "extractbench / json / False",
+      "n": 156,
+      "correct": 44,
+      "wrong": 105,
+      "hallucinated": 7,
+      "precision": 0.28205128205128205,
+      "wilson95_err_upper": 0.7826694408454095
+    },
+    {
+      "key": "extractbench / string / False",
+      "n": 1517,
+      "correct": 1279,
+      "wrong": 173,
+      "hallucinated": 65,
+      "precision": 0.8431114040870138,
+      "wilson95_err_upper": 0.17605481253138525
+    },
+    {
+      "key": "cuad / span / True",
+      "n": 1577,
+      "correct": 577,
+      "wrong": 751,
+      "hallucinated": 249,
+      "precision": 0.3658845909955612,
+      "wilson95_err_upper": 0.6575365096321785
+    }
+  ],
+  "by_confidence": [
+    {
+      "key": "0.49",
+      "n": 8,
+      "correct": 7,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.875,
+      "wilson95_err_upper": 0.4708948057698615
+    },
+    {
+      "key": "0.38",
+      "n": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.60",
+      "n": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.92",
+      "n": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.35",
+      "n": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.30",
+      "n": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.40",
+      "n": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.42",
+      "n": 5,
+      "correct": 1,
+      "wrong": 4,
+      "hallucinated": 0,
+      "precision": 0.2,
+      "wilson95_err_upper": 0.9637768390302125
+    },
+    {
+      "key": "0.75",
+      "n": 6,
+      "correct": 0,
+      "wrong": 2,
+      "hallucinated": 4,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.45",
+      "n": 14,
+      "correct": 4,
+      "wrong": 10,
+      "hallucinated": 0,
+      "precision": 0.2857142857142857,
+      "wilson95_err_upper": 0.882788120898909
+    },
+    {
+      "key": "0.70",
+      "n": 11,
+      "correct": 1,
+      "wrong": 8,
+      "hallucinated": 2,
+      "precision": 0.09090909090909091,
+      "wilson95_err_upper": 0.9837682477371741
+    },
+    {
+      "key": "0.50",
+      "n": 51,
+      "correct": 38,
+      "wrong": 13,
+      "hallucinated": 0,
+      "precision": 0.7450980392156863,
+      "wilson95_err_upper": 0.38868544106148706
+    },
+    {
+      "key": "0.98",
+      "n": 79,
+      "correct": 61,
+      "wrong": 17,
+      "hallucinated": 1,
+      "precision": 0.7721518987341772,
+      "wilson95_err_upper": 0.3316705533043654
+    },
+    {
+      "key": "0.47",
+      "n": 50,
+      "correct": 22,
+      "wrong": 28,
+      "hallucinated": 0,
+      "precision": 0.44,
+      "wilson95_err_upper": 0.6883801278976466
+    },
+    {
+      "key": "0.99",
+      "n": 670,
+      "correct": 641,
+      "wrong": 28,
+      "hallucinated": 1,
+      "precision": 0.9567164179104478,
+      "wilson95_err_upper": 0.06147132128717169
+    },
+    {
+      "key": "0.80",
+      "n": 39,
+      "correct": 9,
+      "wrong": 19,
+      "hallucinated": 11,
+      "precision": 0.23076923076923078,
+      "wilson95_err_upper": 0.8735433757121625
+    },
+    {
+      "key": "0.85",
+      "n": 142,
+      "correct": 25,
+      "wrong": 65,
+      "hallucinated": 52,
+      "precision": 0.176056338028169,
+      "wilson95_err_upper": 0.8778113074782288
+    },
+    {
+      "key": "0.90",
+      "n": 358,
+      "correct": 92,
+      "wrong": 174,
+      "hallucinated": 92,
+      "precision": 0.2569832402234637,
+      "wilson95_err_upper": 0.7855350237586778
+    },
+    {
+      "key": "1.00",
+      "n": 2300,
+      "correct": 1990,
+      "wrong": 269,
+      "hallucinated": 41,
+      "precision": 0.8652173913043478,
+      "wilson95_err_upper": 0.1493495957903057
+    },
+    {
+      "key": "0.95",
+      "n": 1500,
+      "correct": 727,
+      "wrong": 643,
+      "hallucinated": 130,
+      "precision": 0.4846666666666667,
+      "wilson95_err_upper": 0.5405534598140095
+    }
+  ],
+  "by_family_field_grounded": [
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / recipient_name",
+      "n": 14,
+      "correct": 14,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.21531701192718142
+    },
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / payer_federal_id",
+      "n": 13,
+      "correct": 13,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.22810184305529166
+    },
+    {
+      "key": "RRCH5Extraction / uic_no",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / filing_no",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / submittal_date",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / version",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / evaluation",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / test_status",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / preparer",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / preparer_phone",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / preparer_email",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / operator_name",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / operator_no",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / operator_address_line_1",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / operator_city",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / operator_state",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / operator_postal_code",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / api",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / injection_well",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / district",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / lease_no",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / well_no",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / lease_name",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / field_number",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / field_name",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / county",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / reason_for",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / date_test_performed",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / retest",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / packer_make_model",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / depth_packer",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / well_status",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / test_witnessed_by_rrc",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / annulus_fluid_description",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "RRCH5Extraction / injection_fluid_description",
+      "n": 7,
+      "correct": 7,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.35433884297520657
+    },
+    {
+      "key": "stem:sched_i / filer_name",
+      "n": 4,
+      "correct": 4,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.48990002040399916
+    },
+    {
+      "key": "stem:sched_i / tax_period_end_date",
+      "n": 4,
+      "correct": 4,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.48990002040399916
+    },
+    {
+      "key": "stem:sched_i / total_other_org_count",
+      "n": 4,
+      "correct": 4,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.48990002040399916
+    },
+    {
+      "key": "RRCH5Extraction / operator_comments_on_test",
+      "n": 4,
+      "correct": 4,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.48990002040399916
+    },
+    {
+      "key": "Schedule K-1 (Form 1120S) Shareholder's Share / shareholder_stock_ownership_pct",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "stem:13f / filing_manager_name",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "stem:13f / report_type",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "stem:13f / table_entry_total",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "stem:13f / table_value_total_usd",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "UtilityBill / utility_provider",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "UtilityBill / account_number",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "UtilityBill / customer_name",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "UtilityBill / service_address",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "UtilityBill / billing_period_start",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "UtilityBill / billing_period_end",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "UtilityBill / payment_due_date",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "stem:sched_i / total_501c3_org_count",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "Product Spec Sheet / Datasheet — rated specif / product_title",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "PurchaseOrder / buyer_contact",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "stem:nport / filer_name",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "stem:nport / series_id",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "stem:nport / series_name",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "stem:nport / report_period_end",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / account_number",
+      "n": 13,
+      "correct": 12,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.9230769230769231,
+      "wilson95_err_upper": 0.3331453392824736
+    },
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / payer_name",
+      "n": 13,
+      "correct": 11,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.8461538461538461,
+      "wilson95_err_upper": 0.4223517050863101
+    }
+  ],
+  "by_route": [
+    {
+      "key": "text_damaged",
+      "n": 221,
+      "correct": 131,
+      "wrong": 86,
+      "hallucinated": 4,
+      "precision": 0.5927601809954751,
+      "wilson95_err_upper": 0.4730660387439698
+    },
+    {
+      "key": "no_text",
+      "n": 2131,
+      "correct": 1918,
+      "wrong": 202,
+      "hallucinated": 11,
+      "precision": 0.9000469263256687,
+      "wilson95_err_upper": 0.11341671875245102
+    },
+    {
+      "key": "text_ok",
+      "n": 1233,
+      "correct": 971,
+      "wrong": 199,
+      "hallucinated": 63,
+      "precision": 0.7875101378751014,
+      "wilson95_err_upper": 0.23619831625548715
+    },
+    {
+      "key": "cuad_text",
+      "n": 1654,
+      "correct": 598,
+      "wrong": 800,
+      "hallucinated": 256,
+      "precision": 0.3615477629987908,
+      "wilson95_err_upper": 0.661261291502075
+    }
+  ],
+  "whitelist_params": {
+    "min_n": 3,
+    "min_groups": 1,
+    "evidence": "grounded_text",
+    "conf": 0.0
+  },
+  "whitelist": {
+    "min_n": 3,
+    "min_groups": 1,
+    "evidence": "grounded_text",
+    "conf": 0.0,
+    "n_fields": 12562,
+    "booked": 375,
+    "wrong": 0,
+    "wilson95_err_upper": 0.01014038584991722,
+    "families": 2,
+    "groups": 15,
+    "net_e20": 0.029851934405349466,
+    "net_e100": 0.029851934405349466,
+    "net_e500": 0.029851934405349466
+  },
+  "whitelist_grid": [
+    {
+      "min_n": 3,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 12562,
+      "booked": 375,
+      "wrong": 0,
+      "wilson95_err_upper": 0.01014038584991722,
+      "families": 2,
+      "groups": 15,
+      "net_e20": 0.029851934405349466,
+      "net_e100": 0.029851934405349466,
+      "net_e500": 0.029851934405349466
+    },
+    {
+      "min_n": 5,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 12562,
+      "booked": 359,
+      "wrong": 0,
+      "wilson95_err_upper": 0.010587540127703108,
+      "families": 1,
+      "groups": 11,
+      "net_e20": 0.028578251870721223,
+      "net_e100": 0.028578251870721223,
+      "net_e500": 0.028578251870721223
+    },
+    {
+      "min_n": 10,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 12562,
+      "booked": 352,
+      "wrong": 0,
+      "wilson95_err_upper": 0.01079581476701993,
+      "families": 1,
+      "groups": 11,
+      "net_e20": 0.028021015761821366,
+      "net_e100": 0.028021015761821366,
+      "net_e500": 0.028021015761821366
+    },
+    {
+      "min_n": 20,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 12562,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 3,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 12562,
+      "booked": 375,
+      "wrong": 0,
+      "wilson95_err_upper": 0.01014038584991722,
+      "families": 2,
+      "groups": 15,
+      "net_e20": 0.029851934405349466,
+      "net_e100": 0.029851934405349466,
+      "net_e500": 0.029851934405349466
+    },
+    {
+      "min_n": 5,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 12562,
+      "booked": 359,
+      "wrong": 0,
+      "wilson95_err_upper": 0.010587540127703108,
+      "families": 1,
+      "groups": 11,
+      "net_e20": 0.028578251870721223,
+      "net_e100": 0.028578251870721223,
+      "net_e500": 0.028578251870721223
+    },
+    {
+      "min_n": 10,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 12562,
+      "booked": 352,
+      "wrong": 0,
+      "wilson95_err_upper": 0.01079581476701993,
+      "families": 1,
+      "groups": 11,
+      "net_e20": 0.028021015761821366,
+      "net_e100": 0.028021015761821366,
+      "net_e500": 0.028021015761821366
+    },
+    {
+      "min_n": 20,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 12562,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 3,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 12562,
+      "booked": 1697,
+      "wrong": 29,
+      "wilson95_err_upper": 0.024434947551445832,
+      "families": 8,
+      "groups": 57,
+      "net_e20": 0.08891896194873428,
+      "net_e100": -0.09576500557236109,
+      "net_e500": -1.0191848431778379
+    },
+    {
+      "min_n": 5,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 12562,
+      "booked": 1294,
+      "wrong": 21,
+      "wilson95_err_upper": 0.02468266390512187,
+      "families": 4,
+      "groups": 41,
+      "net_e20": 0.06957490845406783,
+      "net_e100": -0.06416175768189779,
+      "net_e500": -0.7328450883617258
+    },
+    {
+      "min_n": 10,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 12562,
+      "booked": 696,
+      "wrong": 9,
+      "wilson95_err_upper": 0.024391713417994575,
+      "families": 2,
+      "groups": 23,
+      "net_e20": 0.041076261741760864,
+      "net_e100": -0.01623945231651011,
+      "net_e500": -0.302818022607865
+    },
+    {
+      "min_n": 20,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 12562,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 3,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 12562,
+      "booked": 1685,
+      "wrong": 29,
+      "wilson95_err_upper": 0.024608191839406608,
+      "families": 7,
+      "groups": 54,
+      "net_e20": 0.08796370004776309,
+      "net_e100": -0.09672026747333227,
+      "net_e500": -1.020140105078809
+    },
+    {
+      "min_n": 5,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 12562,
+      "booked": 1294,
+      "wrong": 21,
+      "wilson95_err_upper": 0.02468266390512187,
+      "families": 4,
+      "groups": 41,
+      "net_e20": 0.06957490845406783,
+      "net_e100": -0.06416175768189779,
+      "net_e500": -0.7328450883617258
+    },
+    {
+      "min_n": 10,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 12562,
+      "booked": 696,
+      "wrong": 9,
+      "wilson95_err_upper": 0.024391713417994575,
+      "families": 2,
+      "groups": 23,
+      "net_e20": 0.041076261741760864,
+      "net_e100": -0.01623945231651011,
+      "net_e500": -0.302818022607865
+    },
+    {
+      "min_n": 20,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 12562,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    }
+  ],
+  "missed_savings": {
+    "params": {
+      "min_n": 3,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "conf": 0.0
+    },
+    "correct_not_booked": 3243,
+    "by_reason": {
+      "no_evidence": 2314,
+      "cell_has_errors": 579,
+      "cell_too_small": 350
+    },
+    "by_family": {
+      "cuad": {
+        "cell_has_errors": 577,
+        "no_evidence": 21
+      },
+      "RRCH9Extraction": {
+        "no_evidence": 503
+      },
+      "RRC2AExtraction": {
+        "no_evidence": 401
+      },
+      "Form W-2 Wage and Tax Statement (2020)": {
+        "no_evidence": 330
+      },
+      "RRCP18Extraction": {
+        "no_evidence": 325
+      },
+      "RRCH12Extraction": {
+        "no_evidence": 311
+      },
+      "RRCW14ReviewExtraction": {
+        "no_evidence": 105,
+        "cell_too_small": 22
+      },
+      "Form 1099-B Proceeds From Broker and Barter E": {
+        "cell_too_small": 61,
+        "no_evidence": 58
+      },
+      "RRCW1Extraction": {
+        "no_evidence": 52,
+        "cell_too_small": 39
+      },
+      "Schedule K-1 (Form 1065) Partner's Share of I": {
+        "no_evidence": 63,
+        "cell_too_small": 10
+      },
+      "Schedule K-1 (Form 1120S) Shareholder's Share": {
+        "no_evidence": 36,
+        "cell_too_small": 22
+      },
+      "ClosingDisclosureTRID": {
+        "cell_too_small": 39
+      },
+      "CCCMarketValuationReport": {
+        "cell_too_small": 32,
+        "no_evidence": 6
+      },
+      "UtilityBill": {
+        "cell_too_small": 30,
+        "no_evidence": 6
+      },
+      "MitchellVehicleValuationReport": {
+        "no_evidence": 17,
+        "cell_too_small": 10
+      },
+      "PurchaseOrder": {
+        "no_evidence": 11,
+        "cell_too_small": 11
+      },
+      "stem:nport": {
+        "cell_too_small": 12,
+        "no_evidence": 9
+      },
+      "stem:13f": {
+        "cell_too_small": 12,
+        "no_evidence": 4
+      },
+      "stem:mcdonalds_receipt": {
+        "no_evidence": 14
+      },
+      "Product Spec Sheet / Datasheet — rated specif": {
+        "no_evidence": 7,
+        "cell_too_small": 5
+      },
+      "stem:golden_corral": {
+        "no_evidence": 12
+      },
+      "stem:sched_i": {
+        "no_evidence": 7,
+        "cell_too_small": 4
+      },
+      "RRCH5Extraction": {
+        "no_evidence": 5,
+        "cell_too_small": 4,
+        "cell_has_errors": 2
+      },
+      "stem:stephenville_axon": {
+        "cell_too_small": 6,
+        "no_evidence": 4
+      },
+      "stem:grafton_isotrope": {
+        "cell_too_small": 6,
+        "no_evidence": 3
+      }
+    }
+  }
+}

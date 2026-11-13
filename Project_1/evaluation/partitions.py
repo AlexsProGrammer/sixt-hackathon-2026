@@ -25,7 +25,12 @@ SEEN_GOLD_FILES = ("results/smoke10_gold.jsonl", "results/smoke2_gold.jsonl", "r
 
 
 def group_of(doc_id: str) -> str:
-    return re.sub(r"-p\d+$", "", doc_id)
+    """Leakage group of a document. Strips, in this order:
+    `_corrupted` (the corrupted twin belongs to the clean document), `-rN` (re-renders such as
+    `passcoag-2020-w2-p0002-r1..r4`) and `-pNNNN` (pages of one filing)."""
+    g = re.sub(r"_corrupted$", "", doc_id)
+    g = re.sub(r"-r\d+$", "", g)
+    return re.sub(r"-p\d+$", "", g)
 
 
 def _u(seed: int, group: str) -> float:

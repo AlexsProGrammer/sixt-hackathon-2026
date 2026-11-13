@@ -1,8 +1,8 @@
 {
   "contract_version": 1,
   "field_contract_version": 2,
-  "run_id": "6b51c47723bf",
-  "mode": "llm",
+  "run_id": "2e8c30419ef1",
+  "mode": "abstain_all",
   "pipeline": {
     "workers": 1,
     "samples": 1,
@@ -12,32 +12,32 @@
     "batch_size": 10,
     "uq_method": "k1_grounded",
     "sampling": "mixed",
-    "model": "vertex_ai/gemini-3.7-flash",
-    "prompt_version": "v4"
+    "model": null,
+    "prompt_version": null
   },
   "uq": {
     "method": "k1_grounded",
     "expected_k": 1,
-    "probly_version": "0.9.1"
+    "probly_version": null
   },
   "fingerprint": {
-    "input_sha256": "a0b6d1cd205bb935425b8a7ff4837c0a39d4e68fadcee4df056163fece545b68",
-    "pipeline_sha256": "8324fe34b349d4a293bfcc04879b6d1623de0afdb49189e6ea6ef3bf57933899",
-    "endpoint_host": "llm.orange.sixt.com",
-    "code_sha256": "61adf99a24fdd07349efdea928c741282e647ca990565e3730154cc59078b78d",
+    "input_sha256": "a1216a6c5afdd3b9fcb4e8def4c1d38285ef2cb088a9c6d2f92e8b103467e808",
+    "pipeline_sha256": "560586315b80852738832da4eccce777008dc5e1b11bff1b4c5c0f26660a89fa",
+    "endpoint_host": null,
+    "code_sha256": "f734d2cfd8551c27b3e9213d3e8fa9d7079b48a595229c819debcc8800740b8b",
     "prompt_version": "v4",
-    "fingerprint_sha256": "55597f90b97311ff4e68edf215485dc01783075cdde4b601f9ed983935f24f4c"
+    "fingerprint_sha256": "ded8a21e395af8bb563cf263e2e69195374775b0714d93897ac5d1eeb40bea45"
   },
   "segments": [
     {
-      "run_id": "6b51c47723bf",
-      "n_requested": 10,
+      "run_id": "2e8c30419ef1",
+      "n_requested": 12,
       "requests": 0,
       "resumed_from_disk": 0
     }
   ],
-  "n_requested": 10,
-  "n_written": 10,
+  "n_requested": 12,
+  "n_written": 12,
   "n_skipped_resumed": 0,
   "n_failed": 0,
   "failed_doc_ids": [],
@@ -45,8 +45,8 @@
   "abstained_after_error_doc_ids": [],
   "run_complete": true,
   "requests": 0,
-  "cache_hits": 48,
-  "elapsed_seconds": 2.95,
+  "cache_hits": 0,
+  "elapsed_seconds": 0.0,
   "stopped_429": false,
   "on_error": "fail",
   "warnings": []

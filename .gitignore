@@ -10,7 +10,11 @@ venv/
 node_modules/
 .ipynb_checkpoints/
 data/raw/
-Project_1/data/
+Project_1/data/*
+# frozen split manifest (ids + hashes only) is tracked; the split files carry gold and stay local
+!Project_1/data/splits/
+Project_1/data/splits/*
+!Project_1/data/splits/manifest.json
 !.env.example
 Project_2/data/
 quickstart_answers.csv
@@ -36,3 +40,4 @@ Project_1/results/runs/*/fields.jsonl
 Project_1/results/runs/*.lock
 Project_1/results/runs/index.jsonl.lock
 !Project_1/results/runs/index.jsonl
+Project_1/results/runs/*/selection.jsonl
