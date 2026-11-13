@@ -52,6 +52,8 @@ def llm_config() -> dict:
     if missing:
         raise RuntimeError("LLM config missing: " + ", ".join(missing)
                            + " (set in the environment or in Project_1/.env)")
+    if not cfg["LLM_BASE_URL"].lower().startswith(("https://", "http://")):
+        raise RuntimeError("LLM_BASE_URL has no http:// or https:// scheme (fix the value in Project_1/.env)")
     return cfg
 
 
