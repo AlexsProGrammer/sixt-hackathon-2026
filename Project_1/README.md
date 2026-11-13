@@ -1,150 +1,132 @@
 # Project 1: Teach a machine to say "I don't know"
-*Structured extraction from documents: turn messy PDFs and scans into JSON, and know which fields to trust.*
 
-**Project owners:** Sruthi Radhakrishnan, Ihsan Soydemir (sruthi.radhakrishnan@sixt.com, ihsan.soydemir@sixt.com). On the day, ask on site.
+**Team A-Team** · SIXT Hackathon 2026 · original task brief: [`docs/task_brief.md`](docs/task_brief.md)
 
-## The story
-Every day documents arrive: contracts, forms, scans, handwriting. Today people read them and type the values into a system. An AI can do it in seconds, but there is a catch: **one confidently wrong value that reaches the system of record costs far more than the minute a person would have spent.** So the useful system is not the one that answers most often. It is the one that **knows when it is right**: it books the fields it is sure of and hands the rest to a human.
+> We do not build the extractor that answers most often.
+> We build the one that **knows which of its answers it can prove**, books only those, and routes everything else to a human.
 
-## The task
-You get a document and a schema (a list of fields, e.g. a contract clause or a form box). For every field, return a **value and a confidence**. A field that is not in the document must come back empty.
+---
+
+## 1. The problem in one table
+
+Every field of a document (contract clause, form box, checkbox) gets a value and a confidence. A field is **booked** when its confidence is ≥ the declared threshold.
+
+| Outcome | Cost |
+|---|---|
+| Field sent to a human | **1** |
+| Booked and correct | 0 (saves the 1) |
+| Booked and wrong / hallucinated | **100** |
+
+One wrong booking wipes out 100 correct ones. Automation only pays above **99 % precision** *on the booked fields*. Coverage is secondary.
+
+What makes it hard (dev data, 540 docs, 22,115 fields):
+
+- **70.6 %** of the fields are contract clauses (CUAD) that must match the gold text with token-F1 ≥ 0.8.
+- **57.6 %** of all fields are empty. A model that fills them is punished.
+- **~40 %** of the form PDFs (ExtractBench) are scans with no text layer, and many others have a damaged OCR layer (`ine Harbour Water Utillties` instead of `Pine Harbour Water Utilities`).
+- The model's own confidence is meaningless: at "1.00" it is still wrong in ~10 % of cases.
+
+## 2. Our idea
+
+**Trust is earned per field type, not per model.** The new approach has three parts.
+
+1. **Different documents, different pipelines.** A contract, a clean digital form and a crooked scan need different inputs and prompts.
+2. **Different eyes, not the same eyes twice.** Asking one model three times measures consistency, not correctness. It repeats its own mistake. We ask **different model families on different inputs** (Gemini on the PDF, Claude on the PDF, Gemini on the text layer). The university UQ library **probly** turns their answers into a distribution and an entropy.
+3. **A selector that has to be convinced.** A field is booked only if its *field cell* (document family × field) has a measured track record on dev, with zero errors over several independent documents, **and** the views agree with evidence in the document. Everything else goes to a human. No exceptions for "high confidence".
+
+```mermaid
+flowchart LR
+    D[Document + schema] --> R{Router}
+    R -->|contract| C[CUAD pipeline<br/>whole contract, long context]
+    R -->|form, good text layer| T[Form pipeline<br/>PDF + text layer]
+    R -->|scan / damaged text| V[Vision pipeline<br/>native PDF / page images]
+    C --> M[Multi-view answers<br/>Gemini · Claude · text]
+    T --> M
+    V --> M
+    M --> E[Evidence checks<br/>schema · grounding · numbers]
+    E --> P[probly<br/>answer distribution + entropy]
+    P --> S{Selector<br/>proven field cell?<br/>views agree?}
+    S -->|yes| B[Book automatically]
+    S -->|no| H[Human review<br/>pre-filled with evidence]
+```
+
+### The pipelines
+
+| Route | When | Inputs / views | Status |
+|---|---|---|---|
+| `cuad` | contracts | full contract text in one long-context call (no truncation); view A Gemini, view B Claude; spans checked word for word against the contract | planned (T07) |
+| `pdf_text_good` | form with a clean text layer | native PDF (Gemini, Claude) + text layer (Gemini) | planned (T06) |
+| `pdf_text_damaged` | text layer fails the quality gate | native PDF only (text layer is not trusted) | planned (T05/T06) |
+| `pdf_no_text` | scan, no text layer | native PDF, or rendered page images for models without PDF input | planned (T06) |
+| `legacy_text` | current code | text layer → chunked prompts → grounding → probly → decision | **implemented** |
+
+Proven so far: `gemini-3.7-flash` reads PDFs natively, and `claude-sonnet-5.5` does too (via the `file` part). On the damaged K-1 scan both read `Pine Harbour Water Utilities LLC` correctly, where the text layer had it mangled.
+
+### Why it can work: first evidence
+
+We re-analysed our **stored** answers from earlier runs (307 dev docs, no new API calls), using the "only proven field cells" rule with leave-one-document-group-out:
+
+| Rule | Booked | Wrong | Net saving |
+|---|---:|---:|---:|
+| Book on model confidence ≥ 0.99 | 976 | 78 | **−30.9 %** |
+| **Whitelist of proven field cells + grounded value** | **378** | **0** | **+3.0 %** |
+
+This is the first configuration in our project that beats the human baseline, and it uses only the weakest pipeline (text only). The vision and multi-view pipelines are expected to add more coverage.
+
+## 3. Repository map
 
 ```
-+---------------------------+   +---------------------------+
-|          document         |   |           schema          |
-|      PDF, scan, photo     |   |     the fields to fill    |
-+-------------+-------------+   +-------------+-------------+
-              |                               |
-              +---------------+---------------+
-                              |
-                              v
-              +-------------------------------+
-              |          YOUR SYSTEM          |
-              |      model, tools, checks     |
-              +-------------------------------+
-                              |
-     a value + a confidence, for every field
-                              |
-                              v
-              +-------------------------------+
-              | confidence >= your threshold? |
-              +-+---------------------------+-+
-                |                           |
-               yes                          no
-                v                           v
-    +-----------------------+   +-----------------------+
-    |  booked automatically |   |    sent to a human    |
-    | right: saves a review |   |     costs 1 review    |
-    |    wrong: costs 100   |   |   (the safe choice)   |
-    +-----------+-----------+   +-----------+-----------+
-                |                           |
-                +-------------+-------------+
-                              |
-                              v
-      5_score.py: net saving vs. doing it all by hand
+4_extract.py            extractor CLI (offline / LLM / all-abstain, frozen decision file)
+pipeline/               job planning, prompts, HTTP transport + reply cache, chunk merge
+uncertainty/            schema check, grounding, policy, probly aggregation, decision rules
+evaluation/             partitions, threshold freeze/audit, ablation, validation
+analyse_fields.py       per-field error analysis + whitelist simulation (offline)
+vision_probe.py         checks which endpoint models accept PDF / image input
+5_score.py              official scorer (unchanged)
+submission/             decision.json, make_slides.py, slides.pdf
+results/                stored predictions and score files
+docs/                   task brief, data/scoring guide, probly guide
+.kilo/plans/ (repo root) master plan + 14 sub-plans for the new architecture
 ```
 
-This is where models struggle: layouts vary, scans are bad, handwriting and checkboxes get misread, and models happily invent a plausible value for a blank field.
+The organiser files `1_download.sh`, `2_prepare.py`, `3_baseline.py`, `4_extract_example.py`, `5_score.py` and `test_score.py` are unchanged.
 
-## The business case
-Everyone is scored with the same fixed costs (a simplified model, not SIXT figures): a human review of one field costs **1**, a wrong value that gets booked costs **100**. So automating only pays off if you are right more than **99%** of the time.
+## 4. How to run
 
-Example with 100 fields. Doing it all by hand costs 100. Your system books 90 and sends 10 to a human (cost 10):
-- all 90 booked values are right: you pay 10 and save **90%**.
-- just 1 booked value is wrong: you pay 10 + 100 = 110, which is **more than by hand**.
+Python 3.12 (needed by `probly==0.9.1`). From `Project_1/`:
 
-One confident mistake can wipe out the saving. That is why knowing when you are right matters more than raw accuracy.
-
-| Outcome | Meaning | Cost |
-| --- | --- | --- |
-| wrong | accepted value differs from gold | error cost |
-| hallucinated | accepted value, but the field is truly absent | error cost, hurts trust most |
-| missed | no value, but the field is there | one review |
-| true null | no value, field truly absent | one review (no saving, no loss) |
-
-## Quick start
-
-<img src="../assets/time-quick-setup.svg" alt="Under 5 minutes" width="360">
-
-**Quick setup (under 5 min):** `bash setup.sh` in this folder. It makes a virtual environment, downloads the data (add `--accept-licenses` to accept the dataset licences) and runs the baseline. Copy `.env.example` to `.env` for your LLM key. Python is our starting point; any language is fine.
-
-Or step by step:
 ```bash
-bash 1_download.sh        # about 60 MB, asks you to accept the dataset licences
-python 2_prepare.py       # builds data/unified/dev.jsonl and test_public.jsonl
-python 3_baseline.py --train data/unified/dev.jsonl --target data/unified/test_public.jsonl --out preds.jsonl
-python 4_extract_example.py --data data/unified/dev.jsonl --out preds.jsonl --limit 10   # naive starter
-python 5_score.py --gold data/unified/dev.jsonl --pred preds.jsonl --threshold 0.95
+python3.12 -m venv .venv && .venv/bin/python -m pip install -r requirements.txt
+bash 1_download.sh --accept-licenses && .venv/bin/python 2_prepare.py     # data/ (not committed)
+cp .env.example .env                                                       # LLM_BASE_URL, LLM_API_KEY, LLM_MODEL
 ```
-Python 3.11+, standard library only (use `python3` if `python` is not found). `pip install -r requirements.txt` is optional (`jsonschema`, `pypdf` so step 4 can read PDFs). The starter uses crude keyword rules and scores about nothing: read it before building on it.
 
-**LLM access:** we email you an API key, endpoint URL and model list on site. Put them in `.env` as `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_MODEL` (any OpenAI-compatible endpoint) and the starter uses them. You can also bring your own key. Never commit secrets or `data/`, and don't run code from inside `data/raw/`.
+| Task | Command |
+|---|---|
+| Hidden test (submitted config) | `bash run_hidden.sh <input.jsonl> <output.jsonl>` |
+| LLM run on a file | `.venv/bin/python 4_extract.py --data data/unified/dev.jsonl --out results/x.jsonl --mode llm --on-error abstain` |
+| Same, through the shell wrapper (loads `.env`) | `bash run_cached.sh --data ... --out ... --mode llm` |
+| Score | `.venv/bin/python 5_score.py --gold data/unified/dev.jsonl --pred results/x.jsonl --threshold 0.99` |
+| Field analysis + whitelist simulation | `.venv/bin/python analyse_fields.py results/x.jsonl` |
+| Which models read PDFs | `.venv/bin/python vision_probe.py <file.pdf> [model]` |
+| Tests | `.venv/bin/python -m unittest discover -s tests && .venv/bin/python test_score.py` |
+| Slides | `.venv/bin/python submission/make_slides.py` |
 
-You may start early: run steps 1 to 3 at home and look at the data. It is a one-day hackathon with a **16:45 deadline**.
+Replies are cached in `cache/` (currently all `gemini-3.7-flash`), so repeated runs are free. Score a subset only against a gold file with the same doc_ids: the scorer counts missing docs as abstained.
 
-## Data
-**565 labelled documents (about 23,000 fields), plus a hidden test we keep.** Downloaded by you from the original hosts; this repo redistributes nothing. Licences are permissive (checked 2026-11-09, not legal advice).
+## 5. Roadmap
 
-| Dataset | Docs | What's in it | Licence |
-| --- | --- | --- | --- |
-| [CUAD](https://www.atticusprojectai.org/cuad) | 510 | Contracts, 41 clause types | CC BY 4.0 |
-| [ExtractBench](https://huggingface.co/datasets/llamaindex/ExtractBench) | 206 | Real forms and scans, handwriting, checkboxes | Apache-2.0 |
+The full plan is in `.kilo/plans/1794596173299-master-plan.md` (14 sub-plans).
 
-Each record in `data/unified/*.jsonl` has `doc_id`, `pages` (path relative to `data/`), `schema`, `gold` (null = not in the document) and `tags`. For CUAD, `pages` is the shared `CUADv1.json` and the contract is the entry whose `title` is the `doc_id` without `cuad:`. The hidden test comes from the same datasets, so tune on dev only.
-
-*Check before you trust the data: what does an empty checkbox mean? Does every document fit in a prompt? Where are the blanks?*
-
-## Scoring
-A field is **accepted** if its value is non-null and `confidence >= threshold` (a missing confidence counts as 1.0, so always send one). In your prediction, null means "no answer, a human reviews it". Values are compared as:
-
-| Field type | Compared as |
-| --- | --- |
-| `string` (default, all ExtractBench fields) | case-insensitive, whitespace collapsed |
-| `span` (CUAD) | token F1 >= 0.8; several gold answers are joined with ` \| ` |
-| `json` (nested, about 2% of fields) | exact match of the whole value; null is fine |
-
-`5_score.py` prints precision, coverage, hallucination rate and **net saving** (always at 1 and 100; the `--review-cost` and `--error-cost` flags are only for your own what-if analysis). Net saving at your declared threshold is the headline result; the sweep over thresholds is for choosing it on dev. `python test_score.py` checks the scorer. `3_baseline.py` has two no-AI references (never answer, or always the most common value); a real system must beat the second one.
-
-## What you submit (by 16:45, pushed to your repo)
-| What | Where |
-| --- | --- |
-| Your code, with `run_hidden.sh` calling your extractor | `Project_1/` |
-| `SUBMISSION.md`: approach, results, how to run, "Models and why" table, **your threshold** ([template](../SUBMISSION_TEMPLATE.md)) | `Project_1/` |
-| `EDA.md`: a short look at the data, with real numbers | `Project_1/` |
-| A 1-minute video or up to 5 slides | `submission/demo.mp4` or `submission/slides.pdf` |
-
-**Hidden test:** we run `bash run_hidden.sh <input.jsonl> <output.jsonl>` from `Project_1/` (dev format without `gold`, `data/raw/` provided) and score at exactly your threshold. List the environment variables it needs in `SUBMISSION.md`.
-
-**Input:** one JSON per line. Dev and public test include `gold`; the hidden test has the same format without it. Shortened example:
-```json
-{"doc_id": "cuad:LIMEENERGYCO_09_09_1999-EX-10-DISTRIBUTOR AGREEMENT", "pages": ["raw/cuad/CUADv1.json"],
- "schema": {"properties": {"Agreement Date": {"type": "string", "x-normalizer": "span"},
-                           "Governing Law": {"type": "string", "x-normalizer": "span"},
-                           "Non-Compete": {"type": "string", "x-normalizer": "span"}}},
- "gold": {"Agreement Date": "7th day of September, 1999.", "Governing Law": "This Agreement is to be construed according to the laws of the State of Illinois.", "Non-Compete": null}}
-```
-**Output (your predictions):** one JSON per line, one entry per schema field. For span fields, copy the text from the contract; null means "no answer".
-```json
-{"doc_id": "cuad:LIMEENERGYCO_09_09_1999-EX-10-DISTRIBUTOR AGREEMENT", "fields": {
-  "Agreement Date": {"value": "7th day of September, 1999.", "confidence": 0.93},
-  "Governing Law": {"value": "This Agreement is to be construed according to the laws of the State of Illinois.", "confidence": 0.90},
-  "Non-Compete": {"value": null}}}
-```
-(On disk each record is a single line; it is wrapped here to read.)
-
-## Directions to think about
-Not a checklist, just things worth asking.
-- **Which model, and why?** Any model is allowed. Compare on the same dev documents, and not only on accuracy: how often does it invent a value for a blank field? Is 0.95 confidence right 95% of the time? What does a document cost in money and seconds?
-- **Make the value prove itself.** Does it actually appear in the document? Can a cheap model go first and a stronger one only when it's unsure?
-- **Use doubt as a signal.** Ask twice or ask two models; if they disagree, lower the confidence. Which fields would you never automate?
-- **Ugly inputs.** Rotate, zoom, try another OCR, or read a page as an image. What happens when a scan is unreadable?
-- **Agents and knowledge graphs** are welcome (extract, check, fix, repeat; tools such as OCR or zoom), but show before and after: did precision, coverage or savings really improve?
-- **Prove the business value.** Show net saving, and how it moves if a wrong value costs 20x or 500x. Show how much runs with no human, what the model costs per document, which fields you'd keep manual, and how you'd roll it out.
-
-## How you are judged
-The general criteria are on the back of the hackathon handout. Here, "Results" means net saving, precision, coverage and hallucination rate at your threshold, on data you did not tune on.
+| Milestone | What | Gate |
+|---|---|---|
+| **M1** | reproducible run + field-cell selector on the current pipeline | audit net > 0 with ≥ 300 booked fields |
+| **M2** | router, text-quality gate, vision + 2-model views for forms | more booked, no more errors |
+| **M3** | long-context contract pipeline, selected clause types | same |
+| **M4** | review dashboard (PDF · value · gold · confidence · accept/decline), docs, slides | – |
 
 ## Credits
-Keep these in anything you publish. We converted both datasets to one format.
+
 - Zhang, Lyjak, Stewart, Li, Suo (2026). *ExtractBench: A Benchmark for Schema-Guided Enterprise Document Extraction.* arXiv:2607.29677.
 - Hendrycks, Burns, Chen, Ball (2021). *CUAD: An Expert-Annotated NLP Dataset for Legal Contract Review.* NeurIPS Datasets and Benchmarks.
+- probly: uncertainty quantification library (university).

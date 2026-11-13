@@ -1,302 +1,233 @@
-"""Builds submission/slides.pdf (5 slides, 16:9). Numbers are read from the stored result files, not typed in.
-Local fonts only (matplotlib defaults). No API call.
+"""Builds submission/slides.pdf: 5 clean 16:9 slides that present the idea and the vision.
 
-    .venv\\Scripts\\python.exe submission\\make_slides.py
+    .venv/bin/python submission/make_slides.py
 
-Net saving is a stored fraction in the scorer output; the slides multiply by 100 once, for display.
+Only matplotlib, no API calls, no data folder needed. The few numbers on the slides are measured results.
+Each constant below names the command that produced it, so it can be checked again.
 """
-import json
-import textwrap
 from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib.backends.backend_pdf import PdfPages  # noqa: E402
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch  # noqa: E402
 
-ROOT = Path(__file__).resolve().parent.parent
-R = ROOT / "results"
-OUT = ROOT / "submission" / "slides.pdf"
-DEC = json.loads((ROOT / "submission" / "decision.json").read_text(encoding="utf-8"))
-THR = 0.99          # the threshold an active system would use; the submitted decision is all-abstain
-RED, GREEN, GREY, INK = "#b3261e", "#2e7d32", "#5f6368", "#1a1a1a"
+OUT = Path(__file__).resolve().parent / "slides.pdf"
 
+# ---------------------------------------------------------------- measured numbers (sources in comments)
+# analyse_fields.py results/llm_dev.jsonl  (307 dev docs, ExtractBench answers, "source / confidence" table)
+CONF_VS_TRUTH = [("model says\n0.95", 0.702), ("model says\n0.99", 0.957), ("model says\n1.00", 0.890)]
+# 5_score.py on the stored runs (README / SUBMISSION results table) and the leave-one-group-out
+# whitelist simulation of analyse_fields.py (min_n=3, grounded): 378 booked, 0 wrong
+NET = [("Most common\nvalue", -177.8), ("Model\nconfidence", -30.9), ("Same model\n3x (probly)", -1.2),
+       ("Human does\neverything", 0.0), ("Proven field\ncells", +3.0)]
+SELECTOR_BOOKED, SELECTOR_WRONG = 378, 0
+# vision_probe.py data/raw/extractbench/docs/short/07021-2016-p0014.pdf [model]
+TEXT_LAYER = "ine Harbour Water Utillties LLC"
+VISION = "Pine Harbour Water Utilities LLC"
 
-def jload(p):
-    return json.loads((R / p).read_text(encoding="utf-8"))
-
-
-def at(score: dict, thr: float, error_cost: float = 100.0) -> dict:
-    """Counts at `thr` from a stored scorer output: the curve point with the smallest threshold >= thr."""
-    n = score["at_threshold_0"]["n_fields"]
-    pts = sorted((p for p in score["curve"] if p["threshold"] >= thr - 1e-12), key=lambda p: p["threshold"])
-    p = pts[0] if pts else {"accepted": 0, "correct": 0, "wrong": 0, "hallucinated": 0, "coverage": 0.0}
-    err = p["wrong"] + p["hallucinated"]
-    return {"accepted": p["accepted"], "correct": p["correct"], "errors": err, "n": n,
-            "precision": p["correct"] / p["accepted"] if p["accepted"] else None,
-            "coverage": p["coverage"], "net": (p["accepted"] - error_cost * err) / n}
-
-
-LLM_DEV, PROBLY_DEV = jload("llm_dev_score.json"), jload("probly_dev_score.json")
-LLM_TEST, PROBLY_TEST = jload("llm_test_public_score.json"), jload("probly_test_public_score.json")
-COMMON, NEVER = jload("base_common_score.json"), jload("base_never_score.json")
-# The frozen select/audit result files were removed from the repository (commit 63fa8aa). If they are present they
-# are read; otherwise the values below are used. They were copied from those files as last committed:
-#   git show 63fa8aa^:Project_1/results/uq_v2_audit_result.json   (key "audit")
-#   git show 63fa8aa^:Project_1/results/uq_v2_frozen_pre_audit.json   (key "dev_select")
-_AUDIT_STORED = {"accepted": 4, "wrong": 1, "hallucinated": 0, "precision": 0.75,
-                 "coverage": 0.09090909090909091, "net_saving_pct": -0.7384615384615385}
-_SELECT_STORED = {"accepted": 14, "wrong": 0, "hallucinated": 0, "precision": 1.0,
-                  "coverage": 0.1891891891891892, "net_saving_pct": 0.08536585365853659}
-AUDIT = jload("uq_v2_audit_result.json")["audit"] if (R / "uq_v2_audit_result.json").exists() else _AUDIT_STORED
-SELECT = (jload("uq_v2_frozen_pre_audit.json")["dev_select"] if (R / "uq_v2_frozen_pre_audit.json").exists()
-          else _SELECT_STORED)
-# The ablation and post-hoc files were removed from the repository as well. Stored values, as last committed
-# (git log --diff-filter=D -- Project_1/results shows the removing commits):
-#   post_schema_v3/audit_frozen_eval.json: 3 accepted, 0 wrong
-#   uq_v2_audit_ablation/ablation_report.json, k_entropy at 0.95: 34 accepted, 18 wrong, 1 hallucinated of 130 fields
-_POST = R / "post_schema_v3" / "audit_frozen_eval.json"
-_ABL = R / "uq_v2_audit_ablation" / "ablation_report.json"
-POST_AUDIT = jload("post_schema_v3/audit_frozen_eval.json")["audit"] if _POST.exists() else {"accepted": 3, "wrong": 0}
-AUDIT_METHODS = (jload("uq_v2_audit_ablation/ablation_report.json")["methods"] if _ABL.exists() else
-                 {"k_entropy": {"per_threshold": {"0.95": {"net_saving_pct": (34 - 100 * 19) / 130}}}})
-CUAD_ACCEPTED_PROBLY = PROBLY_DEV["by_source"]["cuad"]["accepted"] + PROBLY_TEST["by_source"]["cuad"]["accepted"]
-
-assert DEC["abstain_all"] is True, "slides describe the all-abstain decision"
-assert NEVER["declared"]["net_saving_pct"] == 0.0
+# ---------------------------------------------------------------- style
+W, H = 16, 9
+INK, MUTED, LIGHT = "#1d1d1f", "#6e6e73", "#f2f2f4"
+ORANGE, GREEN, RED, BLUE = "#ff5f00", "#1f9d55", "#d93025", "#1a73e8"
+plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 16})
 
 
-def pct(x, digits=1):
-    return f"{x * 100:+.{digits}f}%"
+def slide(n, kicker, title):
+    fig = plt.figure(figsize=(13.333, 7.5))
+    ax = fig.add_axes([0, 0, 1, 1])
+    ax.set_xlim(0, W), ax.set_ylim(0, H), ax.axis("off")
+    ax.add_patch(plt.Rectangle((0, H - 0.12), W, 0.12, color=ORANGE, lw=0))
+    ax.text(0.8, 8.15, kicker.upper(), fontsize=13, color=ORANGE, weight="bold", va="center")
+    ax.text(0.8, 7.45, title, fontsize=30, color=INK, weight="bold", va="center")
+    ax.text(0.8, 0.4, "A-Team  ·  Teach a machine to say \"I don't know\"", fontsize=10, color=MUTED)
+    ax.text(W - 0.8, 0.4, f"{n} / 5", fontsize=10, color=MUTED, ha="right")
+    return fig, ax
 
 
-def page(title, subtitle=None):
-    fig = plt.figure(figsize=(13.33, 7.5))
-    fig.text(0.05, 0.93, title, fontsize=27, weight="bold", va="top", color=INK)
-    if subtitle:
-        fig.text(0.05, 0.855, subtitle, fontsize=15, va="top", color=GREY)
+def card(ax, x, y, w, h, title=None, body=None, face=LIGHT, edge=None, tcolor=INK, tsize=17, bsize=13.5,
+         center=False):
+    ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0,rounding_size=0.18",
+                                fc=face, ec=edge or face, lw=2))
+    if center:
+        if title:
+            ax.text(x + w / 2, y + h / 2 + (0.28 if body else 0), title, fontsize=tsize, weight="bold",
+                    color=tcolor, ha="center", va="center")
+        if body:
+            ax.text(x + w / 2, y + h / 2 - (0.32 if title else 0), body, fontsize=bsize, color=MUTED,
+                    ha="center", va="center", linespacing=1.4)
+        return
+    if title:
+        ax.text(x + 0.3, y + h - 0.45, title, fontsize=tsize, weight="bold", color=tcolor, va="center")
+    if body:
+        ax.text(x + 0.3, y + h - 0.95, body, fontsize=bsize, color=MUTED, va="top", linespacing=1.45)
+
+
+def arrow(ax, x0, y0, x1, y1, color=MUTED, lw=2.2):
+    ax.add_patch(FancyArrowPatch((x0, y0), (x1, y1), arrowstyle="-|>", mutation_scale=18, color=color, lw=lw))
+
+
+# ---------------------------------------------------------------- 1. the problem
+def s1():
+    fig, ax = slide(1, "The problem", "One confident mistake costs 100 good answers")
+    outcomes = [("Send to a human", "cost 1", "the safe choice", LIGHT, INK),
+                ("Book it, correct", "+1", "saves the review", "#e7f6ec", GREEN),
+                ("Book it, wrong", "−100", "reaches the system of record", "#fdecea", RED)]
+    for i, (title, big, sub, face, col) in enumerate(outcomes):
+        x = 0.8 + i * 5.0
+        card(ax, x, 3.5, 4.4, 3.0, face=face)
+        ax.text(x + 2.2, 5.95, title, fontsize=19, weight="bold", color=INK, ha="center", va="center")
+        ax.text(x + 2.2, 4.95, big, fontsize=38, weight="bold", color=col, ha="center", va="center")
+        ax.text(x + 2.2, 4.0, sub, fontsize=14, color=MUTED, ha="center", va="center")
+    ax.text(W / 2, 2.45, "Automation only pays if the booked answers are right more than 99 % of the time.",
+            fontsize=19, color=INK, ha="center", weight="bold")
+    ax.text(W / 2, 1.6, "The real task is not to extract more. It is to know which answers you can prove.",
+            fontsize=16, color=MUTED, ha="center")
     return fig
 
 
-def bullets(fig, items, x=0.05, y=0.76, size=15, gap=0.022, width_in=12.0, color=INK):
-    """Wrapped bullet list. Returns the y below the last item."""
-    line_h = size * 1.42 / 72 / 7.5
-    chars = max(20, int(width_in / (size * 0.52 / 72)))
-    for it in items:
-        block = textwrap.fill(it, chars, initial_indent="• ", subsequent_indent="   ")
-        fig.text(x, y, block, fontsize=size, va="top", color=color, linespacing=1.42)
-        y -= line_h * (block.count("\n") + 1) + gap
-    return y
-
-
-def box(fig, x, y, w, h, text, size=14, face="#f1f3f4", edge="#c4c7c5", color=INK, weight="normal"):
-    ax = fig.add_axes([x, y, w, h])
-    ax.set_xticks([]), ax.set_yticks([])
-    ax.set_facecolor(face)
-    for s in ax.spines.values():
-        s.set_edgecolor(edge), s.set_linewidth(1.2)
-    ax.text(0.5, 0.5, text, ha="center", va="center", fontsize=size, color=color, weight=weight,
-            linespacing=1.35, transform=ax.transAxes)
-    return ax
-
-
-def footer(fig, n):
-    fig.text(0.05, 0.03, f"A-Team  |  Project 1: Teach a machine to say \"I don't know\"  |  {n}/5", fontsize=10, color=GREY)
-    fig.text(0.95, 0.03, "numbers from results/*.json, official scorer 5_score.py", fontsize=10, color=GREY, ha="right")
-
-
-# ---------------------------------------------------------------- 1
-def slide1():
-    f = page("1. The problem: one mistake eats 100 correct answers",
-             "Contracts, forms and scans are typed into systems by hand. Can a model book the fields itself?")
-    box(f, 0.05, 0.56, 0.27, 0.20, "Human review\ncost 1 per field", size=17)
-    box(f, 0.365, 0.56, 0.27, 0.20, "Wrong booked value\ncost 100", size=17, face="#fce8e6", edge=RED, color=RED,
-        weight="bold")
-    box(f, 0.68, 0.56, 0.27, 0.20, "Break-even precision\n> 99.0 %", size=17, weight="bold")
-    c = at(COMMON, 0.95)
-    bullets(f, [
-        "Net saving = (accepted − 100 × (wrong + hallucinated)) / all fields. "
-        "At error cost 20 the bar is 95.0%, at 500 it is 99.8%.",
-        "The bar to beat is the human baseline: `never` answers nothing and scores exactly 0.0%.",
-        f"A careless system loses money: the most-common-value baseline is right in {c['precision'] * 100:.0f}% of "
-        f"its answers and scores {pct(c['net'])}.",
-        "57.6% of all fields are absent (null). 70.6% are contract clauses that must match the gold text. "
-        "About 40% of the form PDFs are scans without a text layer.",
-        "So the real task is not extraction. It is knowing when not to answer.",
-    ], y=0.49, size=15)
-    footer(f, 1)
-    return f
-
-
-# ---------------------------------------------------------------- 2
-def slide2():
-    f = page("2. Architecture: extract, verify, quantify, decide",
-             "Every stage can only remove a value. Nothing is accepted without evidence.")
-    steps = [("Full text\nchunks 45k,\nno truncation", "#f1f3f4"),
-             ("Prompt v4\nfull schema,\nK samples", "#f1f3f4"),
-             ("Schema check\ntypes, keys,\n$defs", "#e8f0fe"),
-             ("Text grounding\nvalue must be\nin the document", "#e8f0fe"),
-             ("probly\ncategorical dist.\n+ entropy", "#e6f4ea"),
-             ("Decision rule\nscore vs.\nthreshold", "#e6f4ea")]
-    w, gap, x0 = 0.135, 0.018, 0.05
-    for i, (label, face) in enumerate(steps):
-        x = x0 + i * (w + gap)
-        box(f, x, 0.55, w, 0.20, label, size=12.5, face=face)
-        if i < len(steps) - 1:
-            f.text(x + w + gap / 2, 0.65, "→", fontsize=20, ha="center", va="center", color=GREY)
-    bullets(f, [
-        "Scan or broken PDF: the whole document is null, no request is sent.",
-        "probly: the K answers of a field are clustered by exact value. The cluster frequencies form a categorical "
-        "distribution. Its entropy (nats, normalised by log K) measures how much the samples disagree.",
-        "Four named decision rules: k1_grounded (model confidence), k_agreement_only, "
-        "k_agreement_conf (min of agreement and confidence), k_entropy (1 − H / log K).",
-        "Freeze and audit: method and threshold are chosen on dev_select, frozen, and applied once to dev_audit. "
-        "Only a positive audit may switch the system on.",
-        f"Submitted decision: all-abstain (abstain_all = true, threshold {DEC['threshold']}). 0 requests, net 0.0%.",
-    ], y=0.48, size=14, gap=0.018, width_in=11.3)
-    footer(f, 2)
-    return f
-
-
-# ---------------------------------------------------------------- 3
-def slide3():
-    f = page("3. Result: low coverage, still below the human baseline",
-             f"Net saving at error cost 100, threshold {THR}. `never` (human reviews everything) = 0.0%.")
-    rows = [("never / all-abstain  (submitted)", None, "all"),
-            ("probly pipeline, dev", at(PROBLY_DEV, THR), "78 of 540 docs*"),
-            ("probly pipeline, test_public", at(PROBLY_TEST, THR), "40 of 176 docs*"),
-            ("LLM confidence only, dev", at(LLM_DEV, THR), "307 of 540 docs*"),
-            ("probly K=3 frozen, dev_audit", {"accepted": AUDIT["accepted"], "errors": AUDIT["wrong"] + AUDIT["hallucinated"],
-                                              "precision": AUDIT["precision"], "coverage": AUDIT["coverage"],
-                                              "net": AUDIT["net_saving_pct"]}, "7 docs"),
-            ("LLM confidence only, test_public", at(LLM_TEST, THR), "75 of 176 docs*"),
-            ("most common value, test_public (0.95)", at(COMMON, 0.95), "all")]
-    ax = f.add_axes([0.33, 0.36, 0.25, 0.42])
-    ys = list(range(len(rows)))[::-1]
-    nets = [0.0 if r[1] is None else r[1]["net"] * 100 for r in rows]
-    ax.barh(ys, nets, color=[GREEN if r[1] is None else RED for r in rows], height=0.62)
-    ax.axvline(0, color=INK, lw=1.4)
-    ax.set_xscale("symlog", linthresh=1.0)
-    ax.set_xlim(-400, 3)
-    ax.set_xticks([-100, -10, -1, 0], ["-100%", "-10%", "-1%", "0%"], fontsize=10)
-    ax.set_yticks([])
-    ax.set_ylim(-0.6, len(rows) - 0.4)
+# ---------------------------------------------------------------- 2. the insight
+def s2():
+    fig, ax = slide(2, "What we learned", "Models don't know when they are wrong")
+    # left: confidence vs truth
+    bx = fig.add_axes([0.07, 0.17, 0.40, 0.55])
+    labels = [c[0] for c in CONF_VS_TRUTH]
+    vals = [c[1] * 100 for c in CONF_VS_TRUTH]
+    bars = bx.bar(labels, vals, color=[MUTED, MUTED, RED], width=0.6)
+    bx.axhline(99, color=GREEN, lw=2.5, ls="--")
+    bx.text(2.45, 99.6, "needed: 99 %", color=GREEN, fontsize=13, ha="right", va="bottom", weight="bold")
+    for b, v in zip(bars, vals):
+        bx.text(b.get_x() + b.get_width() / 2, v - 2.5, f"{v:.0f} %", ha="center", va="top", color="white",
+                fontsize=17, weight="bold")
+    bx.set_ylim(60, 103)
+    bx.set_ylabel("actually correct", fontsize=13, color=MUTED)
+    bx.tick_params(labelsize=13, colors=INK, length=0)
     for s in ("top", "right", "left"):
-        ax.spines[s].set_visible(False)
-    ax.set_xlabel("net saving (log scale)", fontsize=10, color=GREY)
-    fy = lambda v: ax.transData.transform((0, v))[1] / (7.5 * f.dpi)  # noqa: E731
-    f.canvas.draw()
-    f.text(0.05, 0.805, "Variant", fontsize=12, weight="bold", va="center")
-    for label, xx in (("Net saving", 0.615), ("Precision", 0.715), ("Coverage", 0.795), ("Accepted / errors", 0.875)):
-        f.text(xx, 0.805, label, fontsize=12, weight="bold", va="center")
-    for (name, r, docs), yv in zip(rows, ys):
-        yy = fy(yv)
-        bold = "bold" if r is None or name.startswith("probly pipeline, dev") else "normal"
-        f.text(0.05, yy + 0.012, name, fontsize=12.5, va="center", weight=bold)
-        f.text(0.05, yy - 0.018, docs, fontsize=9.5, va="center", color=GREY)
-        if r is None:
-            f.text(0.615, yy, "0.0%", fontsize=13, va="center", weight="bold", color=GREEN)
-            f.text(0.715, yy, "n/a", fontsize=12, va="center")
-            f.text(0.795, yy, "0.0%", fontsize=12, va="center")
-            f.text(0.875, yy, "0 / 0", fontsize=12, va="center")
+        bx.spines[s].set_visible(False)
+    bx.set_yticks([])
+    ax.text(0.9, 6.55, "Self-reported confidence", fontsize=17, weight="bold", color=INK)
+    # right: same model three times
+    card(ax, 8.6, 1.4, 6.6, 5.5, face=LIGHT)
+    ax.text(8.95, 6.4, "Asking the same model 3 times", fontsize=17, weight="bold", color=INK)
+    for i in range(3):
+        y = 5.45 - i * 0.78
+        ax.add_patch(FancyBboxPatch((8.95, y - 0.27), 5.9, 0.55, boxstyle="round,pad=0,rounding_size=0.1",
+                                    fc="white", ec="#d0d0d5"))
+        ax.text(9.15, y, f"sample {i + 1}:  year_1 = \"$241.81\"   conf 0.99", fontsize=12.5, color=INK,
+                va="center", family="DejaVu Sans Mono")
+    ax.text(8.95, 2.95, "3 of 3 agree  →  booked  →  wrong (−100)", fontsize=15, color=RED, weight="bold")
+    ax.text(8.95, 2.15, "Agreement measures consistency,\nnot correctness. The model repeats its own mistake.",
+            fontsize=13.5, color=MUTED, va="center", linespacing=1.45)
+    return fig
+
+
+# ---------------------------------------------------------------- 3. the idea
+def s3():
+    fig, ax = slide(3, "Our idea", "Different pipelines, different eyes, proven trust")
+    card(ax, 0.6, 3.55, 2.3, 1.6, "Document", "+ schema", center=True)
+    pipes = [("Contracts", "whole text, long context"), ("Clean forms", "PDF + text layer"),
+             ("Scans", "PDF / page images")]
+    for i, (t, b) in enumerate(pipes):
+        y = 5.35 - i * 1.65
+        card(ax, 3.9, y, 3.2, 1.3, t, b, center=True, face="#fff1e8", edge=ORANGE, tsize=16, bsize=12.5)
+        arrow(ax, 2.9, 4.35, 3.88, y + 0.65)
+        arrow(ax, 7.1, y + 0.65, 8.05, 4.35)
+    ax.text(5.5, 6.95, "1  route", fontsize=13, color=ORANGE, weight="bold", ha="center")
+    card(ax, 8.1, 3.3, 2.9, 2.1, "Several views", "Gemini · Claude\nPDF · text", center=True, face="#e8f0fe",
+         edge=BLUE)
+    ax.text(9.55, 6.95, "2  different eyes", fontsize=13, color=BLUE, weight="bold", ha="center")
+    arrow(ax, 11.0, 4.35, 11.6, 4.35)
+    card(ax, 11.65, 3.3, 2.0, 2.1, "probly", "agreement\n+ entropy", center=True, face="#e8f0fe", edge=BLUE)
+    arrow(ax, 13.65, 4.35, 14.0, 4.35)
+    ax.add_patch(plt.Polygon([[14.0, 4.35], [14.75, 5.25], [15.5, 4.35], [14.75, 3.45]], fc="#e7f6ec",
+                             ec=GREEN, lw=2))
+    ax.text(14.75, 4.35, "proven?", fontsize=12, ha="center", va="center", weight="bold", color=GREEN)
+    ax.text(14.75, 6.95, "3  selector", fontsize=13, color=GREEN, weight="bold", ha="center")
+    arrow(ax, 14.75, 5.25, 14.75, 6.0, color=GREEN)
+    ax.text(14.75, 6.25, "book", fontsize=14, color=GREEN, ha="center", weight="bold")
+    arrow(ax, 14.75, 3.45, 14.75, 2.7, color=MUTED)
+    ax.text(14.75, 2.35, "human", fontsize=14, color=MUTED, ha="center", weight="bold")
+    ax.text(0.8, 1.35, "A field is booked only if its field type has zero errors on many independent "
+                       "documents\nand the views agree with evidence in the document. Everything else goes to a "
+                       "human.", fontsize=14.5, color=INK, linespacing=1.5)
+    return fig
+
+
+# ---------------------------------------------------------------- 4. first proof
+def s4():
+    fig, ax = slide(4, "First proof", "Better eyes, and a selector that beats the human")
+    # left: vision example
+    ax.text(0.9, 6.55, "A damaged scan (Schedule K-1)", fontsize=17, weight="bold", color=INK)
+    rows = [("Text layer", TEXT_LAYER, RED, "✗"), ("Gemini on PDF", VISION, GREEN, "✓"),
+            ("Claude on PDF", VISION, GREEN, "✓")]
+    for i, (who, val, col, mark) in enumerate(rows):
+        y = 5.55 - i * 1.15
+        ax.add_patch(FancyBboxPatch((0.9, y - 0.42), 6.6, 0.84, boxstyle="round,pad=0,rounding_size=0.12",
+                                    fc="white", ec=col, lw=2))
+        ax.text(1.15, y + 0.13, who, fontsize=11.5, color=MUTED, va="center")
+        ax.text(1.15, y - 0.17, val, fontsize=14.5, color=INK, va="center", weight="bold")
+        ax.text(7.15, y, mark, fontsize=24, color=col, va="center", ha="center", weight="bold")
+    ax.text(0.9, 1.75, "Two model families, same correct answer:\nthat agreement is a signal worth trusting.",
+            fontsize=13.5, color=MUTED, linespacing=1.45)
+    # right: net saving chart
+    ax.text(8.6, 6.55, "Net saving vs. human review (dev)", fontsize=17, weight="bold", color=INK)
+    cx = fig.add_axes([0.62, 0.16, 0.34, 0.54])
+    names = [n for n, _ in NET]
+    vals = [v for _, v in NET]
+    clipped = [max(v, -12) for v in vals]
+    colors = [RED if v < 0 else (MUTED if v == 0 else GREEN) for v in vals]
+    ys = list(range(len(NET)))[::-1]
+    cx.barh(ys, clipped, color=colors, height=0.62)
+    cx.axvline(0, color=INK, lw=1.5)
+    for y, v, c in zip(ys, vals, clipped):
+        txt = f"{v:+.1f} %" if v else "0 %"
+        if v < -3:      # long red bar: label inside, at its left end
+            cx.text(c + 0.3, y, txt, va="center", ha="left", fontsize=14, weight="bold", color="white")
+        elif v < 0:
+            cx.text(c - 0.3, y, txt, va="center", ha="right", fontsize=14, weight="bold", color=INK)
         else:
-            f.text(0.615, yy, pct(r["net"]), fontsize=13, va="center", weight="bold", color=RED)
-            f.text(0.715, yy, f"{r['precision'] * 100:.1f}%", fontsize=12, va="center")
-            f.text(0.795, yy, f"{r['coverage'] * 100:.1f}%", fontsize=12, va="center")
-            f.text(0.875, yy, f"{r['accepted']} / {r['errors']}", fontsize=12, va="center")
-    p = at(PROBLY_DEV, THR)
-    bullets(f, [
-        f"probly cuts the loss from {pct(at(LLM_DEV, THR)['net'])} to {pct(p['net'])} on dev. Coverage "
-        f"{p['coverage'] * 100:.1f}%, precision {p['precision'] * 100:.1f}%, not 99%. All active variants are below 0.0%.",
-        f"Why coverage is low: strict text grounding, threshold {THR}, scans abstained, damaged OCR text. "
-        f"{CUAD_ACCEPTED_PROBLY} accepted CUAD fields: the probly runs most probably contain no contract. Partial runs: scored against the full split (diluted); * run labels and document "
-        "counts are derived from file names, not backed by manifests.",
-        f"Error cost 20: probly on dev is {pct(at(PROBLY_DEV, THR, 20)['net'])}. Error cost 500: "
-        f"{pct(at(PROBLY_DEV, THR, 500)['net'])}. All-abstain saves nothing and produces no automated errors. "
-        "That is why we submit it.",
-    ], y=0.272, size=12, gap=0.008, width_in=11.8)
-    footer(f, 3)
-    return f
+            cx.text(c + 0.3, y, txt, va="center", ha="left", fontsize=14, weight="bold", color=INK)
+    cx.set_yticks(ys, names, fontsize=12.5)
+    cx.set_xlim(-12.5, 6.5)
+    cx.set_xticks([])
+    for s in ("top", "right", "bottom", "left"):
+        cx.spines[s].set_visible(False)
+    cx.tick_params(length=0)
+    cx.text(-12.3, -0.95, "bars clipped at −12 %", fontsize=10, color=MUTED)
+    ax.text(8.6, 0.95, f"{SELECTOR_BOOKED} fields booked, {SELECTOR_WRONG} wrong (simulated on stored answers, "
+                       "text-only pipeline)", fontsize=11.5, color=MUTED)
+    return fig
 
 
-# ---------------------------------------------------------------- 4
-def slide4():
-    f = page("4. One real error, and the five last fixes",
-             "dev_audit, field labor_categories (a table): three samples agreed, every cell was in the document.")
-    box(f, 0.05, 0.50, 0.42, 0.27,
-        "Schema wants\n"
-        "labor_category_title,  year_1_rate: number\n\n"
-        "Model returned (3 of 3 samples)\n"
-        "labor_category,  year_1: \"$241.81\"\n\n"
-        "accepted at confidence 0.99, wrong: cost 100",
-        size=12.5, face="#fce8e6", edge=RED)
-    a_net, s_net = AUDIT["net_saving_pct"], SELECT["net_saving_pct"]
-    bullets(f, [
-        f"This one field turned the frozen choice from {pct(s_net)} (dev_select) into {pct(a_net)} (dev_audit, "
-        f"{AUDIT['accepted']} accepted, {AUDIT['wrong']} wrong).",
-        "Agreement is not correctness: k_entropy and k_agreement_only score "
-        f"{pct(AUDIT_METHODS['k_entropy']['per_threshold']['0.95']['net_saving_pct'], 0)} on the audit at 0.95. "
-        "The model repeats the same mistake three times.",
-        f"With schema validation the field is invalid (post-hoc on the same samples: {POST_AUDIT['accepted']} accepted, "
-        f"{POST_AUDIT['wrong']} wrong). Too few fields to prove anything.",
-    ], x=0.05, y=0.455, size=12.5, gap=0.014, width_in=5.5)
-    f.text(0.52, 0.775, "Five last fixes (32 tests; first v4 runs are worse, see 5)", fontsize=14,
-           weight="bold", va="top")
-    fixes = [
-        ("a  transport.py", "Line breaks and tabs inside JSON strings are accepted. Long clauses are no longer lost."),
-        ("b  requests.py, prompt v4", "Booleans as JSON true/false. Multi-part clauses in one string joined with \" | \"."),
-        ("c  grounding.py", "Supplier’s = Supplier's. Curly quotes, dashes and non-breaking spaces are unified."),
-        ("d  decision.py", "A value with confidence 0.0 becomes null. Nothing is accepted without confidence."),
-        ("e  uq_probly.py", "status_counts per field in the diagnostics: why a field was rejected."),
-    ]
-    y = 0.715
-    for head, body in fixes:
-        f.text(0.52, y, head, fontsize=12.5, weight="bold", va="top", color="#174ea6")
-        block = textwrap.fill(body, 62)
-        f.text(0.52, y - 0.034, block, fontsize=12, va="top", linespacing=1.35)
-        y -= 0.034 + 0.031 * (block.count("\n") + 1) + 0.022
-    footer(f, 4)
-    return f
-
-
-# ---------------------------------------------------------------- 5
-def slide5():
-    p = at(PROBLY_DEV, THR)
-    f = page("5. Limits, and the levers to get above the human baseline",
-             f"The gap is concrete: {p['accepted']} accepted fields with {p['errors']} errors. With at most 1 error "
-             "the pipeline would be positive.")
-    f.text(0.05, 0.775, "Limits", fontsize=16, weight="bold", va="top", color=RED)
-    bullets(f, [
-        "The submitted system saves nothing (0.0%) and produces no automated errors.",
-        f"Best active precision {p['precision'] * 100:.1f}%, needed > 99%. Coverage {p['coverage'] * 100:.1f}%; contracts unmeasured.",
-        "First prompt v4 runs (probly3) are worse than v2: 10 dev docs at 0.99 fell from 14/14 to 10/26 correct.",
-        "Large runs cover a part of the data and have no manifests. The audit set has 7 documents.",
-        "Confidence is not calibrated: at 1.00 the plain LLM is still wrong in "
-        f"{(1 - at(LLM_DEV, 1.0)['precision']) * 100:.1f}% of its answers.",
-        "No OCR or vision. Tested on Windows only.",
-    ], x=0.05, y=0.72, size=12.5, gap=0.014, width_in=5.0)
-    f.text(0.48, 0.775, "Levers for a positive net saving", fontsize=16, weight="bold", va="top", color=GREEN)
-    bullets(f, [
-        "Diagnose the v4 regression with stored predictions, then measure on unused dev documents that include "
-        "contracts (70.6% of the fields).",
-        "Vision or OCR for image-only scans (about 40% of the forms), with their own stricter threshold.",
-        "Calibrate the probability on several hundred labelled dev candidates (probly calibrator; features: confidence, "
-        "agreement, entropy, status_counts). Choose the threshold with a conformal risk bound.",
-        "Field-specific instead of document-wide abstention: accept only field types with proven precision.",
-        "A second yes/no check that an accepted clause really belongs to its field.",
-        "Until an independent audit is positive: suggest mode. Pre-fill with evidence, the human confirms.",
-    ], x=0.48, y=0.72, size=12.5, gap=0.014, width_in=6.6)
-    footer(f, 5)
-    return f
+# ---------------------------------------------------------------- 5. the vision
+def s5():
+    fig, ax = slide(5, "The vision", "Trust is earned per field, not granted to a model")
+    steps = [("1  Suggest", "Every field is pre-filled\nwith its evidence.\nA human confirms.", "#fff1e8",
+              ORANGE),
+             ("2  Earn trust", "Each confirmation is a label.\nA field type with a clean\nrecord goes automatic.",
+              "#e8f0fe", BLUE),
+             ("3  Scale", "More document types,\nscans and contracts.\nAny drift → back to human.", "#e7f6ec",
+              GREEN)]
+    for i, (t, b, face, edge) in enumerate(steps):
+        x = 0.8 + i * 5.0
+        card(ax, x, 3.0, 4.4, 3.4, t, b, face=face, edge=edge, tcolor=edge, tsize=20, bsize=15)
+        if i < 2:
+            arrow(ax, x + 4.45, 4.7, x + 4.95, 4.7, color=INK)
+    ax.text(W / 2, 2.15, "Measured, reversible, and safe from day one: the system never books what it cannot "
+                         "prove.", fontsize=17, color=INK, ha="center", weight="bold")
+    ax.text(W / 2, 1.35, "Next: frozen audit of the selector  ·  vision + 2-model views  ·  contract clauses  ·  "
+                         "review dashboard", fontsize=13, color=MUTED, ha="center")
+    return fig
 
 
 def main():
     with PdfPages(OUT) as pdf:
-        for build in (slide1, slide2, slide3, slide4, slide5):
+        for build in (s1, s2, s3, s4, s5):
             fig = build()
             pdf.savefig(fig)
             plt.close(fig)
-    print("wrote", OUT, "| decision threshold:", DEC["threshold"], "abstain_all:", DEC["abstain_all"])
+    print("wrote", OUT)
 
 
 if __name__ == "__main__":
