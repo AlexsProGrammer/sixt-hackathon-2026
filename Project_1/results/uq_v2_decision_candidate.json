@@ -1,0 +1,79 @@
+{
+  "contract_version": 1,
+  "status": "all_abstain",
+  "abstain_all": true,
+  "threshold": 1.0,
+  "method": null,
+  "pipeline": null,
+  "criteria": {
+    "select_run_complete": true,
+    "audit_run_complete": true,
+    "provenance_present": true,
+    "independent_audit": true,
+    "same_pipeline_except_method": true,
+    "candidate_frozen": true,
+    "audit_accepted_at_least_min": false,
+    "audit_net_saving_positive": false
+  },
+  "diagnostic_wilson_audit": {
+    "name": "wilson_upper_95_diagnostic",
+    "errors": 1,
+    "accepted": 4,
+    "upper_95": 0.6993581574175981,
+    "at_most_1_percent": false,
+    "assumption": "binomial model, accepted fields treated as independent; fields of one document are correlated, so the bound is optimistic. Diagnostic only; not a release gate."
+  },
+  "frozen_on_dev_select": {
+    "accepted": 14,
+    "wrong": 0,
+    "hallucinated": 0,
+    "precision": 1.0,
+    "coverage": 0.1891891891891892,
+    "hallucination_rate": 0.0,
+    "net_saving_pct": 0.08536585365853659,
+    "threshold": 0.99,
+    "all_abstain": false,
+    "n_docs": 7,
+    "n_fields": 164,
+    "wilson_diagnostic": {
+      "name": "wilson_upper_95_diagnostic",
+      "errors": 0,
+      "accepted": 14,
+      "upper_95": 0.2153108027376358,
+      "at_most_1_percent": false,
+      "assumption": "binomial model, accepted fields treated as independent; fields of one document are correlated, so the bound is optimistic. Diagnostic only; not a release gate."
+    }
+  },
+  "audit": {
+    "status": "audited",
+    "method": "k_agreement_conf",
+    "threshold": 0.99,
+    "audit": {
+      "accepted": 4,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.75,
+      "coverage": 0.09090909090909091,
+      "hallucination_rate": 0.0,
+      "net_saving_pct": -0.7384615384615385,
+      "threshold": 0.99,
+      "all_abstain": false,
+      "n_docs": 7,
+      "n_fields": 130,
+      "wilson_diagnostic": {
+        "name": "wilson_upper_95_diagnostic",
+        "errors": 1,
+        "accepted": 4,
+        "upper_95": 0.6993581574175981,
+        "at_most_1_percent": false,
+        "assumption": "binomial model, accepted fields treated as independent; fields of one document are correlated, so the bound is optimistic. Diagnostic only; not a release gate."
+      }
+    },
+    "net_saving_pct_error_cost_20": -0.12307692307692308,
+    "net_saving_pct_error_cost_500": -3.8153846153846156,
+    "error_cost": 100.0,
+    "audit_run_id": "ef36763fe49b",
+    "audit_manifest_run_complete": true
+  },
+  "method_text": "all_abstain: criteria not met (audit_accepted_at_least_min, audit_net_saving_positive)"
+}

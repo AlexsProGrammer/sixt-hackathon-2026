@@ -27,7 +27,11 @@ from evaluation.validate import validate_predictions
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTRACT_VERSION = 1
-MIN_AUDIT_ACCEPTED = 30  # a release needs at least this many accepted audit fields (stability floor, not a proof)
+# HEURISTIC, not a statistical result: a release needs at least 30 accepted audit fields. The coding agent chose this
+# value during the project as a minimum for a visible audit signal (not from a power or error-bound calculation).
+# The team should confirm or replace it before any release.
+# The Wilson bound (wilson_diagnostic) is the statistical diagnostic and is reported separately.
+MIN_AUDIT_ACCEPTED = 30
 SELECTION_ORDER = ("k_agreement_conf", "k_agreement_only", "k_entropy", "k1_grounded")  # tie-break order
 DIAGNOSTIC_ERROR_UPPER = 0.01
 _scorer = None

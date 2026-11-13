@@ -1,6 +1,9 @@
-"""Builds submission/slides.pdf (5 slides, 16:9) from the measured score files. Local fonts only (matplotlib defaults).
+"""Builds submission/slides.pdf (5 slides, 16:9). Numbers are read from the stored result files, not typed in.
+Local fonts only (matplotlib defaults).
 
     .venv\\Scripts\\python.exe submission\\make_slides.py
+
+Net saving is a stored fraction in the scorer output; the slides multiply by 100 once, for display.
 """
 import json
 import textwrap
@@ -12,20 +15,26 @@ import matplotlib.pyplot as plt  # noqa: E402
 from matplotlib.backends.backend_pdf import PdfPages  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
+R = ROOT / "results"
 OUT = ROOT / "submission" / "slides.pdf"
 DEC = json.loads((ROOT / "submission" / "decision.json").read_text(encoding="utf-8"))
 
 
-def load_net(name, costs=(20, 100, 500)):
-    vals = []
-    for c in costs:
-        d = json.loads((ROOT / "results" / f"{name}_e{c}.json").read_text(encoding="utf-8"))["declared"]
-        vals.append(d["net_saving_pct"] * 100)
-    return vals
+def jload(p):
+    return json.loads((R / p).read_text(encoding="utf-8"))
 
 
-ACTUAL = load_net("final_dev_score_actual")
-ABSTAIN = load_net("final_dev_score_allabstain")
+HIST_6 = {e: jload(f"final_dev_score_actual_e{e}.json")["declared"] for e in (20, 100, 500)}
+SELECT = jload("uq_v2_frozen_pre_audit.json")["dev_select"]
+AUDIT = jload("uq_v2_audit_result.json")["audit"]
+POST_AUDIT = jload("post_schema_v3/audit_frozen_eval.json")["audit"]
+HIST_METHODS = jload("uq_v2_audit_ablation/ablation_report.json")["methods"]
+POST_METHODS = jload("post_schema_v3/audit_ablation/ablation_report.json")["methods"]
+ORDER = ["k1_grounded", "k_agreement_only", "k_agreement_conf", "k_entropy"]
+
+
+def pct(x):
+    return f"{x * 100:+.1f}%"
 
 
 def page(title):
@@ -35,13 +44,12 @@ def page(title):
 
 
 def wrapped(text, width_in, size):
-    """Wrap to the available width. A 16:9 slide is 13.33 in wide; average glyph width is about 0.55 em."""
     chars = max(20, int(width_in / (size * 0.55 / 72)))
     return textwrap.fill(text, chars, subsequent_indent="   ")
 
 
 def bullets(fig, items, x=0.05, y=0.80, size=15, gap=0.072, width_in=12.0):
-    line_h = size * 1.45 / 72 / 7.5  # figure height is 7.5 in
+    line_h = size * 1.45 / 72 / 7.5
     for it in items:
         block = wrapped(it, width_in, size)
         fig.text(x, y, block, fontsize=size, va="top")
@@ -50,16 +58,17 @@ def bullets(fig, items, x=0.05, y=0.80, size=15, gap=0.072, width_in=12.0):
 
 
 def footer(fig, n):
-    fig.text(0.05, 0.03, f"Project 1 - uncertainty-aware extraction   |   {n}/5", fontsize=10, color="#555")
+    fig.text(0.05, 0.03, f"Project 1 | {n}/5 | historical results are not revised; post-hoc results are marked",
+             fontsize=10, color="#555")
 
 
 def slide1():
     f = page("1. Problem and cost")
     bullets(f, [
-        "Forms and contracts must be typed into systems of record by hand.",
-        "A human review costs 1 per field. A wrong value that is booked costs 100.",
-        "So auto-booking pays only if it is right more than 99 percent of the time",
-        "(break-even (E-1)/E = 99% at E = 100; 95% at E = 20; 99.8% at E = 500).",
+        "Contracts and forms must be typed into systems of record by hand.",
+        "A human review costs 1 per field. A wrong booked value costs 100.",
+        "Auto-booking pays only if accepted values are right more than 99% of the time (E = 100).",
+        "Break-even precision (E-1)/E: 99.0% for E = 100, 95% for E = 20, 99.8% for E = 500.",
         "The dev set is mostly empty: 57.6% of the fields are null (absent).",
         "Hallucinating a value for an absent field is the expensive mistake.",
     ])
@@ -68,70 +77,80 @@ def slide1():
 
 
 def slide2():
-    f = page("2. Pipeline (implemented, tested with mocks)")
+    f = page("2. Pipeline and release rule")
     bullets(f, [
-        "1. Full text, never truncated (CUAD and PDF text layer). Unreadable PDF -> null, no request.",
-        "2. Chunks of 45,000 characters with 3,000 overlap, every field in batches of at most 10.",
-        "3. Parallel-ready jobs, shared 429 stop, one retry, 60 s wait budget, reply cache.",
-        "4. Merge chunks per sample: conflicting values -> null, span pieces joined with ' | '.",
-        "5. Policy per sample: evidence must occur in the text; confidence must be finite in [0,1].",
-        "6. probly: categorical distribution over sample answers, entropy in nats (diagnostic).",
-        "7. Decision: tie or null winner -> null; otherwise min(agreement, lowest model confidence).",
-        "8. Threshold chosen only on dev_cal with the official scorer; all-abstain if no saving.",
+        "Full text, no truncation. Unreadable PDF -> null, no request. Chunks of 45k with 3k overlap, batches of 10 fields.",
+        "Prompt v3 sends the full field schema including all $defs. Schema validity and textual evidence are checked separately.",
+        "Each sample: a field is valid only if it passes both checks. Invalid values are never accepted.",
+        "probly: categorical distribution over the K valid answers, entropy in nats (diagnostic and method k_entropy).",
+        "Methods: k1_grounded, k_agreement_only, k_agreement_conf (min of share and confidence), k_entropy.",
+        "Freeze on dev_select, audit once on dev_audit. Active only if every release criterion holds.",
+        f"Current decision: {'all-abstain' if DEC['abstain_all'] else 'active'} (threshold {DEC['threshold']}).",
     ], size=14, gap=0.08)
     footer(f, 2)
     return f
 
 
 def slide3():
-    f = page("3. Measured result (6 dev_cal documents, K=1)")
-    ax = f.add_axes([0.07, 0.14, 0.48, 0.62])
-    xs = [0, 1, 2]
-    w = 0.38
-    ax.bar([x - w / 2 for x in xs], ACTUAL, w, label="model, threshold 0.95", color="#c0504d")
-    ax.bar([x + w / 2 for x in xs], ABSTAIN, w, label="all-abstain (decision)", color="#4f81bd")
-    ax.axhline(0, color="black", lw=0.8)
-    ax.set_xticks(xs, ["error cost 20", "error cost 100", "error cost 500"])
-    ax.set_ylabel("net saving (%)")
-    ax.legend(loc="lower left", fontsize=10)
-    ax.set_title("Net saving vs all-manual review, official scorer", fontsize=12)
-    fig_text = (
-        "Functional test, not a quality proof:\n"
-        "- 6 documents, 199 fields, 1 document completed fully.\n"
-        "- 4 documents abstained after API 429 (team quota shared).\n"
-        "- Model: precision 50% (2 accepted, 1 wrong), coverage 3.4%.\n"
-        "- Decision: all-abstain. No positive saving was shown."
-    )
-    f.text(0.62, 0.74, wrapped(fig_text.replace("\n", " "), 5.6, 13).replace("   ", "  "),
-           fontsize=13, va="top", linespacing=1.5)
+    f = page("3. Measured results (historical, prompt v2)")
+    rows = [
+        ("6 dev_cal docs, K=1, thr 0.95", "199 fields", "2 acc, 1 wrong", pct(HIST_6[100]["net_saving_pct"]),
+         f"error cost 20: {pct(HIST_6[20]['net_saving_pct'])}, 500: {pct(HIST_6[500]['net_saving_pct'])}"),
+        ("dev_select, K=3, frozen 0.99", "164 fields", f"{SELECT['accepted']} acc, {SELECT['wrong']} wrong",
+         pct(SELECT["net_saving_pct"]), f"precision {SELECT['precision'] * 100:.0f}%, coverage {SELECT['coverage'] * 100:.1f}%"),
+        ("dev_audit, K=3, frozen 0.99", "130 fields", f"{AUDIT['accepted']} acc, {AUDIT['wrong']} wrong",
+         pct(AUDIT["net_saving_pct"]), f"precision {AUDIT['precision'] * 100:.0f}%, coverage {AUDIT['coverage'] * 100:.1f}%"),
+    ]
+    y = 0.80
+    for name, n, counts, net, extra in rows:
+        f.text(0.05, y, f"{name}   |   {n}   |   {counts}   |   net {net}", fontsize=14, va="top", weight="bold")
+        f.text(0.07, y - 0.04, extra, fontsize=12, va="top", color="#333")
+        y -= 0.13
+    bullets(f, [
+        "Net saving = (accepted - 100 x (wrong + hallucinated)) / fields. Hallucinated values: 0 in all three sets.",
+        "The sets are very small (3 to 14 accepted fields). These are limited development measurements, not quality results.",
+        "Each K=3 set has 3 short CUAD contracts and 4 small ExtractBench documents (no scan).",
+    ], y=0.40, size=13, gap=0.075)
     footer(f, 3)
     return f
 
 
 def slide4():
-    f = page("4. Accepted and abstained examples")
-    bullets(f, [
-        "Accepted, correct (confidence 0.95): Document Name = 'JOINT FILING AGREEMENT'.",
-        "Accepted, WRONG (confidence 0.95): Agreement Date = 'March 27, 2020'.",
-        "   The gold keeps the final period: 'March 27, 2020.' The scorer's token F1 is 0.67 < 0.8.",
-        "Abstained by grounding (synthetic test): value 'Invented Value' with confidence 0.99.",
-        "   It does not occur in the document, so the field is null with confidence 0.0.",
-        "Grounding shows that a value occurs in the text. It does not prove the right field:",
-        "   a real text match in another section would still be accepted.",
-    ], size=15, gap=0.085)
+    f = page("4. Audit comparison at 0.95: historical vs post-hoc")
+    ax = f.add_axes([0.07, 0.16, 0.50, 0.66])
+    xs = list(range(len(ORDER)))
+    w = 0.38
+    hist = [HIST_METHODS[m]["per_threshold"]["0.95"]["net_saving_pct"] * 100 for m in ORDER]
+    post = [POST_METHODS[m]["per_threshold"]["0.95"]["net_saving_pct"] * 100 for m in ORDER]
+    ax.bar([x - w / 2 for x in xs], hist, w, label="historical (prompt v2)", color="#c0504d")
+    ax.bar([x + w / 2 for x in xs], post, w, label="post-hoc validation, same samples", color="#9bbb59")
+    ax.axhline(0, color="black", lw=0.8)
+    ax.set_xticks(xs, ["k1_grounded", "agreement_only", "agreement_conf", "k_entropy"], fontsize=9)
+    ax.set_ylabel("net saving (%)")
+    ax.legend(loc="lower left", fontsize=9)
+    ax.set_title("dev_audit, 130 fields, threshold 0.95", fontsize=12)
+    lines = []
+    for m in ORDER:
+        t = POST_METHODS[m]["per_threshold"]["0.95"]
+        lines.append(f"{m}: {t['accepted']} acc, {t['wrong']} wrong, {t['hallucinated']} hall")
+    f.text(0.62, 0.78, "Post-hoc counts (no new API call):", fontsize=13, weight="bold", va="top")
+    f.text(0.62, 0.72, "\n".join(lines), fontsize=12, va="top", linespacing=1.6)
+    f.text(0.62, 0.50, "Every method is negative at 0.95 in both analyses.\n"
+                       "The historical values were printed as factor 100 too small in earlier drafts.",
+           fontsize=12, va="top", color="#333", linespacing=1.6)
     footer(f, 4)
     return f
 
 
 def slide5():
-    f = page("5. Limits, not tested, how to run")
+    f = page("5. Error cause, limits and next measurement")
     bullets(f, [
-        "Not done: real K=3 runs (quota), Linux run (no Linux Python here), test_public (not used).",
-        "Confidence is an uncalibrated score. Entropy and agreement are diagnostics only.",
-        "Document-level abstention: one incomplete sample drops all fields of that document.",
-        "Strict spans cost recall; the scorer's token F1 penalises small punctuation changes.",
-        "Data flow: document text and prompts go to the external LLM endpoint (see SUBMISSION.md).",
-        "Run: bash run_hidden.sh <gold-free input> <fresh output>  (decision: submission/decision.json)",
+        "Confirmed cause: the prompt omitted $defs, so the model invented row keys (labor_category, year_1) and currency text.",
+        "Second cause: nested values were checked only for text occurrence, not for keys or types. Fixed by schema validation.",
+        "Post-hoc: the wrong table value is no longer accepted. This is not a measurement of prompt v3.",
+        "Not done: prompt v3 on the API, Linux run, calibration (no predictor, no training data), test_public (not used).",
+        "Release rule: the 30-accepted-field minimum is a project heuristic, not a statistical result.",
+        "Next: a new K=3 measurement with prompt v3 on dev documents not used before, method and threshold frozen first.",
     ], size=14, gap=0.085)
     footer(f, 5)
     return f
