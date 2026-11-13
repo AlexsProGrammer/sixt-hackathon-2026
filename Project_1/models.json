@@ -1,0 +1,84 @@
+{
+  "_comment": "Capability matrix per endpoint model. supports.* is true/false when probed, null when untested (treated as unsupported). Refresh with: python tools/probe_models.py --models ... --write",
+  "defaults": {
+    "family": "unknown",
+    "supports": {
+      "text": true,
+      "pdf_file": null,
+      "pdf_image_url": null,
+      "png": null
+    },
+    "max_context_chars": 200000,
+    "timeout_s": 300,
+    "temperature_ok": true
+  },
+  "models": {
+    "vertex_ai/gemini-3.7-flash": {
+      "family": "gemini",
+      "supports": {
+        "text": true,
+        "pdf_file": true,
+        "pdf_image_url": true,
+        "png": true
+      },
+      "max_context_chars": 400000,
+      "timeout_s": 300,
+      "temperature_ok": true,
+      "probed_at": "2026-11-13T20:51:29+00:00"
+    },
+    "vertex_ai/gemini-3.5-flash-lite": {
+      "family": "gemini",
+      "supports": {
+        "text": true,
+        "pdf_file": true,
+        "pdf_image_url": true,
+        "png": true
+      },
+      "max_context_chars": 400000,
+      "timeout_s": 300,
+      "temperature_ok": true,
+      "probed_at": "2026-11-13T20:51:29+00:00"
+    },
+    "vertex_ai/claude-sonnet-5.5": {
+      "family": "claude",
+      "supports": {
+        "text": true,
+        "pdf_file": true,
+        "pdf_image_url": false,
+        "png": true
+      },
+      "max_context_chars": 400000,
+      "timeout_s": 300,
+      "temperature_ok": true,
+      "probed_at": "2026-11-13T20:51:29+00:00"
+    },
+    "gpt-5.6-sol": {
+      "family": "gpt",
+      "supports": {
+        "text": true,
+        "pdf_file": false,
+        "pdf_image_url": false,
+        "png": true
+      },
+      "max_context_chars": 400000,
+      "timeout_s": 300,
+      "temperature_ok": true,
+      "probed_at": "2026-11-13T20:51:29+00:00"
+    },
+    "mistral-ocr-4": {
+      "family": "mistral-ocr",
+      "supports": {
+        "text": false,
+        "pdf_file": false,
+        "pdf_image_url": false,
+        "png": false
+      },
+      "max_context_chars": 200000,
+      "timeout_s": 300,
+      "temperature_ok": true,
+      "probed_at": "2026-11-13T20:51:29+00:00",
+      "ocr_endpoint": true,
+      "note": "Not reachable via /chat/completions (404 for every kind). POST <base>/ocr with document_url data URI works (probed 13.11.2026, value check ok). Integration for T08 grounded_ocr is not part of T04."
+    }
+  }
+}

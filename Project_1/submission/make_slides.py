@@ -23,7 +23,7 @@ CONF_VS_TRUTH = [("model says\n0.95", 0.702), ("model says\n0.99", 0.957), ("mod
 NET = [("Most common\nvalue", -177.8), ("Model\nconfidence", -30.9), ("Same model\n3x (probly)", -1.2),
        ("Human does\neverything", 0.0), ("Proven field\ncells", +3.0)]
 SELECTOR_BOOKED, SELECTOR_WRONG = 378, 0
-# vision_probe.py data/raw/extractbench/docs/short/07021-2016-p0014.pdf [model]
+# tools/probe_models.py --pdf data/raw/extractbench/docs/short/07021-2016-p0014.pdf [model]
 TEXT_LAYER = "ine Harbour Water Utillties LLC"
 VISION = "Pine Harbour Water Utilities LLC"
 

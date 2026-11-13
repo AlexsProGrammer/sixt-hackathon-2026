@@ -81,7 +81,7 @@ pipeline/               job planning, prompts, HTTP transport + reply cache, chu
 uncertainty/            schema check, grounding, policy, probly aggregation, decision rules
 evaluation/             partitions, threshold freeze/audit, ablation, validation
 analyse_fields.py       per-field error analysis + whitelist simulation (offline)
-vision_probe.py         checks which endpoint models accept PDF / image input
+tools/probe_models.py   probes which input kinds (PDF file, PDF image_url, PNG, text) each endpoint model accepts; writes models.json
 5_score.py              official scorer (unchanged)
 submission/             decision.json, make_slides.py, slides.pdf
 results/                stored predictions and score files
@@ -108,7 +108,7 @@ cp .env.example .env                                                       # LLM
 | Same, through the shell wrapper (loads `.env`) | `bash run_cached.sh --data ... --out ... --mode llm` |
 | Score | `.venv/bin/python 5_score.py --gold data/unified/dev.jsonl --pred results/x.jsonl --threshold 0.99` |
 | Field analysis + whitelist simulation | `.venv/bin/python analyse_fields.py results/x.jsonl` |
-| Which models read PDFs | `.venv/bin/python vision_probe.py <file.pdf> [model]` |
+| Which models read PDFs | `.venv/bin/python tools/probe_models.py --pdf <file.pdf> --models <model...> [--write]` |
 | Tests | `.venv/bin/python -m unittest discover -s tests && .venv/bin/python test_score.py` |
 | Slides | `.venv/bin/python submission/make_slides.py` |
 

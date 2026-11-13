@@ -24,6 +24,8 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+from pipeline.messages import key_messages
+
 TIMEOUT_S = 300
 MAX_RETRIES = 1
 WAIT_BUDGET_S = 60.0
@@ -122,13 +124,18 @@ def parse_reply(reply: object) -> dict:
     return obj
 
 
-def post_chat(cfg: dict, messages: list[dict], temperature: float, *, timeout: float = TIMEOUT_S) -> str:
-    """One HTTP request. Returns the assistant text. Raises TransportError with a kind and status only."""
+def post_chat(cfg: dict, messages: list[dict], temperature: float, *, model: str | None = None,
+              timeout: float = TIMEOUT_S) -> str:
+    """One HTTP request to `model` (default cfg["LLM_MODEL"]). Returns the assistant text.
+    Raises TransportError with a kind, status and a redacted body excerpt (max 200 chars) only.
+    Usage and elapsed seconds of the call are available through last_call_meta() in the same thread."""
     key = cfg["LLM_API_KEY"]
-    body = json.dumps({"model": cfg["LLM_MODEL"], "temperature": temperature, "messages": messages}).encode("utf-8")
+    model = model or cfg["LLM_MODEL"]
+    body = json.dumps({"model": model, "temperature": temperature, "messages": messages}).encode("utf-8")
     req = urllib.request.Request(
         cfg["LLM_BASE_URL"].rstrip("/") + "/chat/completions", body,
         {"Content-Type": "application/json", "Authorization": f"Bearer {key}"})
+    t0 = time.monotonic()
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
             raw = r.read()
@@ -151,20 +158,32 @@ def post_chat(cfg: dict, messages: list[dict], temperature: float, *, timeout: f
         raise TransportError("bad_response", "response has no usable choices[0].message.content") from None
     usage = payload.get("usage") if isinstance(payload, dict) else None
     _LAST.usage = usage if isinstance(usage, dict) else None
+    _LAST.elapsed = round(time.monotonic() - t0, 3)
     return content if content is not None else ""
 
 
+def last_call_meta() -> dict:
+    """{"usage": dict | None, "elapsed_s": float | None} of the last successful post_chat in this thread."""
+    return {"usage": getattr(_LAST, "usage", None), "elapsed_s": getattr(_LAST, "elapsed", None)}
+
+
 def call_with_retry(cfg: dict, messages: list[dict], temperature: float, state: RunState,
-                    *, sleep=time.sleep) -> str:
-    """post_chat with bounded retries. A 429 that cannot be retried stops the whole run."""
+                    *, sleep=time.sleep, model: str | None = None, timeout: float | None = None) -> str:
+    """post_chat with bounded retries. A 429 that cannot be retried stops the whole run.
+    An HTTP 400 is added to state.warnings (model, redacted body excerpt) to debug capabilities."""
     attempt = 0
+    extra = {} if model is None else {"model": model}
+    if timeout is not None:
+        extra["timeout"] = timeout
     while True:
         if state.stop.is_set():
             raise TransportError("stopped", "run stopped after rate limit; request not sent")
         state.bump("requests")
         try:
-            return post_chat(cfg, messages, temperature)
+            return post_chat(cfg, messages, temperature, **extra)
         except TransportError as e:
+            if e.status == 400:
+                state.warn(f"{model or cfg.get('LLM_MODEL')}: {e}"[:260])
             if not e.retryable:
                 raise
             if e.status == 429 and attempt >= MAX_RETRIES:
@@ -185,6 +204,18 @@ def call_with_retry(cfg: dict, messages: list[dict], temperature: float, state: 
                 raise
             sleep(wait)
             attempt += 1
+
+
+def call_model(cfg: dict, model: str, messages: list[dict], temperature: float, state: RunState,
+               *, sleep=time.sleep, timeout: float | None = None) -> dict:
+    """Call any endpoint model with retry. Returns {"text", "usage", "elapsed_s"}. The per-model timeout comes from
+    models.json unless given. Raises TransportError."""
+    if timeout is None:
+        from pipeline.models import model_spec
+        timeout = float(model_spec(model).get("timeout_s") or TIMEOUT_S)
+    text = call_with_retry(cfg, messages, temperature, state, sleep=sleep, model=model, timeout=timeout)
+    meta = last_call_meta()
+    return {"text": text, "usage": meta["usage"], "elapsed_s": meta["elapsed_s"]}
 
 
 def model_slug(model: str | None) -> str:
@@ -283,18 +314,25 @@ def sample_temperature(sample_idx: int, temperature: float, sampling: str) -> fl
 
 
 def execute_job(job: dict, *, cfg: dict, cache: ReplyCache, state: RunState, temperature: float,
-                prompt_version: str, build_messages, sampling: str = "mixed") -> dict:
-    """Run one planned job. Always returns a result row; failures carry ok=False and an error kind."""
+                prompt_version: str, build_messages, sampling: str = "mixed", model: str | None = None) -> dict:
+    """Run one planned job. Always returns a result row; failures carry ok=False and an error kind.
+    `model` overrides cfg["LLM_MODEL"]. build_messages may return messages or (messages, input_kind, attachment_sha256);
+    attachment bytes are replaced by a placeholder in the cache key, which uses attachment_sha256 instead."""
     result = {"job_id": job["job_id"], "sample_idx": job["sample_idx"], "chunk_id": job["chunk_id"],
               "batch_id": job["batch_id"], "start": job["start"], "end": job.get("end"),
               "field_names": job["field_names"], "answer": None, "ok": False, "error": None}
     try:
-        messages = build_messages(job)
+        built = build_messages(job)
+        if isinstance(built, tuple):
+            messages, input_kind, attachment_sha = built
+        else:
+            messages, input_kind, attachment_sha = built, "text", None
         temp = sample_temperature(job["sample_idx"], temperature, sampling)
-        key = ReplyCache.make_key(endpoint=cfg["LLM_BASE_URL"].rstrip("/"), model=cfg["LLM_MODEL"],
+        model = model or cfg["LLM_MODEL"]
+        key = ReplyCache.make_key(endpoint=cfg["LLM_BASE_URL"].rstrip("/"), model=model,
                                   temperature=temp, sample_idx=job["sample_idx"],
-                                  prompt_version=prompt_version, messages=messages)
-        model = cfg["LLM_MODEL"]
+                                  prompt_version=prompt_version, messages=key_messages(messages),
+                                  input_kind=input_kind, attachment_sha256=attachment_sha)
         entry = cache.get(key, model, prompt_version)
         if entry is not None:
             state.bump("cache_hits")
@@ -302,11 +340,11 @@ def execute_job(job: dict, *, cfg: dict, cache: ReplyCache, state: RunState, tem
         else:
             _LAST.usage = None
             t0 = time.monotonic()
-            reply = call_with_retry(cfg, messages, temp, state)
+            reply = call_with_retry(cfg, messages, temp, state, model=model)
             elapsed = round(time.monotonic() - t0, 3)
             answer = parse_reply(reply)
             new_entry = {"answer": answer, "prompt_version": prompt_version, "model": model,
-                         "temperature": temp, "sample_idx": job["sample_idx"], "input_kind": "text",
+                         "temperature": temp, "sample_idx": job["sample_idx"], "input_kind": input_kind,
                          "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                          "elapsed_s": elapsed}
             usage = getattr(_LAST, "usage", None)

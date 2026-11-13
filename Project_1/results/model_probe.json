@@ -1,0 +1,440 @@
+{
+  "probed_at": "2026-11-13T20:51:29+00:00",
+  "pdf": "data/raw/extractbench/docs/short/07021-2016-p0014.pdf",
+  "expected": "Pine Harbour Water Utilities LLC",
+  "question": "What is the partnership name printed in item B (partnership's name)? Reply with the exact text only.",
+  "results": [
+    {
+      "model": "vertex_ai/gemini-3.7-flash",
+      "kind": "pdf_file",
+      "ok": true,
+      "status": 200,
+      "answer": "Pine Harbour Water Utilities LLC",
+      "correct": true,
+      "error": null,
+      "elapsed_s": 3.681,
+      "usage": {
+        "completion_tokens": 299,
+        "prompt_tokens": 542,
+        "total_tokens": 841,
+        "completion_tokens_details": {
+          "reasoning_tokens": 294,
+          "text_tokens": 5
+        },
+        "prompt_tokens_details": {
+          "text_tokens": 22,
+          "image_tokens": 520
+        }
+      }
+    },
+    {
+      "model": "vertex_ai/gemini-3.7-flash",
+      "kind": "pdf_image_url",
+      "ok": true,
+      "status": 200,
+      "answer": "Pine Harbour Water Utilities LLC",
+      "correct": true,
+      "error": null,
+      "elapsed_s": 2.968,
+      "usage": {
+        "completion_tokens": 121,
+        "prompt_tokens": 542,
+        "total_tokens": 663,
+        "completion_tokens_details": {
+          "reasoning_tokens": 116,
+          "text_tokens": 5
+        },
+        "prompt_tokens_details": {
+          "text_tokens": 22,
+          "image_tokens": 520
+        }
+      }
+    },
+    {
+      "model": "vertex_ai/gemini-3.7-flash",
+      "kind": "png",
+      "ok": true,
+      "status": 200,
+      "answer": "Pine Harbour Water Utilities LLC",
+      "correct": true,
+      "error": null,
+      "elapsed_s": 2.639,
+      "usage": {
+        "completion_tokens": 120,
+        "prompt_tokens": 1124,
+        "total_tokens": 1244,
+        "completion_tokens_details": {
+          "reasoning_tokens": 115,
+          "text_tokens": 5
+        },
+        "prompt_tokens_details": {
+          "text_tokens": 22,
+          "image_tokens": 1102
+        }
+      }
+    },
+    {
+      "model": "vertex_ai/gemini-3.7-flash",
+      "kind": "text",
+      "ok": true,
+      "status": 200,
+      "answer": "ine Harbour Water Utillties LLC",
+      "correct": false,
+      "error": null,
+      "elapsed_s": 2.531,
+      "usage": {
+        "completion_tokens": 94,
+        "prompt_tokens": 1238,
+        "total_tokens": 1332,
+        "completion_tokens_details": {
+          "reasoning_tokens": 88,
+          "text_tokens": 6
+        },
+        "prompt_tokens_details": {
+          "text_tokens": 1238
+        }
+      }
+    },
+    {
+      "model": "vertex_ai/claude-sonnet-5.5",
+      "kind": "pdf_file",
+      "ok": true,
+      "status": 200,
+      "answer": "Pine Harbour Water Utilities LLC",
+      "correct": true,
+      "error": null,
+      "elapsed_s": 1.886,
+      "usage": {
+        "completion_tokens": 18,
+        "prompt_tokens": 3050,
+        "total_tokens": 3068,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "text_tokens": 18
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3050,
+          "cache_write_tokens": 0,
+          "cache_creation_tokens": 0,
+          "cache_creation_token_details": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          }
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "speed": "standard"
+      }
+    },
+    {
+      "model": "vertex_ai/claude-sonnet-5.5",
+      "kind": "pdf_image_url",
+      "ok": false,
+      "status": 400,
+      "answer": null,
+      "correct": null,
+      "error": "HTTP 400: {\"error\":{\"message\":\"litellm.BadRequestError: Vertex_aiException BadRequestError - {\\\"type\\\":\\\"error\\\",\\\"error\\\":{\\\"type\\\":\\\"invalid_request_error\\\",\\\"message\\\":\\\"messages.0.content.1.image.source.bas",
+      "elapsed_s": null,
+      "usage": null
+    },
+    {
+      "model": "vertex_ai/claude-sonnet-5.5",
+      "kind": "png",
+      "ok": true,
+      "status": 200,
+      "answer": "Pine Harbour Water Utilities LLC",
+      "correct": true,
+      "error": null,
+      "elapsed_s": 2.092,
+      "usage": {
+        "completion_tokens": 18,
+        "prompt_tokens": 2755,
+        "total_tokens": 2773,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "text_tokens": 18
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 2755,
+          "cache_write_tokens": 0,
+          "cache_creation_tokens": 0,
+          "cache_creation_token_details": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          }
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "speed": "standard"
+      }
+    },
+    {
+      "model": "vertex_ai/claude-sonnet-5.5",
+      "kind": "text",
+      "ok": true,
+      "status": 200,
+      "answer": "Pine Harbour Water Utillties LLC",
+      "correct": false,
+      "error": null,
+      "elapsed_s": 1.208,
+      "usage": {
+        "completion_tokens": 18,
+        "prompt_tokens": 1735,
+        "total_tokens": 1753,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "text_tokens": 18
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 1735,
+          "cache_write_tokens": 0,
+          "cache_creation_tokens": 0,
+          "cache_creation_token_details": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 0
+          }
+        },
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "speed": "standard"
+      }
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "kind": "pdf_file",
+      "ok": false,
+      "status": 400,
+      "answer": null,
+      "correct": null,
+      "error": "HTTP 400: {\"error\":{\"message\":\"litellm.BadRequestError: AzureException BadRequestError - Missing required parameter: 'messages[0].content[1].file.file_id'.\\n\\nLiteLLM: model group 'gpt-5.6-sol' failed with the ",
+      "elapsed_s": null,
+      "usage": null
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "kind": "pdf_image_url",
+      "ok": false,
+      "status": 400,
+      "answer": null,
+      "correct": null,
+      "error": "HTTP 400: {\"error\":{\"message\":\"litellm.BadRequestError: AzureException BadRequestError - Invalid image URL: 'messages[0].content[1].image_url.url'. Expected a base64-encoded data URL with an image MIME type (e.",
+      "elapsed_s": null,
+      "usage": null
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "kind": "png",
+      "ok": true,
+      "status": 200,
+      "answer": "Pine Harbour Water Utilities LLC",
+      "correct": true,
+      "error": null,
+      "elapsed_s": 2.117,
+      "usage": {
+        "completion_tokens": 9,
+        "prompt_tokens": 2408,
+        "total_tokens": 2417,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 0,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 8,
+          "engine_ttft_ms": 417,
+          "engine_ttlt_ms": 494,
+          "pre_inference_ms": 183,
+          "service_tbt_ms": 8,
+          "service_ttft_ms": 725,
+          "service_ttlt_ms": 796,
+          "user_visible_ttft_ms": 542
+        }
+      }
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "kind": "text",
+      "ok": true,
+      "status": 200,
+      "answer": "Pine Harbour Water Utilities LLC",
+      "correct": true,
+      "error": null,
+      "elapsed_s": 2.909,
+      "usage": {
+        "completion_tokens": 204,
+        "prompt_tokens": 1078,
+        "total_tokens": 1282,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": 0,
+          "audio_tokens": 0,
+          "reasoning_tokens": 189,
+          "rejected_prediction_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": 0,
+          "cached_tokens": 0,
+          "cache_write_tokens": 1075,
+          "cache_creation_tokens": 1075
+        },
+        "latency_checkpoint": {
+          "engine_tbt_ms": 9,
+          "engine_ttft_ms": 294,
+          "engine_ttlt_ms": 2116,
+          "pre_inference_ms": 87,
+          "service_tbt_ms": 9,
+          "service_ttft_ms": 492,
+          "service_ttlt_ms": 2307,
+          "user_visible_ttft_ms": 405
+        }
+      }
+    },
+    {
+      "model": "vertex_ai/gemini-3.5-flash-lite",
+      "kind": "pdf_file",
+      "ok": true,
+      "status": 200,
+      "answer": "Pine Harbour Water Utilities LLC",
+      "correct": true,
+      "error": null,
+      "elapsed_s": 1.385,
+      "usage": {
+        "completion_tokens": 5,
+        "prompt_tokens": 542,
+        "total_tokens": 547,
+        "completion_tokens_details": {
+          "text_tokens": 5
+        },
+        "prompt_tokens_details": {
+          "text_tokens": 22,
+          "image_tokens": 520
+        }
+      }
+    },
+    {
+      "model": "vertex_ai/gemini-3.5-flash-lite",
+      "kind": "pdf_image_url",
+      "ok": true,
+      "status": 200,
+      "answer": "Pine Harbour Water Utilities LLC",
+      "correct": true,
+      "error": null,
+      "elapsed_s": 1.108,
+      "usage": {
+        "completion_tokens": 5,
+        "prompt_tokens": 542,
+        "total_tokens": 547,
+        "completion_tokens_details": {
+          "text_tokens": 5
+        },
+        "prompt_tokens_details": {
+          "text_tokens": 22,
+          "image_tokens": 520
+        }
+      }
+    },
+    {
+      "model": "vertex_ai/gemini-3.5-flash-lite",
+      "kind": "png",
+      "ok": true,
+      "status": 200,
+      "answer": "Pine Harbour Water Utilities LLC",
+      "correct": true,
+      "error": null,
+      "elapsed_s": 1.316,
+      "usage": {
+        "completion_tokens": 5,
+        "prompt_tokens": 1124,
+        "total_tokens": 1129,
+        "completion_tokens_details": {
+          "text_tokens": 5
+        },
+        "prompt_tokens_details": {
+          "text_tokens": 22,
+          "image_tokens": 1102
+        }
+      }
+    },
+    {
+      "model": "vertex_ai/gemini-3.5-flash-lite",
+      "kind": "text",
+      "ok": true,
+      "status": 200,
+      "answer": "ine Harbour Water Utillties LLC",
+      "correct": false,
+      "error": null,
+      "elapsed_s": 0.726,
+      "usage": {
+        "completion_tokens": 7,
+        "prompt_tokens": 1238,
+        "total_tokens": 1245,
+        "completion_tokens_details": {
+          "text_tokens": 7
+        },
+        "prompt_tokens_details": {
+          "text_tokens": 1238
+        }
+      }
+    },
+    {
+      "model": "mistral-ocr-4",
+      "kind": "pdf_file",
+      "ok": false,
+      "status": 404,
+      "answer": null,
+      "correct": null,
+      "error": "HTTP 404: {\"error\":{\"message\":\"litellm.NotFoundError: NotFoundError: Azure_aiException - {\\\"error\\\":{\\\"code\\\":\\\"api_not_supported\\\",\\\"message\\\":\\\"Requested API is currently not supported\\\",\\\"details\\\":\\\"Request",
+      "elapsed_s": null,
+      "usage": null
+    },
+    {
+      "model": "mistral-ocr-4",
+      "kind": "pdf_image_url",
+      "ok": false,
+      "status": 404,
+      "answer": null,
+      "correct": null,
+      "error": "HTTP 404: {\"error\":{\"message\":\"litellm.NotFoundError: NotFoundError: Azure_aiException - {\\\"error\\\":{\\\"code\\\":\\\"api_not_supported\\\",\\\"message\\\":\\\"Requested API is currently not supported\\\",\\\"details\\\":\\\"Request",
+      "elapsed_s": null,
+      "usage": null
+    },
+    {
+      "model": "mistral-ocr-4",
+      "kind": "png",
+      "ok": false,
+      "status": 404,
+      "answer": null,
+      "correct": null,
+      "error": "HTTP 404: {\"error\":{\"message\":\"litellm.NotFoundError: NotFoundError: Azure_aiException - {\\\"error\\\":{\\\"code\\\":\\\"api_not_supported\\\",\\\"message\\\":\\\"Requested API is currently not supported\\\",\\\"details\\\":\\\"Request",
+      "elapsed_s": null,
+      "usage": null
+    },
+    {
+      "model": "mistral-ocr-4",
+      "kind": "text",
+      "ok": false,
+      "status": 404,
+      "answer": null,
+      "correct": null,
+      "error": "HTTP 404: {\"error\":{\"message\":\"litellm.NotFoundError: NotFoundError: Azure_aiException - {\\\"error\\\":{\\\"code\\\":\\\"api_not_supported\\\",\\\"message\\\":\\\"Requested API is currently not supported\\\",\\\"details\\\":\\\"Request",
+      "elapsed_s": null,
+      "usage": null
+    },
+    {
+      "model": "mistral-ocr-4",
+      "kind": "ocr_endpoint",
+      "ok": true,
+      "status": 200,
+      "error": null,
+      "pages": 1,
+      "correct": true
+    }
+  ]
+}
