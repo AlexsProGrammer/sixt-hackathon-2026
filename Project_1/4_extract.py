@@ -255,7 +255,10 @@ def read_jsonl(path: Path) -> list[dict]:
     return rows
 
 
-def sidecar_paths(out: Path) -> tuple[Path, Path, Path]:
+def sidecar_paths(out: Path, run_dir: Path | None = None) -> tuple[Path, Path, Path]:
+    """diagnostics, manifest, samples. In a run folder they have fixed names next to preds.jsonl."""
+    if run_dir is not None:
+        return run_dir / "diagnostics.jsonl", run_dir / "manifest.json", run_dir / "samples.jsonl"
     return (out.with_name(out.stem + ".diagnostics.jsonl"), out.with_name(out.stem + ".manifest.json"),
             out.with_name(out.stem + ".samples.jsonl"))
 
@@ -345,12 +348,52 @@ def load_decision(path: str) -> dict:
     return dec
 
 
+# ---------------------------------------------------------------- run registry (only with --run-dir)
+
+def _register_run(run_dir: Path, a, recs: list[dict], mode: str, pipeline: dict, dec: dict | None):
+    """Create/refresh the run folder: run.json, gold-free input copy, gold subset. Returns the registry module."""
+    from evaluation import registry
+    splits = sorted({str(r.get("split")) for r in recs if r.get("split")})
+    registry.init_run_dir(run_dir, name=a.run_name, split=splits[0] if len(splits) == 1 else "mixed" if splits else "unknown")
+    input_path = Path(a.data)
+    registry.write_inputs(run_dir, recs, input_ref=str(input_path) if not a.limit else None,
+                          input_sha256=sha256_bytes(input_path.read_bytes()) if not a.limit else None)
+    extra = {"status": "running", "mode": mode, "models": [pipeline["model"]] if pipeline.get("model") else [],
+             "n_requested": len(recs)}
+    if a.run_name:
+        extra["name"] = a.run_name
+    if dec is not None:
+        extra["decision_sha256"] = sha256_bytes(Path(a.decision).read_bytes())
+    registry.update_run(run_dir, **extra)
+    return registry
+
+
+def _finish_registered_run(registry, run_dir: Path, a, dec: dict | None, run_complete: bool, n_written: int,
+                           n_requested: int) -> None:
+    """Close the run folder: status, score (when gold exists) and index row. Never changes the exit code."""
+    status = "complete" if run_complete else ("failed" if n_written == 0 else "incomplete")
+    try:
+        registry.finish_run(run_dir, status, n_written=n_written)
+        if (run_dir / "gold.jsonl").exists() and n_written:
+            threshold = float(dec["threshold"]) if dec is not None else registry.DEFAULT_THRESHOLD
+            s = registry.score_run(run_dir, threshold)
+            print(f"scored {s['n_docs']} docs at threshold {threshold}: accepted={s['accepted']} wrong={s['wrong']} "
+                  f"hallucinated={s['hallucinated']} net_saving_e100={s['net_saving_pct_e100']:.2%}", file=sys.stderr)
+        registry.append_index(run_dir)
+        print(f"run folder: {run_dir}", file=sys.stderr)
+    except Exception as e:  # registry problems must not hide a finished extraction
+        print(f"WARNING: run registry update failed: {type(e).__name__}: {e}", file=sys.stderr)
+
+
 # ---------------------------------------------------------------- main
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--data", required=True, help="e.g. data/unified/dev.jsonl (no gold needed)")
-    ap.add_argument("--out", required=True)
+    ap.add_argument("--out", help="predictions file; with --run-dir defaults to RUN_DIR/preds.jsonl")
+    ap.add_argument("--run-dir", help="register this run in a self-contained folder (results/runs/<run_id>/): "
+                                      "preds, diagnostics, samples, manifest, input/gold copy, score, index row")
+    ap.add_argument("--run-name", help="display name of the run (default: the run folder name)")
     ap.add_argument("--limit", type=int, help="only the first N documents (LLM calls cost money)")
     ap.add_argument("--mode", choices=["auto", "llm", "offline"], default=None,
                     help="llm: fail loudly if config is missing or an API call fails. "
@@ -375,6 +418,13 @@ def main(argv=None) -> int:
     ap.add_argument("--cache-dir", default=str(HERE / "cache"))
     ap.add_argument("--no-cache", action="store_true")
     a = ap.parse_args(argv)
+    run_dir = Path(a.run_dir) if a.run_dir else None
+    if run_dir is not None and not a.out:
+        a.out = str(run_dir / "preds.jsonl")
+    if not a.out:
+        raise SystemExit("ERROR: --out is required (or --run-dir, which defaults it to RUN_DIR/preds.jsonl).")
+    if run_dir is not None and Path(a.out).resolve().parent != run_dir.resolve():
+        raise SystemExit("ERROR: with --run-dir, --out must be inside the run folder.")
 
     if os.environ.get("EXTRACT_SKIP_DOTENV") != "1":  # tests set this so they never load the real .env
         loaded = load_env()
@@ -441,13 +491,16 @@ def main(argv=None) -> int:
     recs = [json.loads(line) for line in open(a.data, encoding="utf-8") if line.strip()]
     recs = recs[: a.limit] if a.limit else recs
     out = Path(a.out)
-    diag_path, man_path, samples_path = sidecar_paths(out)
+    diag_path, man_path, samples_path = sidecar_paths(out, run_dir)
     fingerprint = run_fingerprint(Path(a.data), pipeline, cfg)
     done = check_existing(out, diag_path, man_path, samples_path, pipeline, a.resume, fingerprint)
     previous_segments = []
     if a.resume and man_path.exists():
         previous_segments = json.loads(man_path.read_text(encoding="utf-8")).get("segments", [])
     out.parent.mkdir(parents=True, exist_ok=True)
+    registry = None
+    if run_dir is not None:
+        registry = _register_run(run_dir, a, recs, mode, pipeline, dec)
 
     state = RunState()
     cache = ReplyCache(None if a.no_cache else Path(a.cache_dir), state)
@@ -534,6 +587,8 @@ def main(argv=None) -> int:
     man_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"done: requested={len(recs)} written={n_written} failed={len(failed)} requests={state.requests} "
           f"cache_hits={state.cache_hits} run_id={run_id}", file=sys.stderr)
+    if registry is not None:
+        _finish_registered_run(registry, run_dir, a, dec, run_complete, n_written, len(recs))
     if failed and a.on_error == "fail":
         shown = ", ".join(failed[:5]) + (" ..." if len(failed) > 5 else "")
         print(f"ERROR: {len(failed)} document(s) not written. Rerun with --resume to retry them: {shown}", file=sys.stderr)

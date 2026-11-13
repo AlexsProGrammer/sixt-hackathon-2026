@@ -1,0 +1,57 @@
+{
+  "run_id": "20261113-205136-probly5_dev-7c5d2d",
+  "name": "probly5_dev",
+  "split": "dev",
+  "created_at": "2026-11-13T20:51:36",
+  "tags": [
+    "legacy"
+  ],
+  "git": {
+    "commit": null,
+    "dirty": null,
+    "note": "legacy import"
+  },
+  "status": "complete",
+  "provenance": "manifest",
+  "legacy_source": "probly5_dev.jsonl",
+  "input": {
+    "n_docs": 100,
+    "kind": "ref",
+    "input_ref": "data/unified/dev.jsonl",
+    "input_sha256": "a0b6d1cd205bb935425b8a7ff4837c0a39d4e68fadcee4df056163fece545b68",
+    "n_gold": 100
+  },
+  "n_written": 100,
+  "models": [
+    "vertex_ai/gemini-3.7-flash"
+  ],
+  "summary": {
+    "threshold": 0.99,
+    "n_docs": 100,
+    "n_fields": 5262,
+    "accepted": 230,
+    "correct": 223,
+    "wrong": 5,
+    "hallucinated": 2,
+    "precision": 0.9695652173913043,
+    "coverage": 0.0688821752265861,
+    "net_saving_pct_e20": 0.01710376282782212,
+    "net_saving_pct_e100": -0.08931965032307107,
+    "net_saving_pct_e500": -0.621436716077537,
+    "best_threshold_e100": null,
+    "best_threshold_net_e100": 0.0,
+    "by_source": {
+      "extractbench": {
+        "n_fields": 5262,
+        "accepted": 230,
+        "correct": 223,
+        "wrong": 5,
+        "hallucinated": 2,
+        "precision": 0.9695652173913043,
+        "coverage": 0.0688821752265861,
+        "net_saving_pct_e100": -0.08931965032307107
+      }
+    },
+    "scored_at": "2026-11-13T21:00:36"
+  }
+}

@@ -25,3 +25,14 @@ Project_1/temp/*
 .kilo/*
 Project_1/results/**/*.jsonl
 Project_1/results/*.log
+
+# run registry: tracked = run.json, manifest.json, score.json, index.jsonl. Ignored = document text and bulk data.
+Project_1/results/runs/*/input.jsonl
+Project_1/results/runs/*/gold.jsonl
+Project_1/results/runs/*/samples.jsonl
+Project_1/results/runs/*/preds.jsonl
+Project_1/results/runs/*/diagnostics.jsonl
+Project_1/results/runs/*/fields.jsonl
+Project_1/results/runs/*.lock
+Project_1/results/runs/index.jsonl.lock
+!Project_1/results/runs/index.jsonl

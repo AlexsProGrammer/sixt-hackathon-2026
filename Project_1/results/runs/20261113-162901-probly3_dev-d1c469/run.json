@@ -1,0 +1,55 @@
+{
+  "run_id": "20261113-162901-probly3_dev-d1c469",
+  "name": "probly3_dev",
+  "split": "dev",
+  "created_at": "2026-11-13T16:29:01",
+  "tags": [
+    "legacy"
+  ],
+  "git": {
+    "commit": null,
+    "dirty": null,
+    "note": "legacy import"
+  },
+  "status": "unknown",
+  "provenance": "unknown",
+  "legacy_source": "probly3_dev.jsonl",
+  "input": {
+    "n_docs": 13,
+    "kind": "copy",
+    "input_sha256": "f8d03059bcddaa74caac0c9afb1351b192667601566385b4bd91d12c56d78171",
+    "input_ref": "data/unified/dev.jsonl",
+    "n_gold": 13
+  },
+  "n_written": 13,
+  "models": [],
+  "summary": {
+    "threshold": 0.99,
+    "n_docs": 13,
+    "n_fields": 522,
+    "accepted": 30,
+    "correct": 11,
+    "wrong": 18,
+    "hallucinated": 1,
+    "precision": 0.36666666666666664,
+    "coverage": 0.1228813559322034,
+    "net_saving_pct_e20": -0.6704980842911877,
+    "net_saving_pct_e100": -3.582375478927203,
+    "net_saving_pct_e500": -18.14176245210728,
+    "best_threshold_e100": null,
+    "best_threshold_net_e100": 0.0,
+    "by_source": {
+      "extractbench": {
+        "n_fields": 522,
+        "accepted": 30,
+        "correct": 11,
+        "wrong": 18,
+        "hallucinated": 1,
+        "precision": 0.36666666666666664,
+        "coverage": 0.1228813559322034,
+        "net_saving_pct_e100": -3.582375478927203
+      }
+    },
+    "scored_at": "2026-11-13T21:00:17"
+  }
+}

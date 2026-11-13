@@ -1,0 +1,55 @@
+{
+  "run_id": "20261113-210024-probly5_test_public-d3df39",
+  "name": "probly5_test_public",
+  "split": "test_public",
+  "created_at": "2026-11-13T21:00:24",
+  "tags": [
+    "legacy"
+  ],
+  "git": {
+    "commit": null,
+    "dirty": null,
+    "note": "legacy import"
+  },
+  "status": "unknown",
+  "provenance": "unknown",
+  "legacy_source": "probly5_test_public.jsonl",
+  "input": {
+    "n_docs": 25,
+    "kind": "copy",
+    "input_sha256": "331b27f3a26efdbfadcefcdff64a4a869402cf4d673d8bb98e8e6dd1f9dae639",
+    "input_ref": "data/unified/test_public.jsonl",
+    "n_gold": 25
+  },
+  "n_written": 25,
+  "models": [],
+  "summary": {
+    "threshold": 0.99,
+    "n_docs": 25,
+    "n_fields": 1267,
+    "accepted": 101,
+    "correct": 101,
+    "wrong": 0,
+    "hallucinated": 0,
+    "precision": 1.0,
+    "coverage": 0.12023809523809524,
+    "net_saving_pct_e20": 0.07971586424625099,
+    "net_saving_pct_e100": 0.07971586424625099,
+    "net_saving_pct_e500": 0.07971586424625099,
+    "best_threshold_e100": 0.98,
+    "best_threshold_net_e100": 0.08050513022888714,
+    "by_source": {
+      "extractbench": {
+        "n_fields": 1267,
+        "accepted": 101,
+        "correct": 101,
+        "wrong": 0,
+        "hallucinated": 0,
+        "precision": 1.0,
+        "coverage": 0.12023809523809524,
+        "net_saving_pct_e100": 0.07971586424625099
+      }
+    },
+    "scored_at": "2026-11-13T21:00:41"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "run_id": "20261113-153153-probly_dev-c4fc6c",
+  "name": "probly_dev",
+  "split": "dev",
+  "created_at": "2026-11-13T15:31:53",
+  "tags": [
+    "legacy"
+  ],
+  "git": {
+    "commit": null,
+    "dirty": null,
+    "note": "legacy import"
+  },
+  "status": "unknown",
+  "provenance": "unknown",
+  "legacy_source": "probly_dev.jsonl",
+  "input": {
+    "n_docs": 78,
+    "kind": "copy",
+    "input_sha256": "e273f12b6b99c10cc350bd9fd9594ecf444a9be21f204858baa5ecd75c5c6568",
+    "input_ref": "data/unified/dev.jsonl",
+    "n_gold": 78
+  },
+  "n_written": 78,
+  "models": [],
+  "summary": {
+    "threshold": 0.99,
+    "n_docs": 78,
+    "n_fields": 4410,
+    "accepted": 132,
+    "correct": 128,
+    "wrong": 3,
+    "hallucinated": 1,
+    "precision": 0.9696969696969697,
+    "coverage": 0.045423023578363385,
+    "net_saving_pct_e20": 0.011791383219954649,
+    "net_saving_pct_e100": -0.060770975056689346,
+    "net_saving_pct_e500": -0.4235827664399093,
+    "best_threshold_e100": null,
+    "best_threshold_net_e100": 0.0,
+    "by_source": {
+      "extractbench": {
+        "n_fields": 4410,
+        "accepted": 132,
+        "correct": 128,
+        "wrong": 3,
+        "hallucinated": 1,
+        "precision": 0.9696969696969697,
+        "coverage": 0.045423023578363385,
+        "net_saving_pct_e100": -0.060770975056689346
+      }
+    },
+    "scored_at": "2026-11-13T21:00:50"
+  }
+}

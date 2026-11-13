@@ -1,0 +1,55 @@
+{
+  "run_id": "20261113-110137-llm_dev_10-b82899",
+  "name": "llm_dev_10",
+  "split": "dev",
+  "created_at": "2026-11-13T11:01:37",
+  "tags": [
+    "legacy"
+  ],
+  "git": {
+    "commit": null,
+    "dirty": null,
+    "note": "legacy import"
+  },
+  "status": "unknown",
+  "provenance": "unknown",
+  "legacy_source": "llm_dev_10.jsonl",
+  "input": {
+    "n_docs": 10,
+    "kind": "copy",
+    "input_sha256": "904d91cf8cc792e630fc51e1c6a9f862dfe6d1057aeeb2157fea026c28c8670f",
+    "input_ref": "data/unified/dev.jsonl",
+    "n_gold": 10
+  },
+  "n_written": 10,
+  "models": [],
+  "summary": {
+    "threshold": 0.99,
+    "n_docs": 10,
+    "n_fields": 432,
+    "accepted": 31,
+    "correct": 28,
+    "wrong": 3,
+    "hallucinated": 0,
+    "precision": 0.9032258064516129,
+    "coverage": 0.15656565656565657,
+    "net_saving_pct_e20": -0.06712962962962964,
+    "net_saving_pct_e100": -0.6226851851851852,
+    "net_saving_pct_e500": -3.400462962962963,
+    "best_threshold_e100": null,
+    "best_threshold_net_e100": 0.0,
+    "by_source": {
+      "extractbench": {
+        "n_fields": 432,
+        "accepted": 31,
+        "correct": 28,
+        "wrong": 3,
+        "hallucinated": 0,
+        "precision": 0.9032258064516129,
+        "coverage": 0.15656565656565657,
+        "net_saving_pct_e100": -0.6226851851851852
+      }
+    },
+    "scored_at": "2026-11-13T21:00:06"
+  }
+}

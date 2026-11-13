@@ -1,0 +1,65 @@
+{
+  "run_id": "20261112-213505-base_common-3b0b8d",
+  "name": "base_common",
+  "split": "test_public",
+  "created_at": "2026-11-12T21:35:05",
+  "tags": [
+    "legacy"
+  ],
+  "git": {
+    "commit": null,
+    "dirty": null,
+    "note": "legacy import"
+  },
+  "status": "unknown",
+  "provenance": "unknown",
+  "legacy_source": "base_common.jsonl",
+  "input": {
+    "n_docs": 176,
+    "kind": "copy",
+    "input_sha256": "e9132e7174f709f76492f3aeef4e64d4d83cf4878f0445e3549f9ce57b0fff0b",
+    "input_ref": "data/unified/test_public.jsonl",
+    "n_gold": 176
+  },
+  "n_written": 176,
+  "models": [],
+  "summary": {
+    "threshold": 0.99,
+    "n_docs": 176,
+    "n_fields": 6962,
+    "accepted": 319,
+    "correct": 192,
+    "wrong": 125,
+    "hallucinated": 2,
+    "precision": 0.6018808777429467,
+    "coverage": 0.11064572425828971,
+    "net_saving_pct_e20": -0.3190175237000862,
+    "net_saving_pct_e100": -1.7783682849755817,
+    "net_saving_pct_e500": -9.075122091353059,
+    "best_threshold_e100": null,
+    "best_threshold_net_e100": 0.0,
+    "by_source": {
+      "cuad": {
+        "n_fields": 5289,
+        "accepted": 0,
+        "correct": 0,
+        "wrong": 0,
+        "hallucinated": 0,
+        "precision": null,
+        "coverage": 0.0,
+        "net_saving_pct_e100": 0.0
+      },
+      "extractbench": {
+        "n_fields": 1673,
+        "accepted": 319,
+        "correct": 192,
+        "wrong": 125,
+        "hallucinated": 2,
+        "precision": 0.6018808777429467,
+        "coverage": 0.26932880203908244,
+        "net_saving_pct_e100": -7.400478182904961
+      }
+    },
+    "scored_at": "2026-11-13T20:59:20"
+  }
+}

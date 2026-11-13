@@ -8,9 +8,12 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import sys
 from pathlib import Path
 
 HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE))
+from evaluation import registry  # noqa: E402
 DEV_GOLD = HERE / "data/unified/dev.jsonl"
 TEST_GOLD = HERE / "data/unified/test_public.jsonl"
 RESULTS_DIR = HERE / "results"
@@ -30,17 +33,18 @@ def load_gold_map(path: Path) -> dict[str, dict]:
     return {r["doc_id"]: r for r in S.read_jsonl(path)}
 
 
-def discover_pred_files(results_dir: Path) -> list[Path]:
-    files = []
-    for p in sorted(results_dir.rglob("*.jsonl")):
-        if any(part in ("split", "plots") for part in p.parts):
+def discover_runs(runs_dir: Path | None = None) -> list[dict]:
+    """Index rows (results/runs/index.jsonl) of runs that have non-empty predictions. Newest run wins per name."""
+    runs = Path(runs_dir) if runs_dir else registry.RUNS_DIR
+    latest: dict[str, dict] = {}
+    for row in registry.load_index(runs):
+        preds = runs / row["run_id"] / "preds.jsonl"
+        if row.get("status") == "failed" or not preds.exists() or preds.stat().st_size == 0:
             continue
-        if p.name.endswith((".diagnostics.jsonl", ".samples.jsonl")) or p.name.startswith(("release_", "final_dev_input")):
-            continue
-        if p.stat().st_size == 0:
-            continue
-        files.append(p)
-    return files
+        prev = latest.get(row["name"])
+        if prev is None or (row.get("created_at") or "") >= (prev.get("created_at") or ""):
+            latest[row["name"]] = row
+    return [latest[k] for k in sorted(latest)]
 
 
 def resolve_threshold(cli_threshold: float | None) -> float:
@@ -220,13 +224,21 @@ def main():
     test_gold = load_gold_map(TEST_GOLD)
     dev_runs, test_runs = {}, {}
 
-    for path in discover_pred_files(RESULTS_DIR):
-        preds = S.load_preds(path)
+    rows = discover_runs()
+    if not rows:
+        print("No runs in results/runs/index.jsonl. Import loose result files with: "
+              "python tools/import_legacy_runs.py", file=sys.stderr)
+    for row in rows:
+        preds = S.load_preds(registry.RUNS_DIR / row["run_id"] / "preds.jsonl")
         if not preds:
             continue
         ids = set(preds.keys())
-        key = path.stem if path.parent == RESULTS_DIR else f"{path.parent.name}/{path.stem}"
-        if ids.issubset(test_gold.keys()):
+        key = row["name"]
+        if row.get("split") == "test_public" and ids.issubset(test_gold.keys()):
+            test_runs[key] = preds
+        elif row.get("split") == "dev" and ids.issubset(dev_gold.keys()):
+            dev_runs[key] = preds
+        elif ids.issubset(test_gold.keys()):  # split unknown (e.g. mixed): decide by doc_ids as before
             test_runs[key] = preds
         elif ids.issubset(dev_gold.keys()):
             dev_runs[key] = preds
