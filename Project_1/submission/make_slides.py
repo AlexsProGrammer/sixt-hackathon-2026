@@ -40,8 +40,17 @@ def at(score: dict, thr: float, error_cost: float = 100.0) -> dict:
 LLM_DEV, PROBLY_DEV = jload("llm_dev_score.json"), jload("probly_dev_score.json")
 LLM_TEST, PROBLY_TEST = jload("llm_test_public_score.json"), jload("probly_test_public_score.json")
 COMMON, NEVER = jload("base_common_score.json"), jload("base_never_score.json")
-AUDIT = jload("uq_v2_audit_result.json")["audit"]
-SELECT = jload("uq_v2_frozen_pre_audit.json")["dev_select"]
+# The frozen select/audit result files were removed from the repository (commit 63fa8aa). If they are present they
+# are read; otherwise the values below are used. They were copied from those files as last committed:
+#   git show 63fa8aa^:Project_1/results/uq_v2_audit_result.json   (key "audit")
+#   git show 63fa8aa^:Project_1/results/uq_v2_frozen_pre_audit.json   (key "dev_select")
+_AUDIT_STORED = {"accepted": 4, "wrong": 1, "hallucinated": 0, "precision": 0.75,
+                 "coverage": 0.09090909090909091, "net_saving_pct": -0.7384615384615385}
+_SELECT_STORED = {"accepted": 14, "wrong": 0, "hallucinated": 0, "precision": 1.0,
+                  "coverage": 0.1891891891891892, "net_saving_pct": 0.08536585365853659}
+AUDIT = jload("uq_v2_audit_result.json")["audit"] if (R / "uq_v2_audit_result.json").exists() else _AUDIT_STORED
+SELECT = (jload("uq_v2_frozen_pre_audit.json")["dev_select"] if (R / "uq_v2_frozen_pre_audit.json").exists()
+          else _SELECT_STORED)
 POST_AUDIT = jload("post_schema_v3/audit_frozen_eval.json")["audit"]
 AUDIT_METHODS = jload("uq_v2_audit_ablation/ablation_report.json")["methods"]
 CUAD_ACCEPTED_PROBLY = PROBLY_DEV["by_source"]["cuad"]["accepted"] + PROBLY_TEST["by_source"]["cuad"]["accepted"]
@@ -85,7 +94,7 @@ def box(fig, x, y, w, h, text, size=14, face="#f1f3f4", edge="#c4c7c5", color=IN
 
 
 def footer(fig, n):
-    fig.text(0.05, 0.03, f"Project 1  |  Teach a machine to say \"I don't know\"  |  {n}/5", fontsize=10, color=GREY)
+    fig.text(0.05, 0.03, f"A-Team  |  Project 1: Teach a machine to say \"I don't know\"  |  {n}/5", fontsize=10, color=GREY)
     fig.text(0.95, 0.03, "numbers from results/*.json, official scorer 5_score.py", fontsize=10, color=GREY, ha="right")
 
 
@@ -147,13 +156,13 @@ def slide3():
     f = page("3. Result: low coverage, still below the human baseline",
              f"Net saving at error cost 100, threshold {THR}. `never` (human reviews everything) = 0.0%.")
     rows = [("never / all-abstain  (submitted)", None, "all"),
-            ("probly pipeline, dev", at(PROBLY_DEV, THR), "78 of 540 docs"),
-            ("probly pipeline, test_public", at(PROBLY_TEST, THR), "40 of 176 docs"),
-            ("LLM confidence only, dev", at(LLM_DEV, THR), "307 of 540 docs"),
+            ("probly pipeline, dev", at(PROBLY_DEV, THR), "78 of 540 docs*"),
+            ("probly pipeline, test_public", at(PROBLY_TEST, THR), "40 of 176 docs*"),
+            ("LLM confidence only, dev", at(LLM_DEV, THR), "307 of 540 docs*"),
             ("probly K=3 frozen, dev_audit", {"accepted": AUDIT["accepted"], "errors": AUDIT["wrong"] + AUDIT["hallucinated"],
                                               "precision": AUDIT["precision"], "coverage": AUDIT["coverage"],
                                               "net": AUDIT["net_saving_pct"]}, "7 docs"),
-            ("LLM confidence only, test_public", at(LLM_TEST, THR), "75 of 176 docs"),
+            ("LLM confidence only, test_public", at(LLM_TEST, THR), "75 of 176 docs*"),
             ("most common value, test_public (0.95)", at(COMMON, 0.95), "all")]
     ax = f.add_axes([0.33, 0.36, 0.25, 0.42])
     ys = list(range(len(rows)))[::-1]
@@ -193,10 +202,12 @@ def slide3():
         f"probly cuts the loss from {pct(at(LLM_DEV, THR)['net'])} to {pct(p['net'])} on dev, but coverage falls to "
         f"{p['coverage'] * 100:.1f}% and precision is {p['precision'] * 100:.1f}%, not 99%. Every active variant is below 0.0%.",
         f"Why coverage is low: strict text grounding, threshold {THR}, scans abstained, and {CUAD_ACCEPTED_PROBLY} accepted "
-        "CUAD clause fields. Partial runs are scored against the full split, so their percentages are diluted.",
+        "CUAD clause fields. Partial runs: scored against the full split (diluted); * run labels and document "
+        "counts are derived from file names, not backed by manifests.",
         f"Error cost 20: probly on dev is {pct(at(PROBLY_DEV, THR, 20)['net'])}. Error cost 500: "
-        f"{pct(at(PROBLY_DEV, THR, 500)['net'])}. All-abstain is never negative. That is why we submit it.",
-    ], y=0.265, size=12, gap=0.010, width_in=11.8)
+        f"{pct(at(PROBLY_DEV, THR, 500)['net'])}. All-abstain saves nothing and produces no automated errors. "
+        "That is why we submit it.",
+    ], y=0.272, size=12, gap=0.008, width_in=11.8)
     footer(f, 3)
     return f
 
@@ -249,10 +260,10 @@ def slide5():
              "the pipeline would be positive.")
     f.text(0.05, 0.775, "Limits", fontsize=16, weight="bold", va="top", color=RED)
     bullets(f, [
-        "The submitted system saves nothing (0.0%). It only avoids losing money.",
+        "The submitted system saves nothing (0.0%) and produces no automated errors.",
         f"Best active precision {p['precision'] * 100:.1f}%, needed > 99%. Coverage {p['coverage'] * 100:.1f}%, zero for contracts.",
         "Prompt v4 and the five fixes are not measured on the API.",
-        "Runs cover a part of the data. The audit set has 7 documents.",
+        "Large runs cover a part of the data and have no manifests. The audit set has 7 documents.",
         "Confidence is not calibrated: at 1.00 the plain LLM is still wrong in "
         f"{(1 - at(LLM_DEV, 1.0)['precision']) * 100:.1f}% of its answers.",
         "No OCR or vision. Tested on Windows only.",

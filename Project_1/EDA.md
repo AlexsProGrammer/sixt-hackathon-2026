@@ -22,8 +22,8 @@ Analysis performed strictly on `data/unified/dev.jsonl` (540 documents, 22,115 f
 
 ## 3. Document Length, Truncation & Degradation Risks
 
-- **Documents hitting `4_extract_example.py`'s `MAX_CHARS = 60,000` limit:** 110 docs
-- **Documents with no extractable PDF text (scanned/image-only):** 64 docs
+- **Documents hitting `4_extract_example.py`'s `MAX_CHARS = 60,000` limit:** 109 docs
+- **Documents with no extractable PDF text (scanned/image-only):** 66 docs
 - **Explicitly corrupted PDFs (`*_corrupted` in `doc_id`):** 7 docs
 
 ### Document Condition Tags (`dev.jsonl`)
@@ -52,14 +52,16 @@ Analysis performed strictly on `data/unified/dev.jsonl` (540 documents, 22,115 f
 - **70.6% of the fields are `span` fields (all CUAD).** The scorer needs token F1 >= 0.8 against the gold clause, and several passages are joined with ` | `. A shortened or paraphrased clause is a wrong value. This is the main reason why our accepted CUAD coverage is near zero.
 - **`string` fields are compared verbatim** after casefold and whitespace collapse. `1,234.50` is not `1234.50`. Values must be copied as printed.
 - **`json` fields (1.2%) are all-or-nothing.** One wrong key or cell makes the whole table wrong.
-- **64 of 159 ExtractBench documents (about 40%) have no text layer, 7 are corrupted.** A text-only pipeline can only abstain on them. They are a fixed coverage loss until OCR or a vision model is added.
-- **110 of 381 CUAD contracts (about 29%) exceed 60,000 characters.** The starter truncates them. Our pipeline reads the full text in overlapping chunks.
+- **66 of 159 ExtractBench documents (about 41%) have no text layer, 7 are corrupted.** A text-only pipeline can only abstain on them. They are a fixed coverage loss until OCR or a vision model is added.
+- **109 of 381 CUAD contracts (about 29%) exceed 60,000 characters.** The starter truncates them. Our pipeline reads the full text in overlapping chunks.
 
 ## 5. Reproduce
 
 ```
 .venv\Scripts\python.exe make_eda.py
 ```
+
+`make_eda.py` rewrites this whole file with sections 1 to 3. Sections 4 to 6 are written by hand: after a re-run, restore them with `git checkout -- EDA.md` or copy them back. The counts in section 3 use the document reader of the unchanged organiser starter `4_extract_example.py`.
 
 The numbers above come from `data/unified/dev.jsonl` only. `test_public.jsonl` was not analysed here.
 
