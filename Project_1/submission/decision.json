@@ -1,0 +1,31 @@
+{
+  "contract_version": 1,
+  "run_id": "07f36e261f39",
+  "threshold": 1.0,
+  "abstain_all": true,
+  "method": "all_abstain: the empirical threshold search on the 6-document dev_cal subset found no positive saving at error cost 100. The only completed document had 2 accepted fields at confidence >= 0.95, 1 of them wrong. Four documents were abstained after API 429 stop. Not a validated threshold.",
+  "pipeline": null,
+  "error_cost": 100.0,
+  "n_docs": 6,
+  "n_fields": 199,
+  "accepted": 0,
+  "wrong": 0,
+  "hallucinated": 0,
+  "net_saving_pct": 0.0,
+  "n_abstained_after_errors": 4,
+  "measurement": {
+    "subset": "6 dev_cal documents (3 CUAD single-chunk, 2 ExtractBench text, 1 scan)",
+    "run_id": "07f36e261f39",
+    "samples": 1,
+    "model": "vertex_ai/gemini-3.8-flash",
+    "documents_completed": 1,
+    "documents_abstained_after_api_errors": 4,
+    "scores_actual_threshold_0.95": {
+      "precision": 0.5,
+      "coverage": 0.034,
+      "net_saving_pct_e20": -0.09,
+      "net_saving_pct_e100": -0.492,
+      "net_saving_pct_e500": -2.503
+    }
+  }
+}

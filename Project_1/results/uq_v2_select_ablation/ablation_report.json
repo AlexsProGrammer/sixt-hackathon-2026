@@ -1,0 +1,208 @@
+{
+  "run_id": "afd91060bb3a",
+  "run_complete": true,
+  "expected_k": 3,
+  "n_input_docs": 7,
+  "n_docs_with_samples": 7,
+  "n_docs_unreadable": 0,
+  "n_docs_technical_failure": 0,
+  "error_cost": 100.0,
+  "methods": {
+    "k1_grounded": {
+      "candidate_reasons": {
+        "single_sample": 53,
+        "null_majority": 97,
+        "unsupported_majority": 14
+      },
+      "per_threshold": {
+        "0.5": {
+          "accepted": 53,
+          "wrong": 18,
+          "hallucinated": 3,
+          "precision": 0.6037735849056604,
+          "coverage": 0.6756756756756757,
+          "hallucination_rate": 0.03333333333333333,
+          "net_saving_pct": -12.481707317073171
+        },
+        "0.8": {
+          "accepted": 53,
+          "wrong": 18,
+          "hallucinated": 3,
+          "precision": 0.6037735849056604,
+          "coverage": 0.6756756756756757,
+          "hallucination_rate": 0.03333333333333333,
+          "net_saving_pct": -12.481707317073171
+        },
+        "0.9": {
+          "accepted": 53,
+          "wrong": 18,
+          "hallucinated": 3,
+          "precision": 0.6037735849056604,
+          "coverage": 0.6756756756756757,
+          "hallucination_rate": 0.03333333333333333,
+          "net_saving_pct": -12.481707317073171
+        },
+        "0.95": {
+          "accepted": 46,
+          "wrong": 13,
+          "hallucinated": 2,
+          "precision": 0.6739130434782609,
+          "coverage": 0.5945945945945946,
+          "hallucination_rate": 0.022222222222222223,
+          "net_saving_pct": -8.865853658536585
+        }
+      },
+      "business_best": {
+        "threshold": null,
+        "saving_pct": 0.0
+      }
+    },
+    "k_agreement_only": {
+      "candidate_reasons": {
+        "majority": 56,
+        "null_majority": 94,
+        "unsupported_majority": 14
+      },
+      "per_threshold": {
+        "0.5": {
+          "accepted": 56,
+          "wrong": 18,
+          "hallucinated": 4,
+          "precision": 0.6071428571428571,
+          "coverage": 0.7027027027027027,
+          "hallucination_rate": 0.044444444444444446,
+          "net_saving_pct": -13.073170731707316
+        },
+        "0.8": {
+          "accepted": 48,
+          "wrong": 14,
+          "hallucinated": 2,
+          "precision": 0.6666666666666666,
+          "coverage": 0.6216216216216216,
+          "hallucination_rate": 0.022222222222222223,
+          "net_saving_pct": -9.463414634146341
+        },
+        "0.9": {
+          "accepted": 48,
+          "wrong": 14,
+          "hallucinated": 2,
+          "precision": 0.6666666666666666,
+          "coverage": 0.6216216216216216,
+          "hallucination_rate": 0.022222222222222223,
+          "net_saving_pct": -9.463414634146341
+        },
+        "0.95": {
+          "accepted": 48,
+          "wrong": 14,
+          "hallucinated": 2,
+          "precision": 0.6666666666666666,
+          "coverage": 0.6216216216216216,
+          "hallucination_rate": 0.022222222222222223,
+          "net_saving_pct": -9.463414634146341
+        }
+      },
+      "business_best": {
+        "threshold": null,
+        "saving_pct": 0.0
+      }
+    },
+    "k_agreement_conf": {
+      "candidate_reasons": {
+        "majority": 56,
+        "null_majority": 94,
+        "unsupported_majority": 14
+      },
+      "per_threshold": {
+        "0.5": {
+          "accepted": 56,
+          "wrong": 18,
+          "hallucinated": 4,
+          "precision": 0.6071428571428571,
+          "coverage": 0.7027027027027027,
+          "hallucination_rate": 0.044444444444444446,
+          "net_saving_pct": -13.073170731707316
+        },
+        "0.8": {
+          "accepted": 48,
+          "wrong": 14,
+          "hallucinated": 2,
+          "precision": 0.6666666666666666,
+          "coverage": 0.6216216216216216,
+          "hallucination_rate": 0.022222222222222223,
+          "net_saving_pct": -9.463414634146341
+        },
+        "0.9": {
+          "accepted": 48,
+          "wrong": 14,
+          "hallucinated": 2,
+          "precision": 0.6666666666666666,
+          "coverage": 0.6216216216216216,
+          "hallucination_rate": 0.022222222222222223,
+          "net_saving_pct": -9.463414634146341
+        },
+        "0.95": {
+          "accepted": 42,
+          "wrong": 9,
+          "hallucinated": 2,
+          "precision": 0.7380952380952381,
+          "coverage": 0.5405405405405406,
+          "hallucination_rate": 0.022222222222222223,
+          "net_saving_pct": -6.451219512195122
+        }
+      },
+      "business_best": {
+        "threshold": 0.99,
+        "saving_pct": 0.08536585365853659
+      }
+    },
+    "k_entropy": {
+      "candidate_reasons": {
+        "majority": 56,
+        "null_majority": 94,
+        "unsupported_majority": 14
+      },
+      "per_threshold": {
+        "0.5": {
+          "accepted": 48,
+          "wrong": 14,
+          "hallucinated": 2,
+          "precision": 0.6666666666666666,
+          "coverage": 0.6216216216216216,
+          "hallucination_rate": 0.022222222222222223,
+          "net_saving_pct": -9.463414634146341
+        },
+        "0.8": {
+          "accepted": 48,
+          "wrong": 14,
+          "hallucinated": 2,
+          "precision": 0.6666666666666666,
+          "coverage": 0.6216216216216216,
+          "hallucination_rate": 0.022222222222222223,
+          "net_saving_pct": -9.463414634146341
+        },
+        "0.9": {
+          "accepted": 48,
+          "wrong": 14,
+          "hallucinated": 2,
+          "precision": 0.6666666666666666,
+          "coverage": 0.6216216216216216,
+          "hallucination_rate": 0.022222222222222223,
+          "net_saving_pct": -9.463414634146341
+        },
+        "0.95": {
+          "accepted": 48,
+          "wrong": 14,
+          "hallucinated": 2,
+          "precision": 0.6666666666666666,
+          "coverage": 0.6216216216216216,
+          "hallucination_rate": 0.022222222222222223,
+          "net_saving_pct": -9.463414634146341
+        }
+      },
+      "business_best": {
+        "threshold": null,
+        "saving_pct": 0.0
+      }
+    }
+  }
+}
