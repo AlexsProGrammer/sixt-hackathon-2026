@@ -49,7 +49,9 @@ Analysis performed strictly on `data/unified/dev.jsonl` (540 documents, 22,115 f
 ## 4. What the data means for the pipeline
 
 - **Null rate 57.6% (CUAD 67.9%).** Inventing a value for an absent field costs 100. The pipeline therefore treats an explicit null as a normal answer and never fills a field without textual evidence.
-- **70.6% of the fields are `span` fields (all CUAD).** The scorer needs token F1 >= 0.8 against the gold clause, and several passages are joined with ` | `. A shortened or paraphrased clause is a wrong value. This is the main reason why our accepted CUAD coverage is near zero.
+- **70.6% of the fields are `span` fields (all CUAD).** The scorer needs token F1 >= 0.8 against the gold clause, and several passages are joined with ` | `. A shortened or paraphrased clause is a wrong value. Offline check: 728 of 734 gold clauses in 60 dev contracts (99.2%) occur verbatim in the contract text, so exact copies can be verified.
+- **Document order.** The first 159 records of `dev.jsonl` and the first 47 of `test_public.jsonl` are all ExtractBench. A run with `--limit` below these numbers contains no CUAD contract.
+- **Text layers of scanned forms are often damaged.** In the 85 ExtractBench dev documents with a text layer, the median share of gold string values that occur in the text is 71%; in 23 documents it is below 50% (Schedule K-1 family: 23%).
 - **`string` fields are compared verbatim** after casefold and whitespace collapse. `1,234.50` is not `1234.50`. Values must be copied as printed.
 - **`json` fields (1.2%) are all-or-nothing.** One wrong key or cell makes the whole table wrong.
 - **66 of 159 ExtractBench documents (about 41%) have no text layer, 7 are corrupted.** A text-only pipeline can only abstain on them. They are a fixed coverage loss until OCR or a vision model is added.

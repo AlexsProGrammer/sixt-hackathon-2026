@@ -90,6 +90,46 @@ def _number_forms(value: float | int) -> list[str]:
     return list(dict.fromkeys(forms))
 
 
+def _printed_integral(value: float | int, hay: str) -> tuple[bool, bool]:
+    """How a whole number is printed in the normalised text: (plain, with zero decimals).
+
+    plain: "45442" or "45,442" with no decimals after it. zero decimals: "7689.00" or "7,689.0".
+    """
+    i = int(value)
+    forms = list(dict.fromkeys([str(i), f"{i:,}"]))
+    plain = any(_bounded(f).search(hay) is not None for f in forms)
+    decimals = any(re.search(r"(?<![\w.,+\-])(?<!\d[.,])" + re.escape(f) + r"\.0+(?!\w)(?![.,]\d)", hay) is not None
+                   for f in forms)
+    return plain, decimals
+
+
+def canonical_number(value: object, text: str | None, field_schema: dict) -> object:
+    """JSON form of a whole number as the document prints it. Other values are returned unchanged.
+
+    The official scorer compares str(value): 45442.0 is not 45442, and 7689 is not 7689.0. In the dev gold a whole
+    number is an int when the document prints it without decimals ("45,442") and a float when it prints zero
+    decimals ("7,689.00"). A model may return either JSON form for the same printed number.
+    - schema type integer (without number): always int.
+    - printed only without decimals: int. Printed only with zero decimals: float.
+    - printed in both forms, or in neither: unchanged (no evidence for one form).
+    """
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return value
+    if not math.isfinite(float(value)) or not float(value).is_integer():
+        return value
+    types = _types(field_schema) if isinstance(field_schema, dict) else set()
+    if "integer" in types and "number" not in types:
+        return int(value)
+    if not isinstance(text, str) or not text.strip():
+        return value
+    plain, decimals = _printed_integral(value, normalise(text))
+    if plain and not decimals:
+        return int(value)
+    if decimals and not plain:
+        return float(value)
+    return value
+
+
 def _grounded_piece(piece: str, hay: str) -> bool:
     needle = normalise(piece)
     if not needle:
@@ -154,7 +194,10 @@ def is_grounded(value: object, text: str | None, field_schema: dict) -> bool:
     if kind == "number":
         if not isinstance(value, (int, float)) or not math.isfinite(float(value)):
             return False
-        return any(_bounded(form).search(hay) is not None for form in _number_forms(value))
+        if any(_bounded(form).search(hay) is not None for form in _number_forms(value)):
+            return True
+        # a whole number printed with zero decimals ("7,689.00") is the same number; canonical_number picks the form
+        return float(value).is_integer() and _printed_integral(value, hay)[1]
 
     if isinstance(value, (dict, list)) or not isinstance(value, (str, int, float)):
         return False
