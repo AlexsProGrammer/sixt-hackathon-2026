@@ -1,7 +1,10 @@
 # Engineering Roadmap, Refactoring & LLM Response Cache
 
+<<<<<<< HEAD
 > **Corrections 13.11.2026:** checked against `4_extract_example.py`. Items marked ✱ changed. The full, ordered bug list with fixes is in `00_start_here_review_and_fixes.md` §3 (IDs C1–C7). Do C1 and C2 before anything else.
 
+=======
+>>>>>>> 7cd2fda5fc53c46381bb9d7e7f468fe269e4c0ee
 > **Purpose:** Guide for refactoring `4_extract_example.py` into a clean, fast, modular pipeline with deterministic disk caching before integrating `probly`.
 
 ---
@@ -10,19 +13,33 @@
 
 Before adding `probly` uncertainty quantification, fix these six issues in the starter extractor and run **Checkpoint 2** so you can measure the exact improvement from better extraction/grounding vs. `probly` calibration:
 
+<<<<<<< HEAD
 1. **Silent 60,000-Character Truncation (**`MAX_CHARS = 60_000`**):**
    - *Problem:* `build_content()` slices `cuad_text(...)[:60_000]` and `pdf_text(...)[:60_000]`, cutting off the ends of ✱ $109$ CUAD contracts in `dev.jsonl` (not 110; the 110 in EDA.md includes one ExtractBench PDF).
+=======
+1. **Silent 60,000-Character Truncation (`MAX_CHARS = 60_000`):**
+   - *Problem:* `build_content()` slices `cuad_text(...)[:60_000]` and `pdf_text(...)[:60_000]`, cutting off the ends of $110$ CUAD contracts in `dev.jsonl`.
+>>>>>>> 7cd2fda5fc53c46381bb9d7e7f468fe269e4c0ee
    - *Fix:* Check the context limit of the model SIXT provides. Either raise `MAX_CHARS` to fit full documents (e.g., $128\text{k}+$ tokens $\approx 400\text{k}$ chars) or split long documents into overlapping chunks ($\approx 45\text{k}$ chars with $3\text{k}$ overlap) and merge extracted `span` values using `" | "` deduplication.
 2. **All 41 CUAD Clauses (or 50+ Form Fields) in One Prompt:**
    - *Problem:* Asking an LLM to output 41 legal clauses in a single JSON pass causes attention fatigue, missed clauses, and malformed JSON.
    - *Fix:* Split schemas with $> 12$ fields into thematic batches of $8\text{–}12$ fields per LLM call (e.g., grouping CUAD clauses by topic: Parties/Dates, Termination/Renewal, IP/Licenses, Liability/Governing Law, Exclusivity/Non-Compete).
+<<<<<<< HEAD
 3. **Broken** `grounded()` **Verification Function:**
    - *Problem:* ✱ Verified: `grounded()` returns `True` when `len(str(value)) > 80` (so long CUAD spans are never checked) and for bool, dict and list values. It is also **too lenient**: `squash()` removes commas on both sides, so `1,234.50` matches `1234.50` in the text, which the scorer counts as wrong. Ungrounded values are only halved (`conf *= 0.5`), which can stay above τ. (The earlier claim that it "penalizes valid matches" was not supported by the code.)
+=======
+3. **Broken `grounded()` Verification Function:**
+   - *Problem:* In `4_extract_example.py`, `grounded()` returns `True` without checking if `len(str(value)) > 80` (skipping almost all CUAD legal spans!), and penalizes valid normalized matches.
+>>>>>>> 7cd2fda5fc53c46381bb9d7e7f468fe269e4c0ee
    - *Fix:*
      - For `span` fields: verify that normalized token recall / substring overlap against the source document text is high (e.g., $\ge 0.85$). If a predicted span does not appear in the contract text, treat it as a hallucination (`confidence = 0.0`).
      - For `string` scalar fields: check if the normalized string (or individual tokens for multi-word strings) appears in extracted PDF text when text is available.
 4. **Scanned & Corrupted PDF Handling:**
+<<<<<<< HEAD
    - *Problem:* When `pdf_text()` returns `None` ($64$ ExtractBench docs), `build_content()` sends raw base64 `.pdf` bytes (`{"type": "file", ...}`), which many OpenAI-compatible endpoints reject (not tested on our endpoint yet). ✱ `*_corrupted` PDFs yield **no text** (checked: all 7 return nothing), so "garbled text" detection is not the main case. The main case is "no text, route to vision or abstain".
+=======
+   - *Problem:* When `pdf_text()` returns `None` ($64$ ExtractBench docs), `build_content()` sends raw base64 `.pdf` bytes (`{"type": "file", ...}`), which many OpenAI-compatible endpoints reject. Also, `*_corrupted` PDFs may yield garbled text.
+>>>>>>> 7cd2fda5fc53c46381bb9d7e7f468fe269e4c0ee
    - *Fix:*
      - Detect garbled/corrupted PDF text (e.g., high ratio of non-printable/replacement characters `\ufffd` or unusually low alphabetic ratio) and route to vision or mark high epistemic/input uncertainty.
      - If a vision-capable model is available, render PDF pages to PNG images (e.g., via `pymupdf` / `pdf2image` at $150\text{ DPI}$) and pass `{"type": "image_url", ...}`. If no vision model is available, cleanly abstain (`value: null, confidence: 0.0`) on image-only PDFs rather than crashing or hallucinating.
@@ -34,6 +51,7 @@ Before adding `probly` uncertainty quantification, fix these six issues in the s
      - Copy numbers, dates, currency symbols, and punctuation **character-for-character** as printed (do not reformat dates or strip commas).
      - Use `"true"` / `"false"` for visible checkboxes, and `null` only when a field/section is absent from the document.
      - Never infer or calculate values not explicitly printed.
+<<<<<<< HEAD
      - ✱ Checkbox rule (missing today): `"true"`/`"false"` as strings for boolean fields (gold is string). Number and date rule: follow the schema description (the gold contains floats, ints and `m/d/y` dates).
      - ✱ Also check: `call_llm` hardcodes `temperature: 0`, so multi-sample needs a `temperature` parameter first.
 
@@ -45,6 +63,8 @@ Before adding `probly` uncertainty quantification, fix these six issues in the s
    - **C5** A missing `confidence` defaults to `0.5`. It should default to `0.0`.
    - **C6** `grounded()` is too lenient for commas and only halves confidence (see item 3).
    - **C7** `cuad_text` lazy-loads a global cache, which is not thread-safe with a pool.
+=======
+>>>>>>> 7cd2fda5fc53c46381bb9d7e7f468fe269e4c0ee
 
 ---
 
@@ -70,12 +90,19 @@ Project_1/
 ## 3. Deterministic Disk Cache (`cache/`) Design
 
 Caching raw LLM responses to disk is critical for a 1-day hackathon:
+<<<<<<< HEAD
 
 - Once you run $K$ stochastic extraction calls on `dev.jsonl` and `test_public.jsonl`, your teammate can iterate on `probly` representations, calibration models, and conformal thresholds $\tau^*$ **in** $< 2$ **seconds on CPU with zero additional API calls**.
 - It automatically logs exact token usage and latency per document, giving you the exact numbers required for the **"Models and why" (**`Cost and time per item`**)** table in `SUBMISSION.md`.
 
 ### Cache Key & Storage Schema
 
+=======
+- Once you run $K$ stochastic extraction calls on `dev.jsonl` and `test_public.jsonl`, your teammate can iterate on `probly` representations, calibration models, and conformal thresholds $\tau^*$ **in $< 2$ seconds on CPU with zero additional API calls**.
+- It automatically logs exact token usage and latency per document, giving you the exact numbers required for the **"Models and why" (`Cost and time per item`)** table in `SUBMISSION.md`.
+
+### Cache Key & Storage Schema
+>>>>>>> 7cd2fda5fc53c46381bb9d7e7f468fe269e4c0ee
 Store one JSON file per unique LLM request inside `Project_1/cache/<two_char_prefix>/<sha256>.json`:
 
 - **Cache Key Inputs (SHA-256 hash of canonical JSON):**
@@ -86,7 +113,10 @@ Store one JSON file per unique LLM request inside `Project_1/cache/<two_char_pre
   - `sample_idx` (`0, 1, ..., K-1` so multiple stochastic samples at `temperature > 0` get distinct cache entries!)
   - `prompt_hash` (SHA-256 of the system/user prompt text and document content)
 - **Stored JSON Payload:**
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7cd2fda5fc53c46381bb9d7e7f468fe269e4c0ee
   ```json
   {
     "doc_id": "cuad:...",
@@ -102,7 +132,10 @@ Store one JSON file per unique LLM request inside `Project_1/cache/<two_char_pre
   ```
 
 ### Thread-Safe Atomic Write Pattern (`cache.py`)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7cd2fda5fc53c46381bb9d7e7f468fe269e4c0ee
 Because `ThreadPoolExecutor` writes concurrently from multiple threads, always write to a temporary file in the same directory and `os.replace()` atomically:
 
 ```python
@@ -143,9 +176,14 @@ def cache_put(key: str, record: dict, cache_dir: Path = CACHE_DIR) -> None:
 ```
 
 ### Important Rules for `cache/`
+<<<<<<< HEAD
 
 1. **Add** `Project_1/cache/` **to** `.gitignore` so cached responses are never committed to Git.
 2. **Back up** `cache/` **to Nextcloud** (or a shared USB/folder) after running `dev.jsonl` so all 3 teammates can run `uq_probly.py` offline on their own laptops.
+=======
+1. **Add `Project_1/cache/` to `.gitignore`** so cached responses are never committed to Git.
+2. **Back up `cache/` to Nextcloud** (or a shared USB/folder) after running `dev.jsonl` so all 3 teammates can run `uq_probly.py` offline on their own laptops.
+>>>>>>> 7cd2fda5fc53c46381bb9d7e7f468fe269e4c0ee
 3. **Hidden Test Compatibility:** `run_hidden.sh` must work seamlessly even when `cache/` does not exist (cache miss $\rightarrow$ live API call $\rightarrow$ write to `cache/`).
 
 ---
@@ -153,8 +191,14 @@ def cache_put(key: str, record: dict, cache_dir: Path = CACHE_DIR) -> None:
 ## 4. When to Re-Run & Save `results/`
 
 Run `5_score.py` and save a new `results/<stage>_score.json` whenever you cross one of these boundaries:
+<<<<<<< HEAD
 
 1. **After Phase 1 (Unmodified** `4_extract_example.py --mode llm`**):** Establishes the raw single-pass LLM baseline before any engineering fixes.
 2. **After Phase 2 (Refactored** `extractor.py` **+** `grounding.py`**, single sample** $K=1$**):** Isolates how much chunking, schema batching, and grounding improve extraction quality on their own.
 3. **After Phase 3 (**`uq_probly.py` **with** $K$ **samples + calibration + conformal threshold** $\tau^*$**):** Demonstrates the core hackathon contribution—turning raw LLM outputs into calibrated, selective predictions that achieve $> 99\%$ precision and positive net savings.
+=======
+1. **After Phase 1 (Unmodified `4_extract_example.py --mode llm`):** Establishes the raw single-pass LLM baseline before any engineering fixes.
+2. **After Phase 2 (Refactored `extractor.py` + `grounding.py`, single sample $K=1$):** Isolates how much chunking, schema batching, and grounding improve extraction quality on their own.
+3. **After Phase 3 (`uq_probly.py` with $K$ samples + calibration + conformal threshold $\tau^*$):** Demonstrates the core hackathon contribution—turning raw LLM outputs into calibrated, selective predictions that achieve $> 99\%$ precision and positive net savings.
+>>>>>>> 7cd2fda5fc53c46381bb9d7e7f468fe269e4c0ee
 4. **After any major prompt or model change:** Compare two candidate API models on the exact same `dev_cal` split before picking the winner for `SUBMISSION.md`.
