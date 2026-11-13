@@ -5,7 +5,9 @@ batch_size fields. Every chunk gets every batch, for every sample. Several chunk
 """
 from __future__ import annotations
 
-PROMPT_VERSION = "v2"
+import json
+
+PROMPT_VERSION = "v3"  # v3: full $defs in the prompt, type and key rules; v2 results are not comparable
 
 
 def chunk_spans(n: int, chunk_chars: int, overlap_chars: int) -> list[tuple[int, int]]:
@@ -72,8 +74,12 @@ RULES = """Rules:
 - Reply with ONE JSON object and nothing else. It must contain every listed field:
   {"<field>": {"value": <value or null>, "confidence": <number from 0 to 1>}}
 - "confidence" is required for every field, also for null values. It is how sure you are that the value is exactly right.
+- Value types follow the field schema. A field of type number gets a JSON number: no currency symbol, no thousands
+  separator, no text (for example 241.81, not "$241.81"). A field of type string gets text as printed.
+- Object keys must be exactly the property names in the field schema definitions (including $defs). Do not rename,
+  shorten or add keys. Every row of a table is an object with the schema's own key names.
 - Copy text values character for character as printed. Do not translate, reformat, shorten or add words.
-- For numbers and dates, follow the field description if it states a format. Otherwise copy them as printed.
+- For dates, follow the field description if it states a format. Otherwise copy them as printed.
 - Boolean checkboxes: "true" if the box is visibly checked, "false" if it is visibly unchecked. Use null only if the section is absent.
 - Use null if the field is not in this part of the document or cannot be read. A wrong value costs 100 times more than null.
 - Never infer, compute or guess values that are not printed.
@@ -90,11 +96,18 @@ def build_prompt(schema: dict, chunk_text: str, *, chunk_no: int, n_chunks: int)
             meta += f", normalizer={norm}"
         desc = spec.get("description") or spec.get("title") or ""
         lines.append(f"- {name} ({meta})" + (f": {desc}" if desc else ""))
+    # The complete field schema, including every referenced $defs entry, is sent as JSON. The model must see the
+    # names it has to reproduce; a description alone does not define the keys of a nested row.
+    schema_block = {"properties": schema.get("properties", {})}
+    if schema.get("$defs"):
+        schema_block["$defs"] = schema["$defs"]
     parts = [
         "Extract the fields below from the document part that follows.",
         f"This is part {chunk_no} of {n_chunks} of the document. Report only what appears in this part.",
-        "Fields:",
+        "Fields (summary):",
         "\n".join(lines),
+        "Field schemas (JSON, authoritative; key names and types must match exactly):",
+        json.dumps(schema_block, ensure_ascii=False, sort_keys=True),
         RULES,
         "--- DOCUMENT PART (data) ---",
         chunk_text,

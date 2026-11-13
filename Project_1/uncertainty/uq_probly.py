@@ -113,7 +113,8 @@ def aggregate_v2(samples: list[dict], schema: dict, text: str | None, *, expecte
 
     candidates: dict = {}
     for name, spec in props.items():
-        cls = [classify_field_v2(s["fields"][name], spec, text) for s in ordered]
+        defs = schema.get("$defs") if isinstance(schema, dict) else None
+        cls = [classify_field_v2(s["fields"][name], spec, text, defs=defs) for s in ordered]
         feat: dict = {"k_expected": expected_k, "k_samples": k_actual,
                       "status_counts": dict(Counter(c["status"] for c in cls))}
         if unreadable:

@@ -17,6 +17,7 @@ from __future__ import annotations
 import math
 
 from .grounding import is_grounded
+from .schema_check import check_value
 
 
 def _abstain() -> dict:
@@ -59,7 +60,7 @@ def apply_policy(answer: dict, schema: dict, text: str | None) -> dict:
 
 # ---------------------------------------------------------------- contract version 2
 
-def classify_field_v2(obs: dict, field_schema: dict, text: str | None) -> dict:
+def classify_field_v2(obs: dict, field_schema: dict, text: str | None, defs: dict | None = None) -> dict:
     """Hard exclusions for one V2 field observation (merge_sample_v2 output).
 
     Returns {"status", "value", "model_confidence", "reason"}. The status is one of:
@@ -79,6 +80,11 @@ def classify_field_v2(obs: dict, field_schema: dict, text: str | None) -> dict:
         if _is_empty(value) or conf is None:
             return {"status": "invalid", "value": None, "model_confidence": None,
                     "reason": "empty value or invalid confidence"}
+        # 1. schema validity (types, referenced $defs, declared keys) is checked first and separately
+        schema_ok, schema_reason = check_value(value, field_schema, defs)
+        if not schema_ok:
+            return {"status": "invalid", "value": None, "model_confidence": None, "reason": schema_reason}
+        # 2. textual evidence is checked second; a schema-valid value can still be unsupported
         if not is_grounded(value, text, field_schema if isinstance(field_schema, dict) else {}):
             return {"status": "unsupported", "value": None, "model_confidence": None,
                     "reason": "value not grounded in the document text"}

@@ -270,6 +270,7 @@ def sha256_obj(obj: object) -> str:
 
 CODE_FILES = ("4_extract.py", "pipeline/requests.py", "pipeline/transport.py", "pipeline/merge.py",
               "uncertainty/contracts.py", "uncertainty/grounding.py", "uncertainty/policy.py",
+              "uncertainty/schema_check.py",
               "uncertainty/uq_probly.py", "uncertainty/decision.py")
 
 
