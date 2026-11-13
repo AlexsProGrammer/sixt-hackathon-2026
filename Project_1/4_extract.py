@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
-"""Extractor: full text -> chunk/batch jobs -> HTTP (cache, retries) -> sample merge -> probly aggregation -> prediction.
+"""Extractor: full text -> chunk/batch jobs -> HTTP (cache, retries) -> sample merge (contract v2)
+-> probly aggregation -> decision rule -> prediction.
 
+    python 4_extract.py --data INPUT.jsonl --out OUT.jsonl --mode llm --samples 3 --uq-method k_entropy
     python 4_extract.py --data INPUT.jsonl --out OUT.jsonl --mode llm --on-error abstain --decision submission/decision.json
     python 4_extract.py --data INPUT.jsonl --out OUT.jsonl --abstain-all      # no API call, no credentials needed
     python 4_extract.py --data INPUT.jsonl --out OUT.jsonl --mode offline     # keyword rules, baseline only
 
-Writes OUT.jsonl (doc_id, fields), OUT.diagnostics.jsonl (doc_id, diagnostics) and OUT.manifest.json.
+Writes OUT.jsonl (doc_id, fields), OUT.diagnostics.jsonl (doc_id, diagnostics), OUT.samples.jsonl (doc_id,
+per-sample field observations for offline ablation; contains document text, keep local), OUT.manifest.json.
 Records need only schema.properties. The extractor never reads "gold".
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
+import importlib.metadata as importlib_metadata
 import json
+import math
 import os
 import re
 import shutil
@@ -22,8 +28,9 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from functools import partial
 from pathlib import Path
+from urllib.parse import urlparse
 
-from pipeline.merge import merge_sample
+from pipeline.merge import merge_sample_v2
 from pipeline.requests import PROMPT_VERSION, build_jobs, build_prompt
 from pipeline.transport import ReplyCache, RunState, execute_job
 
@@ -31,9 +38,11 @@ HERE = Path(__file__).parent
 # EXTRACT_DATA_DIR overrides the data folder (used by the tests with synthetic data). Normal runs use data/.
 DATA = Path(os.environ["EXTRACT_DATA_DIR"]) if os.environ.get("EXTRACT_DATA_DIR") else HERE / "data"
 LLM_VARS = ("LLM_BASE_URL", "LLM_API_KEY", "LLM_MODEL")
-CONTRACT_VERSION = 1
+CONTRACT_VERSION = 1          # run manifest and decision file
+UQ_METHODS = ("k1_grounded", "k_agreement_only", "k_agreement_conf", "k_entropy")
+SAMPLING_MODES = ("mixed", "identical")
 DEFAULTS = {"workers": 1, "samples": 1, "temperature": 0.7, "chunk_chars": 45000,
-            "overlap_chars": 3000, "batch_size": 10}
+            "overlap_chars": 3000, "batch_size": 10, "uq_method": None, "sampling": "mixed"}
 PATTERNS = {
     "amount": r"-?\d[\d.,]*\d|\d",
     "date": r"\d{1,4}[-/.]\d{1,2}[-/.]\d{2,4}|[A-Z][a-z]{2,8}\.? \d{1,2},? \d{4}|\d{1,2} [A-Z][a-z]{2,8}\.? \d{4}",
@@ -79,6 +88,13 @@ def llm_config() -> dict:
     return cfg
 
 
+def probly_version() -> str:
+    try:
+        return importlib_metadata.version("probly")
+    except importlib_metadata.PackageNotFoundError:
+        return "not installed"
+
+
 # ---------------------------------------------------------------- documents
 
 def page_path(stored: str) -> Path:
@@ -94,6 +110,7 @@ def page_path(stored: str) -> Path:
 
 
 def pdf_text(path: Path) -> str | None:
+    """Text of all pages (pdftotext reads the whole file; pypdf fallback reads every page)."""
     if shutil.which("pdftotext"):
         r = subprocess.run(["pdftotext", "-layout", str(path), "-"], capture_output=True, text=True)
         if r.returncode == 0 and r.stdout.strip():
@@ -162,7 +179,7 @@ def offline_extract(rec: dict) -> dict:
     return {"doc_id": rec["doc_id"], "fields": fields}
 
 
-# ---------------------------------------------------------------- LLM pipeline
+# ---------------------------------------------------------------- LLM pipeline (contract v2)
 
 class Ctx:
     """Everything one run needs. Built once in main()."""
@@ -183,7 +200,7 @@ def build_messages(job: dict) -> list[dict]:
 def run_jobs(jobs: list[dict], ctx: Ctx) -> list[dict]:
     p = ctx.pipeline
     fn = partial(execute_job, cfg=ctx.cfg, cache=ctx.cache, state=ctx.state, temperature=p["temperature"],
-                 prompt_version=PROMPT_VERSION, build_messages=build_messages)
+                 prompt_version=PROMPT_VERSION, build_messages=build_messages, sampling=p["sampling"])
     results: list[dict | None] = [None] * len(jobs)
     window = max(1, 2 * p["workers"])  # bounded submission: never queue the whole document at once
     with ThreadPoolExecutor(max_workers=p["workers"]) as pool:
@@ -196,27 +213,31 @@ def run_jobs(jobs: list[dict], ctx: Ctx) -> list[dict]:
 
 
 def extract_llm(rec: dict, ctx: Ctx) -> dict:
-    """Returns {"fields", "diagnostics", "job_failures"} for one document. Never raises for job errors."""
+    """One document. Returns {"fields", "diagnostics", "job_failures", "samples"}. Job errors never raise."""
+    from uncertainty.decision import make_prediction  # imported here: all-abstain and offline need no probly
+    from uncertainty.uq_probly import aggregate_v2
+
     schema = rec["schema"]
     text = full_text(rec)
     if text is None or not text.strip():
-        per_field = {n: {"agreement": 0.0, "entropy": None, "n_clusters": 0, "grounded": False,
-                         "reason": "unreadable"} for n in schema.get("properties", {})}
+        per_field = {n: {"eligible": False, "reason": "unreadable", "agreement": None, "entropy_nats": None,
+                         "n_clusters": 0, "grounded": False} for n in schema.get("properties", {})}
         return {"fields": null_fields(schema),
-                "diagnostics": {"n_samples": 0, "complete": False, "method": "unreadable_document",
-                                "per_field": per_field},
-                "job_failures": []}
-    from uncertainty.uq_probly import aggregate_samples  # imported here: all-abstain and offline need no probly
+                "diagnostics": {"n_samples": 0, "expected_k": ctx.pipeline["samples"], "complete": False,
+                                "method": "unreadable_document", "uq_called": False, "per_field": per_field},
+                "job_failures": [], "samples": []}
     p = ctx.pipeline
     jobs = build_jobs(text, schema, chunk_chars=p["chunk_chars"], overlap_chars=p["overlap_chars"],
                       batch_size=p["batch_size"], samples=p["samples"])
     results = run_jobs(jobs, ctx) if jobs else []
-    samples = [merge_sample(results, schema, s) for s in range(p["samples"])]
-    agg = aggregate_samples(samples, schema, text)
-    diag = dict(agg["diagnostics"])
+    samples = [merge_sample_v2(results, schema, s, planned_jobs=jobs) for s in range(p["samples"])]
+    agg = aggregate_v2(samples, schema, text, expected_k=p["samples"])
+    fields = make_prediction(agg, schema, method=p["uq_method"])
     failures = sorted({r["error"] for r in results if not r["ok"]})
-    diag["job_failures"] = failures
-    return {"fields": agg["fields"], "diagnostics": diag, "job_failures": failures}
+    diag = dict(agg["diagnostics"])
+    diag.update({"complete": all(s["complete"] for s in samples), "uq_method": p["uq_method"],
+                 "uq_called": True, "probly_version": probly_version(), "job_failures": failures})
+    return {"fields": fields, "diagnostics": diag, "job_failures": failures, "samples": samples}
 
 
 # ---------------------------------------------------------------- files and resume
@@ -234,16 +255,49 @@ def read_jsonl(path: Path) -> list[dict]:
     return rows
 
 
-def sidecar_paths(out: Path) -> tuple[Path, Path]:
-    return out.with_name(out.stem + ".diagnostics.jsonl"), out.with_name(out.stem + ".manifest.json")
+def sidecar_paths(out: Path) -> tuple[Path, Path, Path]:
+    return (out.with_name(out.stem + ".diagnostics.jsonl"), out.with_name(out.stem + ".manifest.json"),
+            out.with_name(out.stem + ".samples.jsonl"))
 
 
-def check_existing(out: Path, diag: Path, manifest: Path, pipeline: dict, resume: bool) -> set[str]:
-    """Refuse to mix runs. Returns doc_ids already written by an identical pipeline (resume only)."""
+def sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def sha256_obj(obj: object) -> str:
+    return sha256_bytes(json.dumps(obj, sort_keys=True, ensure_ascii=False).encode("utf-8"))
+
+
+CODE_FILES = ("4_extract.py", "pipeline/requests.py", "pipeline/transport.py", "pipeline/merge.py",
+              "uncertainty/contracts.py", "uncertainty/grounding.py", "uncertainty/policy.py",
+              "uncertainty/uq_probly.py", "uncertainty/decision.py")
+
+
+def code_sha256() -> str:
+    """Hash of the modules that decide prediction values. Changes here make earlier results non-comparable."""
+    parts = []
+    for rel in CODE_FILES:
+        p = HERE / rel
+        parts.append(rel + "\0" + (sha256_bytes(p.read_bytes()) if p.exists() else "missing"))
+    return sha256_bytes("\n".join(parts).encode("utf-8"))
+
+
+def run_fingerprint(input_path: Path, pipeline: dict, cfg: dict | None) -> dict:
+    """Provenance of a run. Contains no credentials: the endpoint is recorded as host name only."""
+    fp = {"input_sha256": sha256_bytes(input_path.read_bytes()), "pipeline_sha256": sha256_obj(pipeline),
+          "endpoint_host": urlparse(cfg["LLM_BASE_URL"]).netloc if cfg else None,
+          "code_sha256": code_sha256(), "prompt_version": PROMPT_VERSION}
+    fp["fingerprint_sha256"] = sha256_obj(fp)
+    return fp
+
+
+def check_existing(out: Path, diag: Path, manifest: Path, samples: Path, pipeline: dict, resume: bool,
+                   fingerprint: dict) -> set[str]:
+    """Refuse to mix runs. Returns doc_ids already written by an identical run (resume only)."""
     existing = out.exists() and out.stat().st_size > 0
     if not existing:
-        if diag.exists() or manifest.exists():
-            raise SystemExit(f"ERROR: stale {diag.name}/{manifest.name} next to a missing {out.name}. Use a fresh --out.")
+        if diag.exists() or manifest.exists() or samples.exists():
+            raise SystemExit(f"ERROR: stale sidecar files next to a missing {out.name}. Use a fresh --out.")
         return set()
     if not resume:
         raise SystemExit(f"ERROR: {out} already exists. Use --resume to continue an identical run, or a fresh --out.")
@@ -252,6 +306,8 @@ def check_existing(out: Path, diag: Path, manifest: Path, pipeline: dict, resume
     man = json.loads(manifest.read_text(encoding="utf-8"))
     if man.get("pipeline") != pipeline:
         raise SystemExit("ERROR: cannot resume: pipeline configuration differs from the existing run.")
+    if man.get("fingerprint", {}).get("fingerprint_sha256") != fingerprint["fingerprint_sha256"]:
+        raise SystemExit("ERROR: cannot resume: input file, code version or endpoint differs from the existing run.")
     rows = read_jsonl(out)
     ids = [r.get("doc_id") for r in rows]
     if len(set(ids)) != len(ids):
@@ -262,6 +318,8 @@ def check_existing(out: Path, diag: Path, manifest: Path, pipeline: dict, resume
 # ---------------------------------------------------------------- decision file
 
 def load_decision(path: str) -> dict:
+    """Strict: version, boolean abstain_all, finite threshold in [0, 1], complete pipeline block for an active
+    decision, and pipeline_sha256 (when present) must match the pipeline block. No silent defaults."""
     try:
         dec = json.loads(Path(path).read_text(encoding="utf-8"))
     except (OSError, ValueError) as e:
@@ -270,8 +328,19 @@ def load_decision(path: str) -> dict:
         raise SystemExit(f"ERROR: decision file {path} has an unknown contract_version.")
     if not isinstance(dec.get("abstain_all"), bool):
         raise SystemExit(f"ERROR: decision file {path} lacks a boolean abstain_all.")
-    if not dec["abstain_all"] and not isinstance(dec.get("pipeline"), dict):
-        raise SystemExit(f"ERROR: decision file {path} lacks the pipeline block.")
+    thr = dec.get("threshold")
+    if not isinstance(thr, (int, float)) or isinstance(thr, bool) or not math.isfinite(float(thr)) \
+            or not 0.0 <= float(thr) <= 1.0:
+        raise SystemExit(f"ERROR: decision file {path} needs a finite numeric threshold in [0, 1].")
+    if not dec["abstain_all"]:
+        pipe = dec.get("pipeline")
+        if not isinstance(pipe, dict):
+            raise SystemExit(f"ERROR: decision file {path} lacks the pipeline block.")
+        missing = [k for k in DEFAULTS if k not in pipe]
+        if missing:
+            raise SystemExit(f"ERROR: decision file pipeline block lacks: {', '.join(missing)}.")
+        if "pipeline_sha256" in dec and dec["pipeline_sha256"] != sha256_obj(pipe):
+            raise SystemExit("ERROR: decision file pipeline_sha256 does not match its pipeline block.")
     return dec
 
 
@@ -287,12 +356,18 @@ def main(argv=None) -> int:
                          "auto (default): LLM if config is complete, else offline rules with a warning.")
     ap.add_argument("--workers", type=int, default=None, help="parallel jobs per document (default 1)")
     ap.add_argument("--samples", type=int, default=None, help="K samples (default 1)")
-    ap.add_argument("--temperature", type=float, default=None, help="temperature of samples 1..K-1 (default 0.7)")
+    ap.add_argument("--temperature", type=float, default=None, help="temperature of sampled answers (default 0.7)")
+    ap.add_argument("--sampling", choices=SAMPLING_MODES, default=None,
+                    help="mixed (default): sample 0 at temperature 0, others at --temperature. "
+                         "identical: every sample at --temperature.")
+    ap.add_argument("--uq-method", choices=UQ_METHODS, default=None,
+                    help="decision rule: k1_grounded (K=1, default for K=1), k_agreement_only (K>1), k_agreement_conf (K>1, default for K>1), k_entropy (K>1, probly)")
     ap.add_argument("--chunk-chars", type=int, default=None, help="default 45000")
     ap.add_argument("--overlap-chars", type=int, default=None, help="default 3000")
     ap.add_argument("--batch-size", type=int, default=None, help="fields per request, default 10")
     ap.add_argument("--on-error", choices=["fail", "abstain"], default="fail",
-                    help="fail: documents with failed jobs are not written, exit 1. abstain: write null/0 plus diagnosis.")
+                    help="fail: documents with failed jobs are not written, exit 1. abstain: write null/0 for the "
+                         "affected fields plus diagnosis; complete fields are kept.")
     ap.add_argument("--abstain-all", action="store_true", help="write null/0 for every document, no API call")
     ap.add_argument("--decision", help="submission/decision.json: loads the frozen pipeline configuration")
     ap.add_argument("--resume", action="store_true", help="continue an existing run with an identical pipeline")
@@ -347,6 +422,16 @@ def main(argv=None) -> int:
         raise SystemExit("ERROR: decision file was made with another model than LLM_MODEL.")
     if pipeline_values["overlap_chars"] >= pipeline_values["chunk_chars"]:
         raise SystemExit("ERROR: overlap_chars must be smaller than chunk_chars.")
+    if pipeline_values["uq_method"] is None:  # default depends on K: one sample has no variation to measure
+        pipeline_values["uq_method"] = "k1_grounded" if pipeline_values["samples"] == 1 else "k_agreement_conf"
+    if pipeline_values["uq_method"] not in UQ_METHODS or pipeline_values["sampling"] not in SAMPLING_MODES:
+        raise SystemExit("ERROR: unknown --uq-method or --sampling value.")
+    if mode == "llm":
+        k = pipeline_values["samples"]
+        if pipeline_values["uq_method"] == "k1_grounded" and k != 1:
+            raise SystemExit("ERROR: --uq-method k1_grounded needs --samples 1.")
+        if pipeline_values["uq_method"] != "k1_grounded" and k < 2:
+            raise SystemExit(f"ERROR: --uq-method {pipeline_values['uq_method']} needs --samples 2 or more.")
     pipeline = {**pipeline_values, "model": cfg["LLM_MODEL"] if cfg else None,
                 "prompt_version": PROMPT_VERSION if mode == "llm" else None}
     print(f"mode: {mode}", file=sys.stderr)
@@ -355,8 +440,12 @@ def main(argv=None) -> int:
     recs = [json.loads(line) for line in open(a.data, encoding="utf-8") if line.strip()]
     recs = recs[: a.limit] if a.limit else recs
     out = Path(a.out)
-    diag_path, man_path = sidecar_paths(out)
-    done = check_existing(out, diag_path, man_path, pipeline, a.resume)
+    diag_path, man_path, samples_path = sidecar_paths(out)
+    fingerprint = run_fingerprint(Path(a.data), pipeline, cfg)
+    done = check_existing(out, diag_path, man_path, samples_path, pipeline, a.resume, fingerprint)
+    previous_segments = []
+    if a.resume and man_path.exists():
+        previous_segments = json.loads(man_path.read_text(encoding="utf-8")).get("segments", [])
     out.parent.mkdir(parents=True, exist_ok=True)
 
     state = RunState()
@@ -368,9 +457,10 @@ def main(argv=None) -> int:
     run_id = uuid.uuid4().hex[:12]
     started = time.time()
     failed: list[str] = []      # not written (fail mode): rerun with --resume to retry
-    degraded: list[str] = []    # written as null/0 after job errors (abstain mode): NOT a measured prediction
+    degraded: list[str] = []    # written with affected fields null/0 after job errors: NOT a measured prediction
     skipped = 0
-    with open(out, "a", encoding="utf-8") as fout, open(diag_path, "a", encoding="utf-8") as fdiag:
+    with open(out, "a", encoding="utf-8") as fout, open(diag_path, "a", encoding="utf-8") as fdiag, \
+            open(samples_path, "a", encoding="utf-8") as fsamp:
         for i, rec in enumerate(recs):
             if rec["doc_id"] in done:
                 skipped += 1
@@ -379,13 +469,13 @@ def main(argv=None) -> int:
                 if mode == "abstain_all":
                     res = {"fields": null_fields(rec["schema"]),
                            "diagnostics": {"n_samples": 0, "complete": False, "method": "abstain_all",
-                                           "per_field": {n: {"agreement": 0.0, "entropy": None, "n_clusters": 0,
-                                                             "grounded": False, "reason": "abstain_all"}
+                                           "uq_called": False,
+                                           "per_field": {n: {"eligible": False, "reason": "abstain_all"}
                                                          for n in rec["schema"]["properties"]}},
-                           "job_failures": []}
+                           "job_failures": [], "samples": []}
                 elif mode == "offline":
                     row = offline_extract(rec)
-                    res = {"fields": row["fields"], "diagnostics": None, "job_failures": []}
+                    res = {"fields": row["fields"], "diagnostics": None, "job_failures": [], "samples": []}
                 else:
                     res = extract_llm(rec, ctx)
             except Exception as e:  # document-level error: reported, never silently written as a success
@@ -393,8 +483,8 @@ def main(argv=None) -> int:
                 if mode == "llm" and a.on_error == "abstain":
                     res = {"fields": null_fields(rec["schema"]),
                            "diagnostics": {"n_samples": 0, "complete": False, "method": "document_error",
-                                           "per_field": {}, "job_failures": [type(e).__name__]},
-                           "job_failures": [type(e).__name__]}
+                                           "uq_called": False, "per_field": {}, "job_failures": [type(e).__name__]},
+                           "job_failures": [type(e).__name__], "samples": []}
                     fout.write(json.dumps({"doc_id": rec["doc_id"], "fields": res["fields"]}, ensure_ascii=False) + "\n")
                     fdiag.write(json.dumps({"doc_id": rec["doc_id"], "diagnostics": res["diagnostics"]}, ensure_ascii=False) + "\n")
                     degraded.append(rec["doc_id"])
@@ -407,21 +497,35 @@ def main(argv=None) -> int:
                 failed.append(rec["doc_id"])
                 continue
             if res["job_failures"]:
-                print(f"[{i}] {rec['doc_id']}: abstained after job errors {', '.join(res['job_failures'])}", file=sys.stderr)
+                print(f"[{i}] {rec['doc_id']}: fields with failed jobs set to null after errors "
+                      f"{', '.join(res['job_failures'])}", file=sys.stderr)
                 degraded.append(rec["doc_id"])
             fout.write(json.dumps({"doc_id": rec["doc_id"], "fields": res["fields"]}, ensure_ascii=False) + "\n")
             if res["diagnostics"] is not None:
                 fdiag.write(json.dumps({"doc_id": rec["doc_id"], "diagnostics": res["diagnostics"]}, ensure_ascii=False) + "\n")
+            if res.get("samples"):
+                fsamp.write(json.dumps({"doc_id": rec["doc_id"], "samples": res["samples"]}, ensure_ascii=False) + "\n")
             fout.flush()
             fdiag.flush()
+            fsamp.flush()
             print(f"[{i}] {rec['doc_id']}", file=sys.stderr)
 
     n_written = len(read_jsonl(out)) if out.exists() else 0
+    n_requested_total = len(recs)
+    # complete: every requested document is in the output, none failed or was abstained after an error,
+    # and the run was not stopped by the rate limit. Incomplete runs must not be used for calibration.
+    run_complete = (not failed and not degraded and not state.stop.is_set() and n_written == len(recs))
     manifest = {
-        "contract_version": CONTRACT_VERSION, "run_id": run_id, "mode": mode,
-        "pipeline": pipeline, "n_requested": len(recs), "n_written": n_written,
+        "contract_version": CONTRACT_VERSION, "field_contract_version": 2, "run_id": run_id, "mode": mode,
+        "pipeline": pipeline, "uq": {"method": pipeline["uq_method"], "expected_k": pipeline["samples"],
+                                     "probly_version": probly_version() if mode == "llm" else None},
+        "fingerprint": fingerprint,
+        "segments": previous_segments + [{"run_id": run_id, "n_requested": n_requested_total,
+                                          "requests": state.requests, "resumed_from_disk": skipped}],
+        "n_requested": n_requested_total, "n_written": n_written,
         "n_skipped_resumed": skipped, "n_failed": len(failed), "failed_doc_ids": failed[:50],
         "n_abstained_after_errors": len(degraded), "abstained_after_error_doc_ids": degraded[:50],
+        "run_complete": bool(run_complete),
         "requests": state.requests, "cache_hits": state.cache_hits,
         "elapsed_seconds": round(time.time() - started, 2), "stopped_429": state.stop.is_set(),
         "on_error": a.on_error, "warnings": state.warnings[:20],

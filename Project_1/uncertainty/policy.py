@@ -55,3 +55,34 @@ def apply_policy(answer: dict, schema: dict, text: str | None) -> dict:
     props = schema.get("properties", {}) if isinstance(schema, dict) else {}
     raw = answer if isinstance(answer, dict) else {}
     return {name: decide_field(raw.get(name), spec, text) for name, spec in props.items()}
+
+
+# ---------------------------------------------------------------- contract version 2
+
+def classify_field_v2(obs: dict, field_schema: dict, text: str | None) -> dict:
+    """Hard exclusions for one V2 field observation (merge_sample_v2 output).
+
+    Returns {"status", "value", "model_confidence", "reason"}. The status is one of:
+    present (grounded, valid confidence), absent (explicit null), unsupported (not grounded in the text),
+    unreadable (no text layer), invalid / missing / error (taken over from the merge).
+    The model confidence is kept separate from these hard exclusions and is never raised.
+    """
+    status = obs.get("status") if isinstance(obs, dict) else None
+    if status == "absent":
+        return {"status": "absent", "value": None, "model_confidence": obs.get("model_confidence"),
+                "reason": obs.get("reason", "")}
+    if status == "present":
+        if text is None or not str(text).strip():
+            return {"status": "unreadable", "value": None, "model_confidence": None, "reason": "no text layer"}
+        value = obs.get("value")
+        conf = valid_confidence(obs.get("model_confidence"))
+        if _is_empty(value) or conf is None:
+            return {"status": "invalid", "value": None, "model_confidence": None,
+                    "reason": "empty value or invalid confidence"}
+        if not is_grounded(value, text, field_schema if isinstance(field_schema, dict) else {}):
+            return {"status": "unsupported", "value": None, "model_confidence": None,
+                    "reason": "value not grounded in the document text"}
+        return {"status": "present", "value": value, "model_confidence": conf, "reason": ""}
+    if status in ("invalid", "missing", "error", "unsupported", "unreadable"):
+        return {"status": status, "value": None, "model_confidence": None, "reason": str(obs.get("reason", ""))}
+    return {"status": "invalid", "value": None, "model_confidence": None, "reason": "unknown status"}

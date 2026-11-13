@@ -1,0 +1,34 @@
+{
+  "python": "3.12.10",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "probly": "0.9.1",
+  "modules": {
+    "probly.uncertainty.llm": "missing: ModuleNotFoundError",
+    "probly.quantification": "ok",
+    "probly.representation.distribution": "ok",
+    "probly.representation.credal_set": "ok",
+    "probly.transformation.calibration": "ok",
+    "probly.method.calibration": "ok",
+    "probly.calibrator": "ok",
+    "probly.decider": "ok"
+  },
+  "signatures": {
+    "platt_scaling": "(base: 'Predictor[In, Out]') -> 'CalibrationPredictor[In, Out]'",
+    "calibrate": "(predictor: 'Calibrator[In, Out]', *calib_args: 'In.args', **calib_kwargs: 'In.kwargs') -> 'None'",
+    "create_categorical_distribution": "(data: 'T') -> 'CategoricalDistribution'",
+    "entropy": "(distribution: 'Distribution', base: 'LogBase' = None) -> 'ArrayLike'"
+  },
+  "missing": [
+    "probly.uncertainty.llm"
+  ],
+  "optional": {
+    "sklearn": "not installed",
+    "torch": "not installed",
+    "pymupdf": "not installed",
+    "fitz": "not installed"
+  },
+  "self_check_entropy": {
+    "onehot": 0.0,
+    "half": 0.6931471805599453
+  }
+}

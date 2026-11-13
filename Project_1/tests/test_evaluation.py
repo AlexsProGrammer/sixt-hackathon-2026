@@ -133,15 +133,31 @@ class ThresholdTests(unittest.TestCase):
         # Saving = (6 - (6 - 3)) / 6 = 0.5 per the scorer's formula.
         preds = [pred("d1", "X", 0.99, None, 0.0), pred("d2", "Y", 0.98, "Z", 0.97),
                  pred("d3", None, 0.0, None, 0.0)]
-        d = choose_threshold(GOLD, preds, 100.0, manifest={"run_id": "r1", "pipeline": {"samples": 1}})
-        self.assertFalse(d["abstain_all"])
-        self.assertAlmostEqual(d["threshold"], 0.97)
+        # The scorer arithmetic is checked directly (the adapter's gate is tested separately below).
+        scorer = load_scorer()
+        pmap = {p["doc_id"]: p["fields"] for p in preds}
+        d = scorer.score(GOLD, pmap, threshold=0.97, review_cost=1.0, error_cost=100.0)["declared"]
         self.assertEqual((d["accepted"], d["wrong"], d["hallucinated"]), (3, 0, 0))
-        self.assertEqual((d["n_docs"], d["n_fields"]), (3, 6))
         self.assertAlmostEqual(d["net_saving_pct"], 0.5)
-        self.assertEqual(d["run_id"], "r1")
-        self.assertEqual(d["pipeline"], {"samples": 1})
-        self.assertEqual(d["contract_version"], 1)
+        sweep = scorer.score(GOLD, pmap, review_cost=1.0, error_cost=100.0)["business"]
+        self.assertAlmostEqual(sweep["threshold"], 0.97)
+
+    def test_in_sample_selection_never_activates_and_reports_diagnostic(self):
+        # 3 accepted, 0 errors: in-sample only, so the decision abstains whatever the numbers are.
+        preds = [pred("d1", "X", 0.99, None, 0.0), pred("d2", "Y", 0.98, "Z", 0.97),
+                 pred("d3", None, 0.0, None, 0.0)]
+        d = choose_threshold(GOLD, preds, 100.0, manifest={"run_id": "r1", "pipeline": {"samples": 1}})
+        self.assertTrue(d["abstain_all"])
+        self.assertIn("in-sample", d["method_text"])
+        self.assertGreater(d["diagnostic_wilson_audit"]["upper_95"], 0.01)
+        self.assertFalse(d["diagnostic_wilson_audit"]["at_most_1_percent"])
+
+    def test_wilson_bound_values(self):
+        from evaluation.select_threshold import wilson_upper
+        self.assertEqual(wilson_upper(0, 0), 1.0)
+        self.assertAlmostEqual(wilson_upper(0, 300), 0.01264, places=4)   # > 1%: 300 errorless fields are not enough
+        self.assertLess(wilson_upper(0, 400), 0.01)
+        self.assertGreater(wilson_upper(1, 10), wilson_upper(0, 10))
 
     def test_no_positive_saving_gives_all_abstain_with_zero_saving(self):
         # Every accepted value is wrong or hallucinated at confidence 0.99, and nothing is correct.
@@ -161,11 +177,12 @@ class ThresholdTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             choose_threshold(GOLD, preds)
 
-    def test_positive_decision_needs_pipeline(self):
+    def test_no_manifest_still_gives_a_valid_abstaining_decision(self):
         preds = [pred("d1", "X", 0.99, None, 0.0), pred("d2", "Y", 0.98, "Z", 0.97),
                  pred("d3", None, 0.0, None, 0.0)]
-        with self.assertRaises(ValueError):
-            choose_threshold(GOLD, preds, 100.0, manifest=None)
+        d = choose_threshold(GOLD, preds, 100.0, manifest=None)
+        self.assertTrue(d["abstain_all"])
+        self.assertIsNone(d["pipeline"])
 
 
 if __name__ == "__main__":

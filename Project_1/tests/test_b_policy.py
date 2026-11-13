@@ -77,10 +77,17 @@ class GroundingTests(unittest.TestCase):
         self.assertFalse(is_grounded("", TEXT, STR))
         self.assertFalse(is_grounded(None, TEXT, STR))
 
-    def test_bool_json_and_objects_return_false(self):
+    def test_bool_always_false(self):
         self.assertFalse(is_grounded(True, "true", BOOL))
-        self.assertFalse(is_grounded("true", "true", BOOL), "checkbox-like fields are not checkable yet")
-        self.assertFalse(is_grounded({"a": 1}, '{"a": 1}', JSONF))
+        self.assertFalse(is_grounded("true", "true", BOOL), "checkbox-like fields are not checkable")
+
+    def test_json_needs_matching_structure_and_grounded_leaves(self):
+        table = "Holding Alpha 1500 units. Holding Beta 42 units."
+        self.assertTrue(is_grounded({"name": "Alpha", "units": 1500}, table, JSONF))
+        self.assertFalse(is_grounded({"name": "Alpha", "units": 999}, table, JSONF), "ungrounded number leaf")
+        self.assertFalse(is_grounded({"name": "Alpha", "flag": True}, table, JSONF), "bool leaf is unverifiable")
+        self.assertFalse(is_grounded([], table, JSONF), "empty container")
+        self.assertFalse(is_grounded(["Alpha"], table, {"type": "string"}), "structure does not match schema type")
         self.assertFalse(is_grounded([1, 2], "1 2", STR))
 
 

@@ -145,7 +145,9 @@ class CliTests(unittest.TestCase):
         self.assertEqual(by["cuad:TESTDOC"]["f00"]["value"], "Acme Corp")
         self.assertLessEqual(by["cuad:TESTDOC"]["f00"]["confidence"], 0.9, "agreement never raises confidence")
         diag = {r["doc_id"]: r["diagnostics"] for r in self.rows(self.tmp / "k3.diagnostics.jsonl")}
-        self.assertEqual(diag["cuad:TESTDOC"]["per_field"]["f00"]["entropy"], 0.0)
+        self.assertEqual(diag["cuad:TESTDOC"]["per_field"]["f00"]["entropy_nats"], 0.0)
+        self.assertEqual(diag["cuad:TESTDOC"]["uq_method"], "k_agreement_conf")
+        self.assertTrue(diag["cuad:TESTDOC"]["uq_called"])
 
     def test_broken_json_fail_mode_leaves_document_unwritten_and_exits_1(self):
         Mock.mode = "broken"
@@ -233,7 +235,8 @@ class CliTests(unittest.TestCase):
                                    "method": "empirical", "pipeline": {
                                        "model": "mock-model", "prompt_version": "v2", "samples": 1,
                                        "temperature": 0.7, "workers": 1, "chunk_chars": 45000,
-                                       "overlap_chars": 3000, "batch_size": 10}}), encoding="utf-8")
+                                       "overlap_chars": 3000, "batch_size": 10,
+                                       "uq_method": "k1_grounded", "sampling": "mixed"}}), encoding="utf-8")
         p = self.run_cli(self.base_args(self.tmp / "conf.jsonl", "--decision", str(dec), "--chunk-chars", "1000"))
         self.assertNotEqual(p.returncode, 0)
         self.assertIn("contradict", p.stderr)

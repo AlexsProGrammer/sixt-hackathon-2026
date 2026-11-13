@@ -1,0 +1,19 @@
+{
+  "contract_version": 1,
+  "status": "decided",
+  "run_id": "f9b9a67e838d",
+  "threshold": 1.0,
+  "abstain_all": true,
+  "method": "all_abstain: gate rejected positive candidate at threshold 0.95: accepted=5, error upper bound (95%)=0.434 > 0.01",
+  "pipeline": null,
+  "error_cost": 100.0,
+  "n_docs": 3,
+  "n_fields": 89,
+  "accepted": 0,
+  "wrong": 0,
+  "hallucinated": 0,
+  "net_saving_pct": 0.0,
+  "error_upper_bound_95": 1.0,
+  "gate": "gate rejected positive candidate at threshold 0.95: accepted=5, error upper bound (95%)=0.434 > 0.01",
+  "n_abstained_after_errors": 0
+}

@@ -228,15 +228,22 @@ class ReplyCache:
             raise
 
 
+def sample_temperature(sample_idx: int, temperature: float, sampling: str) -> float:
+    """'mixed': sample 0 is greedy (0.0), the others use `temperature`. 'identical': every sample uses `temperature`."""
+    if sampling == "identical":
+        return temperature
+    return 0.0 if sample_idx == 0 else temperature
+
+
 def execute_job(job: dict, *, cfg: dict, cache: ReplyCache, state: RunState, temperature: float,
-                prompt_version: str, build_messages) -> dict:
+                prompt_version: str, build_messages, sampling: str = "mixed") -> dict:
     """Run one planned job. Always returns a result row; failures carry ok=False and an error kind."""
     result = {"job_id": job["job_id"], "sample_idx": job["sample_idx"], "chunk_id": job["chunk_id"],
-              "batch_id": job["batch_id"], "start": job["start"], "field_names": job["field_names"],
-              "answer": None, "ok": False, "error": None}
+              "batch_id": job["batch_id"], "start": job["start"], "end": job.get("end"),
+              "field_names": job["field_names"], "answer": None, "ok": False, "error": None}
     try:
         messages = build_messages(job)
-        temp = 0.0 if job["sample_idx"] == 0 else temperature
+        temp = sample_temperature(job["sample_idx"], temperature, sampling)
         key = ReplyCache.make_key(endpoint=cfg["LLM_BASE_URL"].rstrip("/"), model=cfg["LLM_MODEL"],
                                   temperature=temp, sample_idx=job["sample_idx"],
                                   prompt_version=prompt_version, messages=messages)

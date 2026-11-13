@@ -37,8 +37,11 @@ import numpy as np
 from probly.quantification import entropy
 from probly.representation.distribution import create_categorical_distribution
 
+from math import log
+
+from .contracts import CONTRACT_VERSION, VALID_STATUSES, ContractError, check_sample
 from .grounding import normalise
-from .policy import apply_policy
+from .policy import apply_policy, classify_field_v2
 
 METHOD = "apply_policy_per_sample + exact_cluster_vote(null=cluster, tie->null) + probly_entropy_nats"
 NULL_KEY = "null"
@@ -71,6 +74,95 @@ def _abstain_all(schema: dict, reason: str, n_samples: int) -> dict:
 
 def _valid_sample(s: object) -> bool:
     return isinstance(s, dict) and s.get("complete") is True and isinstance(s.get("fields"), dict)
+
+
+UQ_V2_METHOD = ("classify_field_v2 per sample; exact cluster vote (explicit null = its own cluster, "
+                "unsupported = excluded); probly categorical entropy in nats and normalised by log(K)")
+
+
+def _cluster_key_v2(status: str, value: object) -> str:
+    if status == "absent":
+        return NULL_KEY
+    if status == "unsupported":
+        return "unsupported"
+    return _cluster_key(value)
+
+
+def aggregate_v2(samples: list[dict], schema: dict, text: str | None, *, expected_k: int) -> dict:
+    """Contract version 2: per-field votes over exactly `expected_k` valid observations.
+
+    Returns {"contract_version", "candidates": {field: {"value", "eligible", "reason", "features"}},
+    "diagnostics": {...}}. A candidate is eligible only with all K observations valid (present, absent or
+    unsupported), a unique winner, and a non-null, grounded winner. Null and unsupported winners are never
+    eligible. Errors and missing fields are not counted as null votes. Confidence is not calibrated.
+    """
+    if not isinstance(expected_k, int) or isinstance(expected_k, bool) or expected_k < 1:
+        raise ValueError("expected_k must be a positive integer")
+    props = schema.get("properties", {}) if isinstance(schema, dict) else {}
+    for s in samples:
+        problems = check_sample(s, schema)
+        if problems:
+            raise ContractError("invalid sample: " + "; ".join(problems))
+    idxs = [s["sample_idx"] for s in samples]
+    if len(set(idxs)) != len(idxs):
+        raise ContractError("duplicate sample_idx")
+    ordered = sorted(samples, key=lambda s: s["sample_idx"])
+    k_actual = len(ordered)
+    mismatch = k_actual != expected_k
+    unreadable = text is None or not str(text).strip()
+
+    candidates: dict = {}
+    for name, spec in props.items():
+        cls = [classify_field_v2(s["fields"][name], spec, text) for s in ordered]
+        feat: dict = {"k_expected": expected_k, "k_samples": k_actual,
+                      "status_counts": dict(Counter(c["status"] for c in cls))}
+        if unreadable:
+            candidates[name] = {"value": None, "eligible": False, "reason": "unreadable", "features": feat}
+            continue
+        if mismatch:
+            candidates[name] = {"value": None, "eligible": False, "reason": "sample_count_mismatch", "features": feat}
+            continue
+        valid = [i for i, c in enumerate(cls) if c["status"] in VALID_STATUSES]
+        feat["k_valid"] = len(valid)
+        if len(valid) < expected_k:
+            candidates[name] = {"value": None, "eligible": False, "reason": "incomplete_observations",
+                                "features": feat}
+            continue
+        keys = [_cluster_key_v2(c["status"], c["value"]) for c in cls]
+        counts = Counter(keys)
+        cluster_keys = sorted(counts)
+        probs = np.array([counts[c] / expected_k for c in cluster_keys], dtype=float)
+        h = float(entropy(create_categorical_distribution(probs)))
+        h_norm = h / log(expected_k) if expected_k > 1 else 0.0
+        top = max(counts.values())
+        leaders = [c for c in cluster_keys if counts[c] == top]
+        leader = leaders[0]
+        members = [i for i, key in enumerate(keys) if key == leader]
+        model_confs = [cls[i]["model_confidence"] for i in members if cls[i]["model_confidence"] is not None]
+        feat.update({"agreement": top / expected_k, "entropy_nats": h, "entropy_norm": h_norm,
+                     "n_clusters": len(counts), "null_share": counts.get(NULL_KEY, 0) / expected_k,
+                     "grounded": leader not in (NULL_KEY, "unsupported")})
+        if model_confs:
+            feat["model_conf_min"] = min(model_confs)
+            feat["model_conf_mean"] = sum(model_confs) / len(model_confs)
+        if len(leaders) > 1:
+            candidates[name] = {"value": None, "eligible": False, "reason": "tie", "features": feat}
+        elif leader == NULL_KEY:
+            candidates[name] = {"value": None, "eligible": False, "reason": "null_majority", "features": feat}
+        elif leader == "unsupported":
+            candidates[name] = {"value": None, "eligible": False, "reason": "unsupported_majority", "features": feat}
+        else:
+            value = cls[members[0]]["value"]
+            reason = "single_sample" if expected_k == 1 else "majority"
+            candidates[name] = {"value": value, "eligible": True, "reason": reason, "features": feat}
+
+    per_field = {n: {"eligible": c["eligible"], "reason": c["reason"],
+                     **{k: c["features"][k] for k in ("k_valid", "agreement", "entropy_nats", "entropy_norm",
+                                                      "n_clusters", "grounded") if k in c["features"]}}
+                 for n, c in candidates.items()}
+    return {"contract_version": CONTRACT_VERSION, "candidates": candidates,
+            "diagnostics": {"n_samples": k_actual, "expected_k": expected_k, "method": UQ_V2_METHOD,
+                            "per_field": per_field}}
 
 
 def aggregate_samples(samples: list[dict], schema: dict, text: str | None) -> dict:

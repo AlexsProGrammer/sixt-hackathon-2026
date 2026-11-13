@@ -9,7 +9,9 @@ Rules
 - Token bounds: "12" does not match inside "312", "12.50" or "1,12"; "-12" does not match "12".
 - CUAD-style compound answers joined with " | " are checked piece by piece; every piece must be grounded.
   Each piece must be a whole contiguous text span. Scattered single words are never accepted.
-- JSON, native booleans, and objects/arrays return False (not yet checkable, so abstain).
+- Native booleans return False: no reliable evidence rule exists, so they are never accepted as "true"/"false".
+- JSON (x-normalizer "json" or object/array type) is accepted only if the structure matches the schema type and
+  every non-null scalar leaf is grounded. A boolean leaf makes the structure unverifiable (False).
 - Missing text returns False.
 
 Limits (documented, not hidden)
@@ -89,6 +91,47 @@ def _grounded_piece(piece: str, hay: str) -> bool:
     return _bounded(needle).search(hay) is not None
 
 
+def _leaves(value: object):
+    """Scalar leaves of a nested JSON value. Object keys are labels and are not values."""
+    if isinstance(value, dict):
+        for v in value.values():
+            yield from _leaves(v)
+    elif isinstance(value, list):
+        for v in value:
+            yield from _leaves(v)
+    else:
+        yield value
+
+
+def _grounded_json(value: object, hay: str, field_schema: dict) -> bool:
+    """A nested object/array counts only with a matching structure and every non-null leaf grounded.
+
+    Conservative limits: a boolean leaf makes the whole structure unverifiable (False); an empty container
+    or an empty string leaf is False; a grounded leaf proves presence of the number or text, not its
+    place in the table. Leaf presence is therefore weaker evidence than a span match.
+    """
+    if not isinstance(value, (dict, list)) or not value:
+        return False
+    want = _types(field_schema)
+    if want and not (want & {"object", "array"}):
+        return False
+    leaves = [v for v in _leaves(value) if v is not None]
+    if not leaves:
+        return False
+    for leaf in leaves:
+        if isinstance(leaf, bool):
+            return False
+        if isinstance(leaf, (int, float)):
+            if not math.isfinite(float(leaf)) or not any(_bounded(f).search(hay) for f in _number_forms(leaf)):
+                return False
+        elif isinstance(leaf, str):
+            if not _grounded_piece(leaf, hay):
+                return False
+        else:
+            return False
+    return True
+
+
 def is_grounded(value: object, text: str | None, field_schema: dict) -> bool:
     """True only if the value is visible in the text as a contiguous, token-bounded span."""
     if text is None or not isinstance(text, str) or not text.strip():
@@ -96,9 +139,11 @@ def is_grounded(value: object, text: str | None, field_schema: dict) -> bool:
     if value is None or isinstance(value, bool):
         return False
     kind = field_kind(field_schema)
-    if kind in ("boolean", "json", "unknown"):
-        return False
     hay = normalise(text)
+    if kind == "json":
+        return _grounded_json(value, hay, field_schema if isinstance(field_schema, dict) else {})
+    if kind in ("boolean", "unknown"):
+        return False
 
     if kind == "number":
         if not isinstance(value, (int, float)) or not math.isfinite(float(value)):
