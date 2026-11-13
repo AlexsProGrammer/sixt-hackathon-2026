@@ -30,7 +30,7 @@ from functools import partial
 from pathlib import Path
 from urllib.parse import urlparse
 
-from pipeline import router
+from pipeline import eb_pipeline, router
 from pipeline.merge import merge_sample_v2
 from pipeline.requests import PROMPT_VERSION, build_jobs, build_prompt
 from pipeline.transport import ReplyCache, RunState, execute_job
@@ -155,12 +155,13 @@ def offline_extract(rec: dict) -> dict:
 class Ctx:
     """Everything one run needs. Built once in main()."""
 
-    def __init__(self, cfg, cache, state, pipeline, on_error):
+    def __init__(self, cfg, cache, state, pipeline, on_error, eb=None):
         self.cfg = cfg
         self.cache = cache
         self.state = state
         self.pipeline = pipeline
         self.on_error = on_error
+        self.eb = eb          # None = text pipeline only; else the resolved ExtractBench vision config (T06)
 
 
 def build_messages(job: dict) -> list[dict]:
@@ -191,6 +192,8 @@ def extract_llm(rec: dict, ctx: Ctx) -> dict:
     schema = rec["schema"]
     text = full_text(rec)
     routed = router.route(rec, DATA, text=text)
+    if ctx.eb and routed["route"] in eb_pipeline.VISION_ROUTES and eb_pipeline.views_for_route(routed["route"], ctx.eb["views"]):
+        return eb_pipeline.extract_document(rec, routed, ctx, data_dir=DATA)   # ExtractBench on the native PDF (T06)
     route_info = {"route": routed["route"], "text_source": routed["text_source"], "quality": routed["quality"],
                   "quality_features": routed["quality_features"]}
     if text is None or not text.strip():
@@ -248,7 +251,8 @@ def sha256_obj(obj: object) -> str:
 
 
 CODE_FILES = ("4_extract.py", "pipeline/router.py", "pipeline/requests.py", "pipeline/transport.py", "pipeline/merge.py",
-              "uncertainty/contracts.py", "uncertainty/grounding.py", "uncertainty/policy.py",
+              "pipeline/eb_pipeline.py", "pipeline/prompts_eb.py", "pipeline/messages.py", "pipeline/models.py",
+              "uncertainty/single_view.py", "uncertainty/contracts.py", "uncertainty/grounding.py", "uncertainty/policy.py",
               "uncertainty/schema_check.py",
               "uncertainty/uq_probly.py", "uncertainty/decision.py")
 
@@ -334,7 +338,10 @@ def _register_run(run_dir: Path, a, recs: list[dict], mode: str, pipeline: dict,
     input_path = Path(a.data)
     registry.write_inputs(run_dir, recs, input_ref=str(input_path) if not a.limit else None,
                           input_sha256=sha256_bytes(input_path.read_bytes()) if not a.limit else None)
-    extra = {"status": "running", "mode": mode, "models": [pipeline["model"]] if pipeline.get("model") else [],
+    models = [pipeline["model"]] if pipeline.get("model") else []
+    if pipeline.get("eb"):
+        models += [m for m in (pipeline["eb"]["model_a"], pipeline["eb"]["model_b"]) if m not in models]
+    extra = {"status": "running", "mode": mode, "models": models,
              "n_requested": len(recs)}
     if a.run_name:
         extra["name"] = a.run_name
@@ -382,6 +389,11 @@ def main(argv=None) -> int:
                          "identical: every sample at --temperature.")
     ap.add_argument("--uq-method", choices=UQ_METHODS, default=None,
                     help="decision rule: k1_grounded (K=1, default for K=1), k_agreement_only (K>1), k_agreement_conf (K>1, default for K>1), k_entropy (K>1, probly)")
+    ap.add_argument("--eb-views", default=None, metavar="VIEWS",
+                    help="ExtractBench vision pipeline (T06) on the native PDF instead of the text layer. "
+                         "'A' = view A only, 'full' = the per-route table (A-pdf, B-pdf, A-text), or a list such as "
+                         "A-pdf,B-pdf. Models: LLM_MODEL_A (default LLM_MODEL) and LLM_MODEL_B. Off by default. "
+                         "Only view A feeds the prediction until the multi-view aggregation (T09) exists.")
     ap.add_argument("--chunk-chars", type=int, default=None, help="default 45000")
     ap.add_argument("--overlap-chars", type=int, default=None, help="default 3000")
     ap.add_argument("--batch-size", type=int, default=None, help="fields per request, default 10")
@@ -461,6 +473,21 @@ def main(argv=None) -> int:
             raise SystemExit(f"ERROR: --uq-method {pipeline_values['uq_method']} needs --samples 2 or more.")
     pipeline = {**pipeline_values, "model": cfg["LLM_MODEL"] if cfg else None,
                 "prompt_version": PROMPT_VERSION if mode == "llm" else None}
+    eb_cfg = None
+    dec_eb = dec["pipeline"].get("eb") if dec is not None and not dec["abstain_all"] else None
+    if mode == "llm" and (a.eb_views or dec_eb):
+        try:
+            if a.eb_views and dec_eb and eb_pipeline.parse_views(a.eb_views) != dec_eb.get("views"):
+                raise SystemExit("ERROR: --eb-views contradicts the decision file.")
+            eb_cfg = eb_pipeline.resolve_eb({**(dec_eb or {}), **({"views": eb_pipeline.parse_views(a.eb_views)}
+                                                                  if a.eb_views else {})})
+        except ValueError as e:
+            raise SystemExit(f"ERROR: {e}")
+        pipeline["eb"] = {k: eb_cfg[k] for k in ("views", "model_a", "model_b", "batch_size", "dpi", "lower_dpi",
+                                                 "max_pages", "temperature")}
+        pipeline["eb"]["prompt_version"] = eb_pipeline.EB_PROMPT_VERSION
+    elif a.eb_views and mode != "llm":
+        print("WARNING: --eb-views is ignored outside the llm mode.", file=sys.stderr)
     print(f"mode: {mode}", file=sys.stderr)
 
     # ----- input and output files
@@ -480,7 +507,7 @@ def main(argv=None) -> int:
 
     state = RunState()
     cache = ReplyCache(None if a.no_cache else Path(a.cache_dir), state)
-    ctx = Ctx(cfg, cache, state, pipeline, a.on_error)
+    ctx = Ctx(cfg, cache, state, pipeline, a.on_error, eb_cfg)
     if mode == "llm" and any(r["source_dataset"] == "cuad" for r in recs):
         load_cuad()  # once, before any worker pool starts
 

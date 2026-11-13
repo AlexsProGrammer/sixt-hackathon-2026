@@ -10,7 +10,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from evaluation import docs, field_table, registry, report, splits
+from evaluation import docs, field_table, registry, report, run_batch, splits
 from evaluation.partitions import group_of
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -371,3 +371,66 @@ class RunBatchCliTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DiffTest(unittest.TestCase):
+    """--diff: per-field outcome transitions between two runs (T06 prompt regression set)."""
+
+    @staticmethod
+    def row(doc, field, outcome, value="v", family="Fam", kind="string", route="pdf_text_good"):
+        present = outcome not in ("missed", "true_null")
+        return {"doc_id": doc, "group": doc.split(":")[0], "source": "extractbench", "family": family,
+                "perception": "P0", "field": field, "kind": kind, "route": route, "pred_value": value if present else None,
+                "pred_present": present, "conf_out": 0.9 if present else None, "model_conf": None, "n_views": None,
+                "agreement": None, "entropy_norm": None, "grounded_text": present, "grounded_ocr": None,
+                "cross_view_agree": None, "value_len": 1, "text_quality": 1.0, "text_source": "pdftotext",
+                "has_text": True, "gold_present": outcome not in ("hallucinated", "true_null"),
+                "match": outcome == "correct", "outcome": outcome}
+
+    def test_transitions_and_regressions(self):
+        a = [self.row("d1", "f", "correct", "x"), self.row("d1", "g", "wrong"), self.row("d2", "h", "missed")]
+        b = [self.row("d1", "f", "wrong", "y"), self.row("d1", "g", "correct"), self.row("d2", "h", "correct")]
+        d = report.diff_field_tables(a, b, name_a="A", name_b="B")
+        self.assertEqual(d["transitions"]["correct->wrong"], 1)
+        self.assertEqual(d["transitions"]["wrong->correct"], 1)
+        self.assertEqual(d["transitions"]["missed->correct"], 1)
+        self.assertEqual(d["n_regressions"], 1)
+        self.assertEqual(d["regressions"][0]["field"], "f")
+        self.assertEqual(d["n_fixes"], 2)
+        self.assertEqual(d["by_field"]["f"], {"correct->wrong": 1})
+        self.assertEqual(d["at0_b"]["correct"], 2)
+
+    def test_only_in_one_run_counts_as_missed(self):
+        a = [self.row("d1", "f", "correct")]
+        b = []                       # run B has no prediction for d1:f at all
+        d = report.diff_field_tables(a, b, name_a="A", name_b="B")
+        self.assertEqual(d["transitions"]["correct->missed"], 1)
+        self.assertEqual(d["n_fields_only_a"], 1)
+
+    def test_write_diff_writes_report_files(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        runs = []
+        for rows in ([self.row("d1", "f", "correct")], [self.row("d1", "f", "wrong")]):
+            run = Path(tmp.name) / f"run{len(runs)}"
+            run.mkdir()
+            registry.write_jsonl(run / "fields.jsonl", rows)
+            runs.append(run)
+        d = report.write_diff(*runs)
+        self.assertTrue((runs[1] / "diff.md").exists())
+        self.assertTrue((runs[1] / "diff.json").exists())
+        self.assertEqual(d["n_regressions"], 1)
+
+    def test_run_batch_source_filter(self):
+        import argparse
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        path = Path(tmp.name) / "in.jsonl"
+        recs = [{"doc_id": "extractbench:a", "source_dataset": "extractbench", "pages": ["raw/x.pdf"], "schema": {}},
+                {"doc_id": "cuad:x", "source_dataset": "cuad", "pages": [], "schema": {}},
+                {"doc_id": "extractbench:b", "source_dataset": "extractbench", "pages": ["raw/y.pdf"], "schema": {}}]
+        path.write_text("".join(json.dumps(r) + "\n" for r in recs), encoding="utf-8")
+        ns = argparse.Namespace(split=None, input=str(path), random=None, limit=None, seed=13, source="extractbench")
+        sel, info = run_batch.select_records(ns)
+        self.assertEqual([r["doc_id"] for r in sel], ["extractbench:a", "extractbench:b"])
+        self.assertEqual(info["source"], "extractbench")

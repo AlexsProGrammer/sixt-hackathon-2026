@@ -1,0 +1,158 @@
+{
+  "at_threshold_0": {
+    "threshold": 0.0,
+    "n_fields": 82,
+    "accepted": 26,
+    "correct": 15,
+    "wrong": 9,
+    "hallucinated": 2,
+    "missed": 11,
+    "true_null": 45,
+    "precision": 0.5769230769230769,
+    "recall": 0.42857142857142855,
+    "coverage": 0.6857142857142857,
+    "accepted_rate": 0.3170731707317073,
+    "hallucination_rate": 0.0425531914893617
+  },
+  "headline": {
+    "target_precision": 0.99,
+    "coverage_at_target_precision": 0.0,
+    "threshold_at_target": null,
+    "reached_target": false
+  },
+  "coverage_at_precision": {
+    "0.99": 0.0,
+    "0.95": 0.0,
+    "0.9": 0.0,
+    "0.8": 0.0
+  },
+  "business": {
+    "review_cost": 1.0,
+    "error_cost": 100.0,
+    "threshold": null,
+    "saving": 0.0,
+    "saving_pct": 0.0
+  },
+  "schema_validity": 1.0,
+  "by_source": {
+    "cuad": {
+      "threshold": 0.0,
+      "n_fields": 82,
+      "accepted": 26,
+      "correct": 15,
+      "wrong": 9,
+      "hallucinated": 2,
+      "missed": 11,
+      "true_null": 45,
+      "precision": 0.5769230769230769,
+      "recall": 0.42857142857142855,
+      "coverage": 0.6857142857142857,
+      "accepted_rate": 0.3170731707317073,
+      "hallucination_rate": 0.0425531914893617
+    }
+  },
+  "by_condition": {},
+  "curve": [
+    {
+      "threshold": 0.8,
+      "n_fields": 82,
+      "accepted": 26,
+      "correct": 15,
+      "wrong": 9,
+      "hallucinated": 2,
+      "missed": 11,
+      "true_null": 45,
+      "precision": 0.5769230769230769,
+      "recall": 0.42857142857142855,
+      "coverage": 0.6857142857142857,
+      "accepted_rate": 0.3170731707317073,
+      "hallucination_rate": 0.0425531914893617
+    },
+    {
+      "threshold": 0.85,
+      "n_fields": 82,
+      "accepted": 25,
+      "correct": 14,
+      "wrong": 9,
+      "hallucinated": 2,
+      "missed": 12,
+      "true_null": 45,
+      "precision": 0.56,
+      "recall": 0.4,
+      "coverage": 0.6571428571428571,
+      "accepted_rate": 0.3048780487804878,
+      "hallucination_rate": 0.0425531914893617
+    },
+    {
+      "threshold": 0.9,
+      "n_fields": 82,
+      "accepted": 23,
+      "correct": 12,
+      "wrong": 9,
+      "hallucinated": 2,
+      "missed": 14,
+      "true_null": 45,
+      "precision": 0.5217391304347826,
+      "recall": 0.34285714285714286,
+      "coverage": 0.6,
+      "accepted_rate": 0.2804878048780488,
+      "hallucination_rate": 0.0425531914893617
+    },
+    {
+      "threshold": 0.95,
+      "n_fields": 82,
+      "accepted": 17,
+      "correct": 9,
+      "wrong": 7,
+      "hallucinated": 1,
+      "missed": 19,
+      "true_null": 46,
+      "precision": 0.5294117647058824,
+      "recall": 0.2571428571428571,
+      "coverage": 0.45714285714285713,
+      "accepted_rate": 0.2073170731707317,
+      "hallucination_rate": 0.02127659574468085
+    },
+    {
+      "threshold": 1.0,
+      "n_fields": 82,
+      "accepted": 5,
+      "correct": 3,
+      "wrong": 2,
+      "hallucinated": 0,
+      "missed": 30,
+      "true_null": 47,
+      "precision": 0.6,
+      "recall": 0.08571428571428572,
+      "coverage": 0.14285714285714285,
+      "accepted_rate": 0.06097560975609756,
+      "hallucination_rate": 0.0
+    }
+  ],
+  "at_threshold": {
+    "threshold": 0.99,
+    "n_fields": 82,
+    "accepted": 5,
+    "correct": 3,
+    "wrong": 2,
+    "hallucinated": 0,
+    "missed": 30,
+    "true_null": 47,
+    "precision": 0.6,
+    "recall": 0.08571428571428572,
+    "coverage": 0.14285714285714285,
+    "accepted_rate": 0.06097560975609756,
+    "hallucination_rate": 0.0
+  },
+  "declared": {
+    "threshold": 0.99,
+    "precision": 0.6,
+    "coverage": 0.14285714285714285,
+    "hallucination_rate": 0.0,
+    "accepted": 5,
+    "wrong": 2,
+    "hallucinated": 0,
+    "band": null,
+    "net_saving_pct": -2.3780487804878048
+  }
+}

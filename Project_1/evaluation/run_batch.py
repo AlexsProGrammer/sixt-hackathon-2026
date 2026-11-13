@@ -62,6 +62,9 @@ def select_records(a) -> tuple[list[dict], dict]:
     if a.limit:
         recs = recs[: a.limit]
         info["limit"] = a.limit
+    if a.source:
+        recs = [r for r in recs if r.get("source_dataset") == a.source]
+        info["source"] = a.source
     if not recs:
         raise SystemExit("ERROR: the selection is empty.")
     info.update({"n_available": n_all, "n_docs": len(recs),
@@ -90,6 +93,7 @@ def main(argv=None) -> int:
                                  epilog="Unknown options are forwarded to 4_extract.py.")
     ap.add_argument("--split", help="frozen split name in data/splits/")
     ap.add_argument("--input", help="jsonl with dev-layout records (alternative to --split)")
+    ap.add_argument("--source", help="keep only records of this source_dataset (e.g. extractbench)")
     ap.add_argument("--splits-dir", help="default: data/splits")
     ap.add_argument("--limit", type=int, help="first N documents of the selection")
     ap.add_argument("--random", type=int, metavar="N", help="N documents stratified by (source, family)")
