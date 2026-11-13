@@ -1,0 +1,53 @@
+{
+  "contract_version": 1,
+  "field_contract_version": 2,
+  "run_id": "4f0f88b6d890",
+  "mode": "llm",
+  "pipeline": {
+    "workers": 1,
+    "samples": 1,
+    "temperature": 0.7,
+    "chunk_chars": 45000,
+    "overlap_chars": 3000,
+    "batch_size": 10,
+    "uq_method": "k1_grounded",
+    "sampling": "mixed",
+    "model": "vertex_ai/gemini-3.7-flash",
+    "prompt_version": "v4"
+  },
+  "uq": {
+    "method": "k1_grounded",
+    "expected_k": 1,
+    "probly_version": "0.9.1"
+  },
+  "fingerprint": {
+    "input_sha256": "a0b6d1cd205bb935425b8a7ff4837c0a39d4e68fadcee4df056163fece545b68",
+    "pipeline_sha256": "8324fe34b349d4a293bfcc04879b6d1623de0afdb49189e6ea6ef3bf57933899",
+    "endpoint_host": "llm.orange.sixt.com",
+    "code_sha256": "6de0f8271bfb38215ba2c83ac00cde4b17a4fb3e49fd92e8001aa77f349ac86a",
+    "prompt_version": "v4",
+    "fingerprint_sha256": "35f97e99372bfedfb256806afc42c758c9eda3a21d148004df21f3e949b79d46"
+  },
+  "segments": [
+    {
+      "run_id": "4f0f88b6d890",
+      "n_requested": 10,
+      "requests": 0,
+      "resumed_from_disk": 0
+    }
+  ],
+  "n_requested": 10,
+  "n_written": 10,
+  "n_skipped_resumed": 0,
+  "n_failed": 0,
+  "failed_doc_ids": [],
+  "n_abstained_after_errors": 0,
+  "abstained_after_error_doc_ids": [],
+  "run_complete": true,
+  "requests": 0,
+  "cache_hits": 48,
+  "elapsed_seconds": 2.49,
+  "stopped_429": false,
+  "on_error": "fail",
+  "warnings": []
+}
