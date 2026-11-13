@@ -51,8 +51,15 @@ _SELECT_STORED = {"accepted": 14, "wrong": 0, "hallucinated": 0, "precision": 1.
 AUDIT = jload("uq_v2_audit_result.json")["audit"] if (R / "uq_v2_audit_result.json").exists() else _AUDIT_STORED
 SELECT = (jload("uq_v2_frozen_pre_audit.json")["dev_select"] if (R / "uq_v2_frozen_pre_audit.json").exists()
           else _SELECT_STORED)
-POST_AUDIT = jload("post_schema_v3/audit_frozen_eval.json")["audit"]
-AUDIT_METHODS = jload("uq_v2_audit_ablation/ablation_report.json")["methods"]
+# The ablation and post-hoc files were removed from the repository as well. Stored values, as last committed
+# (git log --diff-filter=D -- Project_1/results shows the removing commits):
+#   post_schema_v3/audit_frozen_eval.json: 3 accepted, 0 wrong
+#   uq_v2_audit_ablation/ablation_report.json, k_entropy at 0.95: 34 accepted, 18 wrong, 1 hallucinated of 130 fields
+_POST = R / "post_schema_v3" / "audit_frozen_eval.json"
+_ABL = R / "uq_v2_audit_ablation" / "ablation_report.json"
+POST_AUDIT = jload("post_schema_v3/audit_frozen_eval.json")["audit"] if _POST.exists() else {"accepted": 3, "wrong": 0}
+AUDIT_METHODS = (jload("uq_v2_audit_ablation/ablation_report.json")["methods"] if _ABL.exists() else
+                 {"k_entropy": {"per_threshold": {"0.95": {"net_saving_pct": (34 - 100 * 19) / 130}}}})
 CUAD_ACCEPTED_PROBLY = PROBLY_DEV["by_source"]["cuad"]["accepted"] + PROBLY_TEST["by_source"]["cuad"]["accepted"]
 
 assert DEC["abstain_all"] is True, "slides describe the all-abstain decision"
@@ -199,10 +206,10 @@ def slide3():
             f.text(0.875, yy, f"{r['accepted']} / {r['errors']}", fontsize=12, va="center")
     p = at(PROBLY_DEV, THR)
     bullets(f, [
-        f"probly cuts the loss from {pct(at(LLM_DEV, THR)['net'])} to {pct(p['net'])} on dev, but coverage falls to "
-        f"{p['coverage'] * 100:.1f}% and precision is {p['precision'] * 100:.1f}%, not 99%. Every active variant is below 0.0%.",
-        f"Why coverage is low: strict text grounding, threshold {THR}, scans abstained, and {CUAD_ACCEPTED_PROBLY} accepted "
-        "CUAD clause fields. Partial runs: scored against the full split (diluted); * run labels and document "
+        f"probly cuts the loss from {pct(at(LLM_DEV, THR)['net'])} to {pct(p['net'])} on dev. Coverage "
+        f"{p['coverage'] * 100:.1f}%, precision {p['precision'] * 100:.1f}%, not 99%. All active variants are below 0.0%.",
+        f"Why coverage is low: strict text grounding, threshold {THR}, scans abstained, damaged OCR text. "
+        f"{CUAD_ACCEPTED_PROBLY} accepted CUAD fields: the probly runs most probably contain no contract. Partial runs: scored against the full split (diluted); * run labels and document "
         "counts are derived from file names, not backed by manifests.",
         f"Error cost 20: probly on dev is {pct(at(PROBLY_DEV, THR, 20)['net'])}. Error cost 500: "
         f"{pct(at(PROBLY_DEV, THR, 500)['net'])}. All-abstain saves nothing and produces no automated errors. "
@@ -233,7 +240,7 @@ def slide4():
         f"With schema validation the field is invalid (post-hoc on the same samples: {POST_AUDIT['accepted']} accepted, "
         f"{POST_AUDIT['wrong']} wrong). Too few fields to prove anything.",
     ], x=0.05, y=0.455, size=12.5, gap=0.014, width_in=5.5)
-    f.text(0.52, 0.775, "Five last fixes (32 tests, not yet run on the API)", fontsize=14,
+    f.text(0.52, 0.775, "Five last fixes (32 tests; first v4 runs are worse, see 5)", fontsize=14,
            weight="bold", va="top")
     fixes = [
         ("a  transport.py", "Line breaks and tabs inside JSON strings are accepted. Long clauses are no longer lost."),
@@ -261,8 +268,8 @@ def slide5():
     f.text(0.05, 0.775, "Limits", fontsize=16, weight="bold", va="top", color=RED)
     bullets(f, [
         "The submitted system saves nothing (0.0%) and produces no automated errors.",
-        f"Best active precision {p['precision'] * 100:.1f}%, needed > 99%. Coverage {p['coverage'] * 100:.1f}%, zero for contracts.",
-        "Prompt v4 and the five fixes are not measured on the API.",
+        f"Best active precision {p['precision'] * 100:.1f}%, needed > 99%. Coverage {p['coverage'] * 100:.1f}%; contracts unmeasured.",
+        "First prompt v4 runs (probly3) are worse than v2: 10 dev docs at 0.99 fell from 14/14 to 10/26 correct.",
         "Large runs cover a part of the data and have no manifests. The audit set has 7 documents.",
         "Confidence is not calibrated: at 1.00 the plain LLM is still wrong in "
         f"{(1 - at(LLM_DEV, 1.0)['precision']) * 100:.1f}% of its answers.",
@@ -270,8 +277,8 @@ def slide5():
     ], x=0.05, y=0.72, size=12.5, gap=0.014, width_in=5.0)
     f.text(0.48, 0.775, "Levers for a positive net saving", fontsize=16, weight="bold", va="top", color=GREEN)
     bullets(f, [
-        "Measure prompt v4 and the fixes on unused dev documents. Contract clauses (70.6% of the fields) become "
-        "acceptable for the first time.",
+        "Diagnose the v4 regression with stored predictions, then measure on unused dev documents that include "
+        "contracts (70.6% of the fields).",
         "Vision or OCR for image-only scans (about 40% of the forms), with their own stricter threshold.",
         "Calibrate the probability on several hundred labelled dev candidates (probly calibrator; features: confidence, "
         "agreement, entropy, status_counts). Choose the threshold with a conformal risk bound.",

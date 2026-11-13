@@ -12,7 +12,7 @@
 
 We built a full extraction pipeline with probly-based uncertainty. We do not switch it on, for three measured reasons:
 
-1. **Coverage is low.** At our conservative threshold 0.99 the pipeline accepts 1.4% of the fields that have a value on dev, and 7.2% on test_public. For CUAD contracts it accepts nothing.
+1. **Coverage is low.** At our conservative threshold 0.99 the pipeline accepts 1.4% of the fields that have a value on dev, and 7.2% on test_public. The large probly runs contain no accepted CUAD field, and most probably no CUAD document at all (see B).
 2. **Precision is high but not high enough.** The best active variant reaches 97.0% precision. The cost rule (review 1, error 100) needs more than 99%.
 3. **So every active variant is below the human-review baseline.** The best one is at −1.2% net saving (dev) and −15.7% (test_public). `never` is at 0.0%. One wrong booked value removes the gain of 100 correct ones.
 
@@ -100,7 +100,7 @@ What these runs show:
 - **The probly pipeline removes most of the loss.** On dev at 0.99 the loss goes from −30.9% to −1.2%. On test_public from −129.4% to −15.7%. Hallucinated values fall to 0 or 1.
 - **It is still below `never`.** No row with more than 14 accepted fields is positive at E = 100. The 10-document run is positive, but 14 accepted fields prove nothing (see D).
 - **The price is coverage.** The pipeline accepts 132 fields where the plain LLM run accepts 976.
-- **CUAD coverage is zero.** In every probly run the number of accepted CUAD fields is 0. All accepted fields come from ExtractBench. In the plain LLM run on dev, CUAD precision is 39.6% (101 accepted, 40 correct), so accepting CUAD spans without a better check would be far worse.
+- **The probly runs say nothing about CUAD.** In every large probly run the number of accepted CUAD fields is 0, and all accepted fields come from ExtractBench. The reason is most probably the document order, not a rejection: the first 159 records of `dev.jsonl` and the first 47 of `test_public.jsonl` are all ExtractBench. A run over the first 78 (dev) or 40 (test_public) documents contains no CUAD contract. We cannot confirm the subset, because the prediction files are missing. An offline check shows that grounding is not the blocker for CUAD: of 734 gold clauses in 60 dev contracts, 728 (99.2%) pass the grounding check. In the plain LLM run on dev, CUAD precision is 39.6% (101 accepted, 40 correct), so CUAD spans need a real measurement before any are accepted.
 - **The model confidence is not calibrated.** At confidence 1.00 the plain LLM run is still wrong in 63 of 660 fields (9.5%).
 
 ### C. Select and audit with probly (K=3, prompt v2, `gemini-3.8-flash`)
@@ -148,7 +148,8 @@ At error cost 20 the probly pipeline is slightly positive on dev (+0.2%) but not
 
 Coverage is low on purpose and by limitation. The causes, in order of size:
 
-1. **CUAD span rejections.** 70.6% of all dev fields are CUAD span fields. Before the last fixes the pipeline accepted none of them: the model answered multi-part clauses as lists or with other separators, curly apostrophes did not match straight ones in the grounding check, and long clauses with line breaks failed JSON parsing.
+1. **CUAD is not covered by the large probly runs.** 70.6% of all dev fields are CUAD span fields, and the large probly runs most probably processed no CUAD contract (document order, see B). The CUAD coverage of the pipeline is therefore unmeasured on a large set. Known defects for CUAD answers were fixed (fixes a, b, c below), but their effect is not measured.
+2. **Poor text layers in scanned forms.** Many ExtractBench PDFs have an embedded OCR text layer of low quality. In the 85 dev documents with a text layer, the median share of gold string values that occur in the text is 71%. In 23 documents it is below 50%. In the first six dev documents (Schedule K-1 forms) none of the gold strings is in the text: the layer reads `ine Harbour Water Utillties LLC` where the form says `Pine Harbour Water Utilities LLC`. The correct value cannot pass grounding there, and a value copied from the damaged layer passes grounding and is wrong.
 2. **Strict text grounding.** A value is accepted only if it occurs in the text as a contiguous, token-bounded span. Paraphrased, reformatted or shortened values are rejected. Booleans are never accepted, because no evidence rule exists for them.
 3. **Scan abstention.** About 40% of the ExtractBench PDFs have no text layer. The pipeline abstains on the whole document.
 4. **The conservative threshold 0.99.** Raising the threshold from 0.95 to 0.99 removes 43% of the accepted fields on dev (230 to 132).
@@ -181,9 +182,32 @@ Two causes, both fixed: the prompt (v2) did not send the `$defs`, so the model n
 | dev_audit, K=3 | `gemini-3.8-flash` | 7 | 57 | 0 | 0 | no | 1,455 s |
 | 10 dev documents, K=1 | `gemini-3.7-flash` | 10 | 48 | not recorded | 0 | no | 303 s |
 
-The manifests and result files of the dev_select and dev_audit runs (`results/uq_v2_*_run.manifest.json`, `uq_v2_audit_result.json`, `uq_v2_frozen*.json`) were removed from the repository in commit `63fa8aa`. The numbers in this table and in section C were read from them before the removal. They can be checked with `git show 63fa8aa^:Project_1/results/<file>`. The ablation reports in `results/uq_v2_*_ablation/` and `results/post_schema_v3/` are still in the repository.
+The manifests and result files of the dev_select and dev_audit runs (`results/uq_v2_*_run.manifest.json`, `uq_v2_audit_result.json`, `uq_v2_frozen*.json`) were removed from the repository in commit `63fa8aa`. The numbers in this table and in section C were read from them before the removal. They can be checked with `git show 63fa8aa^:Project_1/results/<file>`. The ablation reports (`results/uq_v2_*_ablation/`, `results/post_schema_v3/`) were removed later as well. All numbers of section C therefore rest on files that are only in the git history (`git log --diff-filter=D -- Project_1/results` lists the removing commits).
 
 The dev_cal subset run is the measurement stored in `submission/decision.json`: 2 accepted fields, 1 wrong, net −49.2% at threshold 0.95 (E=20: −9.0%; E=500: −250.3%). It is a functional test, not a representative measurement.
+
+### J. probly3 runs (prompt v4, added after the five fixes)
+
+Files: `results/probly3_dev_10_score.json` with manifest, `probly3_dev_score.json` and `probly3_test_public_score.json` without manifest or predictions. The manifest of the 10-document run states: prompt v4, K=1, `k1_grounded`, `gemini-3.7-flash`, 0 requests and 48 cache hits (the replies came from an earlier v4 run on that machine), code hash `6de0f827…`. The input hash is the same as for the earlier 10-document run, so the two runs are on the same documents.
+
+| Run | Threshold | Accepted | Correct | Wrong | Halluc. | Precision | Net (E=100) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 10 dev documents, prompt v2 (`probly_dev_10`) | 0.99 | 14 | 14 | 0 | 0 | 100% | +0.06% |
+| 10 dev documents, prompt v4 (`probly3_dev_10`) | 0.99 | 26 | 10 | 15 | 1 | 38.5% | −7.1% |
+| dev, prompt v2 (`probly_dev`) | 0.99 | 132 | 128 | 3 | 1 | 97.0% | −1.2% |
+| dev, v4 by file name (`probly3_dev`) | 0.99 | 30 | 11 | 18 | 1 | 36.7% | −8.5% |
+| test_public, prompt v2 (`probly_test_public`) | 0.99 | 205 | 192 | 13 | 0 | 93.7% | −15.7% |
+| test_public, v4 by file name (`probly3_test_public`) | 0.99 | 47 | 40 | 7 | 0 | 85.1% | −9.4% |
+
+**The v4 runs are worse, not better.** On the same 10 documents, precision at 0.99 fell from 100% to 38.5%, and over all thresholds the correct values fell from 34 to 19 while the wrong ones rose from 37 to 54. `probly3_dev` has only 17 more accepted fields than the 10-document run (93 against 76 at the lowest threshold), so it covers far fewer documents than the earlier 78-document run. The two dev rows are not on the same documents. No accepted field is a CUAD field (see B). This confirms the all-abstain decision: the configuration with the last fixes has no evidence of a positive saving.
+
+Confirmed by offline analysis of the dev data (no API call):
+
+- **The 10 documents are a worst case for a text pipeline.** All are Schedule K-1 scans with a damaged OCR text layer. In six of them no gold string is in the text (see F, point 2). An accepted value there is either copied from damaged text or taken from the wrong place.
+- **Whole numbers were written in the model's JSON form (fixed now).** The scorer compares `str(value)`: `45442.0` is not `45442`, and `7689` is not `7689.0`. In the dev gold a whole number is an int when the document prints it without decimals and a float when it prints `.00`. The pipeline passed the model's form through, so `45442.0` for a printed `45,442` was accepted and wrong, and a value printed as `7,689.00` was rejected as not grounded. Fix: `canonical_number()` in `uncertainty/grounding.py`, applied in `uncertainty/policy.py`. On the dev gold, 57 of 58 grounded whole numbers given in the other form are now scored correct (before: 0 of 58), with 1 regression among 58 given in the gold form. Tests: `tests/test_number_form_regressions.py` (15 tests).
+- **The text depends on the machine.** `pdf_text()` uses `pdftotext -layout` if it is installed and `pypdf` otherwise. The two give different text, so grounding and the prompts differ between machines. The code hash in the manifest does not record which one was used.
+
+Not confirmed (the prediction and diagnostics files of the probly3 runs are not in the repository): which fields became wrong between prompt v2 and v4, whether the number form caused any of the probly3 errors, and whether the "type number gets a JSON number" rule of prompt v3/v4 let more numbers from damaged text pass. Needed for the diagnosis: `probly3_*.jsonl`, `probly3_*.diagnostics.jsonl`, `probly3_*.samples.jsonl` and the two missing manifests.
 
 ## Configuration
 
@@ -258,7 +282,9 @@ In an active run the text of each document part and the field prompts are sent t
 ## Limits
 
 - **The submitted system saves nothing.** It is exactly as good as full human review (0.0%): it saves nothing and produces no automated errors.
-- **Coverage of the active pipeline is low** (1.4% on dev, 7.2% on test_public at 0.99) and zero for CUAD.
+- **Coverage of the active pipeline is low** (1.4% on dev, 7.2% on test_public at 0.99). For CUAD it is unmeasured on a large set.
+- **The runs with prompt v4 (probly3) are worse than the runs with prompt v2** (section J). The cause is only partly diagnosed.
+- **Damaged OCR text layers are not detected.** The pipeline trusts any non-empty text layer.
 - **No active variant reaches 99% precision.** The best is 97.0% (132 accepted, 4 errors).
 - **Prompt v4 and the five last fixes are not measured on the API.**
 - **The large runs cover only a part of the splits** (by file name: 78 and 307 of 540 dev documents; 40 and 75 of 176 test_public documents). Their percentages are diluted by the unprocessed documents. **Their manifests and prediction files are not in the repository: run labels and document counts are derived from file names only, and model, K, decision rule and prompt version are undocumented.** The plain LLM run and the probly run cover different documents, so their rows are not a paired comparison.
@@ -275,7 +301,8 @@ In an active run the text of each document part and the field prompts are sent t
 
 The gap is concrete. At 0.99 on dev the pipeline has 132 accepted fields and 4 errors. With at most 1 error it would be positive. Two things are needed at once: fewer errors among the accepted fields, and more accepted fields.
 
-1. **Measure prompt v4 and the five fixes.** One K=3 run on unused `dev_fit` documents, with method and threshold frozen first. Expected: CUAD span fields become acceptable for the first time (fixes a, b, c), and schema-invalid booleans and tables disappear (fix b plus schema validation). This is the largest coverage lever, because 70.6% of the fields are CUAD spans.
+1. **Measure prompt v4 and the five fixes.** One K=3 run on unused `dev_fit` documents, with method and threshold frozen first. The run must include CUAD contracts (they start at record 160 of `dev.jsonl`), because 70.6% of the fields are CUAD spans and no large probly run has covered them. The first v4 results (section J) are negative, so store predictions and diagnostics and find the changed fields before anything else.
+2. **Detect damaged text layers.** Add a text-quality gate for scanned forms (for example the share of dictionary words, or agreement between the text layer and a second OCR pass) and abstain or switch to vision below it. On dev, 23 of 85 documents with a text layer contain less than half of their gold strings.
 2. **Vision or OCR for image-only scans.** About 40% of the ExtractBench PDFs have no text layer. Send page images to a vision model, or add OCR and ground against the OCR text. Scans need their own, stricter threshold.
 3. **Calibrate the probability on a larger dev set.** The raw confidence is wrong in 9.5% of the cases where it says 1.00. Fit an isotonic or Venn-Abers calibrator (probly `calibrator`) per normalizer type on several hundred labelled candidates from `dev_fit`. Features: model confidence, agreement, probly entropy, `status_counts`, field type, grounding. Then choose the threshold with a conformal risk bound instead of a fixed 0.99.
 4. **Field-specific instead of document-wide abstention.** Accept only field types with proven precision (for example printed ExtractBench strings and numbers) and keep abstaining on risky ones (tables, clauses, booleans). The `status_counts` diagnostics (fix e) and the per-source score give the data for this. A per-field-type threshold raises coverage without raising the error rate.

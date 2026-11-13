@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import math
 
-from .grounding import is_grounded
+from .grounding import canonical_number, is_grounded
 from .schema_check import check_value
 
 
@@ -48,6 +48,7 @@ def decide_field(entry: object, field_schema: dict, text: str | None) -> dict:
         return _abstain()
     if not is_grounded(value, text, field_schema if isinstance(field_schema, dict) else {}):
         return _abstain()
+    value = canonical_number(value, text, field_schema if isinstance(field_schema, dict) else {})
     return {"value": value, "confidence": conf}
 
 
@@ -88,6 +89,9 @@ def classify_field_v2(obs: dict, field_schema: dict, text: str | None, defs: dic
         if not is_grounded(value, text, field_schema if isinstance(field_schema, dict) else {}):
             return {"status": "unsupported", "value": None, "model_confidence": None,
                     "reason": "value not grounded in the document text"}
+        # 3. a whole number is written in the JSON form the document prints (45442 vs 7689.0): the scorer compares
+        #    str(value), so 45442.0 for a printed "45,442" would be an accepted wrong value
+        value = canonical_number(value, text, field_schema if isinstance(field_schema, dict) else {})
         return {"status": "present", "value": value, "model_confidence": conf, "reason": ""}
     if status in ("invalid", "missing", "error", "unsupported", "unreadable"):
         return {"status": status, "value": None, "model_confidence": None, "reason": str(obs.get("reason", ""))}
