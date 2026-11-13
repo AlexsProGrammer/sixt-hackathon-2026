@@ -22,7 +22,9 @@ LLM_VARS = ("LLM_BASE_URL", "LLM_API_KEY", "LLM_MODEL")
 
 
 def load_env(path: Path = HERE / ".env") -> list[str]:
-    """Load KEY=VALUE lines from .env into os.environ. Variables that are already set are never overwritten.
+    """Load KEY=VALUE lines from .env into os.environ. Variables already set to a non-empty
+    value are never overwritten; variables exported as empty ARE filled from .env
+    (e.g. a stale 'export LLM_MODEL=' or an earlier 'source .env' from before the value existed).
     Returns the names that were loaded (never the values)."""
     loaded = []
     try:
@@ -39,7 +41,7 @@ def load_env(path: Path = HERE / ".env") -> list[str]:
         key, val = key.strip(), val.strip()
         if len(val) >= 2 and val[0] == val[-1] and val[0] in "\"'":
             val = val[1:-1]
-        if sep and key and val and key not in os.environ:
+        if sep and key and val and not os.environ.get(key, "").strip():
             os.environ[key] = val
             loaded.append(key)
     return loaded
