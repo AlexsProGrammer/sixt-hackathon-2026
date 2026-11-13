@@ -158,8 +158,8 @@ def aggregate_v2(samples: list[dict], schema: dict, text: str | None, *, expecte
             candidates[name] = {"value": value, "eligible": True, "reason": reason, "features": feat}
 
     per_field = {n: {"eligible": c["eligible"], "reason": c["reason"],
-                     **{k: c["features"][k] for k in ("k_valid", "agreement", "entropy_nats", "entropy_norm",
-                                                      "n_clusters", "grounded") if k in c["features"]}}
+                     **{k: c["features"][k] for k in ("k_valid", "status_counts", "agreement", "entropy_nats",
+                                                      "entropy_norm", "n_clusters", "grounded") if k in c["features"]}}
                  for n, c in candidates.items()}
     return {"contract_version": CONTRACT_VERSION, "candidates": candidates,
             "diagnostics": {"n_samples": k_actual, "expected_k": expected_k, "method": UQ_V2_METHOD,

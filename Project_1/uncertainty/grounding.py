@@ -30,9 +30,15 @@ _WS = re.compile(r"\s+")
 _NUMERIC_TEXT = re.compile(r"[\d\s.,+\-$€£%()]+")
 
 
+# Typographic variants of the same character. Only the glyph is unified; words, numbers and punctuation stay exact.
+# Curly quotes occur in CUAD texts next to straight ones; a model may print either form.
+_TYPO = str.maketrans({"‘": "'", "’": "'", "‚": "'", "“": '"', "”": '"', "„": '"',
+                       "–": "-", "—": "-", "−": "-", " ": " ", " ": " ", " ": " "})
+
+
 def normalise(s: str) -> str:
-    """Casefold and collapse whitespace. Keeps commas, points and currency symbols."""
-    return _WS.sub(" ", str(s)).strip().casefold()
+    """Unify typographic glyphs, casefold and collapse whitespace. Keeps commas, points and currency symbols."""
+    return _WS.sub(" ", str(s).translate(_TYPO)).strip().casefold()
 
 
 def _types(field_schema: dict) -> set[str]:

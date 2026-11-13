@@ -61,5 +61,9 @@ def make_prediction(aggregation: dict, schema: dict, *, method: str, calibration
         score = score_for(method, cand["features"])
         if not math.isfinite(score) or not 0.0 <= score <= 1.0:
             raise ContractError(f"score for {name!r} outside [0, 1]: {score!r}")
+        if score <= 0.0:
+            # A value with score 0 carries no confidence. At threshold 0 the scorer would accept it, so abstain instead.
+            out[name] = {"value": None, "confidence": 0.0}
+            continue
         out[name] = {"value": cand["value"], "confidence": float(score)}
     return out

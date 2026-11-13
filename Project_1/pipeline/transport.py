@@ -107,7 +107,9 @@ def parse_reply(reply: object) -> dict:
             lines = lines[:-1]
         s = "\n".join(lines).strip()
     try:
-        obj = json.loads(s)
+        # strict=False: long quoted passages often contain literal line breaks or tabs, which strict JSON rejects.
+        # Such characters are accepted only inside string values; invalid structure is still a visible error.
+        obj = json.loads(s, strict=False)
     except ValueError:
         raise ParseError("reply is not valid JSON") from None
     if not isinstance(obj, dict):
