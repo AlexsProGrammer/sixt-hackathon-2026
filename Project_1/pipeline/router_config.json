@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "tau_q": 0.74,
+  "w_clipped": 0.0,
+  "w_odd": 2.0,
+  "damaged_families": [
+    "Schedule K-1 (Form 1065) Partner's Share of I",
+    "Schedule K-1 (Form 1120S) Shareholder's Share"
+  ],
+  "tuned_on": {
+    "file": "fit.jsonl",
+    "n_docs": 42,
+    "n_low_hit": 19,
+    "recall_low_hit_score_only": 0.2632,
+    "recall_low_hit_with_families": 0.9474,
+    "false_flag_rate_score_only": 0.1304,
+    "low_hit_threshold": 0.5
+  }
+}

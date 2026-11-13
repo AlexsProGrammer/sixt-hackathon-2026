@@ -95,13 +95,10 @@ def provisional_route(rec: dict, text: str | None, quality: float) -> str:
 
 
 def route_of(rec: dict, text: str | None, quality: float) -> str:
-    """Route from T05 (`pipeline.router.route`) when it exists, else the provisional name."""
+    """Route from the T05 router, classifying the text layer the caller already holds. Falls back to the
+    provisional name only if the router itself cannot be imported."""
     try:
-        from pipeline.router import route  # type: ignore
+        from pipeline import router
     except ImportError:
         return provisional_route(rec, text, quality)
-    try:
-        r = route(rec)
-        return str(getattr(r, "name", None) or getattr(r, "route", None) or r)
-    except Exception:
-        return provisional_route(rec, text, quality)
+    return router.route(rec, text=text)["route"]

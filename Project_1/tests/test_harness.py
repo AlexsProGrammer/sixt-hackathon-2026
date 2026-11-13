@@ -227,7 +227,7 @@ class FieldTableTest(unittest.TestCase):
         run = self.make_run()
         rows = field_table.build_field_table(run, text_fn=lambda r: None)
         self.assertFalse(any(r["grounded_text"] for r in rows))
-        self.assertTrue(all(r["route"] == "no_text" for r in rows))
+        self.assertTrue(all(r["route"] == "pdf_no_text" for r in rows))
 
     def test_diagnostics_and_samples_features(self):
         run = self.make_run()

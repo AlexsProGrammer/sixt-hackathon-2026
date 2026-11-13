@@ -13,7 +13,7 @@ Row schema (FIELDS_CONTRACT_VERSION = 1; later subplans may add keys, never rena
                 n_views, agreement, entropy_norm (diagnostics.jsonl, null when absent)
     evidence    grounded_text (value is a token-bounded span of the text layer), grounded_ocr (null until T08),
                 cross_view_agree (true when >= 2 views agree completely, null for a single view; T09),
-                value_len, text_quality, has_text
+                value_len, text_quality (T05 score, 0 without text), text_source, has_text
     label       gold_present, match, outcome in {correct, wrong, hallucinated, missed, true_null}
 
 Labels come only from 5_score.collect / values_match, so they cannot drift from the official scorer: at
@@ -34,6 +34,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from evaluation import docs, registry  # noqa: E402
+from pipeline import router  # noqa: E402
 from evaluation.partitions import group_of  # noqa: E402
 from uncertainty.grounding import field_kind, is_grounded  # noqa: E402
 
@@ -73,8 +74,8 @@ def doc_rows(rec: dict, preds: dict, scorer, *, diag: dict | None = None, sample
     """Field-table rows of one document. `text` is the document text layer (None = no text)."""
     props = rec.get("schema", {}).get("properties", {})
     family = docs.family_of(rec)
-    quality = docs.text_quality(text)
-    route = docs.route_of(rec, text, quality)
+    routed = router.route(rec, text=text)       # T05: route and text-layer quality of the layer the caller holds
+    quality, route = routed["quality"], routed["route"]
     group = group_of(rec["doc_id"])
     per_field = (diag or {}).get("per_field") or {}
     rows = []
@@ -98,7 +99,7 @@ def doc_rows(rec: dict, preds: dict, scorer, *, diag: dict | None = None, sample
             "grounded_ocr": None,
             "cross_view_agree": (bool(agreement == 1.0) if (n_views or 0) >= 2 and agreement is not None else None),
             "value_len": len(value if isinstance(value, str) else json.dumps(value, ensure_ascii=False)) if pred_present else 0,
-            "text_quality": quality, "has_text": text is not None,
+            "text_quality": quality, "text_source": routed["text_source"], "has_text": text is not None,
             "gold_present": bool(r["gold_present"]), "match": bool(r["match"]),
             "outcome": outcome_of(pred_present, bool(r["gold_present"]), bool(r["match"])),
         })

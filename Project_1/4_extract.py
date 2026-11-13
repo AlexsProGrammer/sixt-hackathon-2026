@@ -30,6 +30,7 @@ from functools import partial
 from pathlib import Path
 from urllib.parse import urlparse
 
+from pipeline import router
 from pipeline.merge import merge_sample_v2
 from pipeline.requests import PROMPT_VERSION, build_jobs, build_prompt
 from pipeline.transport import ReplyCache, RunState, execute_job
@@ -98,53 +99,23 @@ def probly_version() -> str:
 # ---------------------------------------------------------------- documents
 
 def page_path(stored: str) -> Path:
-    """Map a record's page path to a local file. Records store Windows separators; normalise them
-    so one record resolves the same way on Windows, Linux and macOS."""
-    parts = [p for p in stored.replace("\\", "/").split("/") if p and p != "."]
-    if not parts or ".." in parts:
-        raise ValueError(f"unsafe page path in record: {stored!r}")
-    path = DATA.joinpath(*parts)
-    if not path.is_file():
-        raise FileNotFoundError(f"document not found: data/{'/'.join(parts)}")
-    return path
+    """Map a record's page path to a local file (implementation: pipeline.router). Uses this module's DATA."""
+    return router.page_path(stored, DATA)
 
 
 def pdf_text(path: Path) -> str | None:
-    """Text of all pages (pdftotext reads the whole file; pypdf fallback reads every page)."""
-    if shutil.which("pdftotext"):
-        r = subprocess.run(["pdftotext", "-layout", str(path), "-"], capture_output=True, text=True)
-        if r.returncode == 0 and r.stdout.strip():
-            return r.stdout
-    try:
-        from pypdf import PdfReader
-        text = "\n".join(p.extract_text() or "" for p in PdfReader(str(path)).pages)
-        return text if text.strip() else None
-    except ImportError:
-        return None
-    except Exception:  # broken or image-only PDF: treated as "no text layer" -> unreadable, not a crash
-        return None
-
-
-_cuad: dict | None = None
+    """Text of all pages (pdftotext, pypdf fallback). Implementation: pipeline.router."""
+    return router.pdf_text(path)
 
 
 def load_cuad() -> dict:
     """CUAD texts, loaded once. Call before any worker pool starts."""
-    global _cuad
-    if _cuad is None:
-        raw = json.loads((DATA / "raw/cuad/CUADv1.json").read_text(encoding="utf-8"))["data"]
-        _cuad = {d["title"]: "\n".join(p["context"] for p in d["paragraphs"]) for d in raw}
-    return _cuad
+    return router.load_cuad(DATA)
 
 
 def full_text(rec: dict) -> str | None:
     """Complete document text, never truncated. None means no text layer (scan or unreadable PDF)."""
-    if rec["source_dataset"] == "cuad":
-        return load_cuad()[rec["doc_id"].split(":", 1)[1]]
-    page = page_path(rec["pages"][0])
-    if page.suffix.lower() != ".pdf":
-        return None
-    return pdf_text(page)
+    return router.full_text(rec, DATA)
 
 
 def null_fields(schema: dict) -> dict:
@@ -219,12 +190,16 @@ def extract_llm(rec: dict, ctx: Ctx) -> dict:
 
     schema = rec["schema"]
     text = full_text(rec)
+    routed = router.route(rec, DATA, text=text)
+    route_info = {"route": routed["route"], "text_source": routed["text_source"], "quality": routed["quality"],
+                  "quality_features": routed["quality_features"]}
     if text is None or not text.strip():
         per_field = {n: {"eligible": False, "reason": "unreadable", "agreement": None, "entropy_nats": None,
                          "n_clusters": 0, "grounded": False} for n in schema.get("properties", {})}
         return {"fields": null_fields(schema),
                 "diagnostics": {"n_samples": 0, "expected_k": ctx.pipeline["samples"], "complete": False,
-                                "method": "unreadable_document", "uq_called": False, "per_field": per_field},
+                                "method": "unreadable_document", "uq_called": False, "per_field": per_field,
+                                **route_info},
                 "job_failures": [], "samples": []}
     p = ctx.pipeline
     jobs = build_jobs(text, schema, chunk_chars=p["chunk_chars"], overlap_chars=p["overlap_chars"],
@@ -236,7 +211,8 @@ def extract_llm(rec: dict, ctx: Ctx) -> dict:
     failures = sorted({r["error"] for r in results if not r["ok"]})
     diag = dict(agg["diagnostics"])
     diag.update({"complete": all(s["complete"] for s in samples), "uq_method": p["uq_method"],
-                 "uq_called": True, "probly_version": probly_version(), "job_failures": failures})
+                 "uq_called": True, "probly_version": probly_version(), "job_failures": failures,
+                 **route_info})
     return {"fields": fields, "diagnostics": diag, "job_failures": failures, "samples": samples}
 
 
@@ -271,7 +247,7 @@ def sha256_obj(obj: object) -> str:
     return sha256_bytes(json.dumps(obj, sort_keys=True, ensure_ascii=False).encode("utf-8"))
 
 
-CODE_FILES = ("4_extract.py", "pipeline/requests.py", "pipeline/transport.py", "pipeline/merge.py",
+CODE_FILES = ("4_extract.py", "pipeline/router.py", "pipeline/requests.py", "pipeline/transport.py", "pipeline/merge.py",
               "uncertainty/contracts.py", "uncertainty/grounding.py", "uncertainty/policy.py",
               "uncertainty/schema_check.py",
               "uncertainty/uq_probly.py", "uncertainty/decision.py")
