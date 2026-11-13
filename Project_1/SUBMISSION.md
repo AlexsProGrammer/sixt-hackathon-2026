@@ -2,7 +2,7 @@
 
 ## Authors
 
-**Team name:** not provided in this workspace (fill in)
+**Team name:** A-Team
 
 **Project:** Project 1: Teach a machine to say "I don't know" (structured extraction with abstention)
 
@@ -66,11 +66,13 @@ All percentages are net saving as a share of all fields in the scored split, fro
 
 ### B. Method comparison on the large runs
 
-These runs cover a part of each split (document counts below). The scorer was run against the whole split, and a document without a prediction counts as abstained. The percentages are therefore diluted: on the processed documents alone, the losses per field are larger. Counts (accepted, wrong) are not affected. The manifests of these runs are not in the repository, except for the 10-document run (K=1, `k1_grounded`, prompt v2).
+These runs cover a part of each split (document counts below). The scorer was run against the whole split, and a document without a prediction counts as abstained. The percentages are therefore diluted: on the processed documents alone, the losses per field are larger. Counts (accepted, wrong) are not affected.
+
+**Not backed by manifests.** Only the 10-document run has a stored manifest (K=1, `k1_grounded`, prompt v2, `gemini-3.7-flash`). For the other large score files (`llm_dev_score.json`, `probly_dev_score.json`, `llm_test_public_score.json`, `probly_test_public_score.json`) the repository holds no manifest and no prediction file. The run labels below ("LLM, model confidence only", "probly pipeline") and the "documents processed" counts are **derived from the file names** of the score files and of the plots in `results/plots/` (for example `probly_dev___78_docs`). They are not verified. The model, K, decision rule and prompt version of these runs are not documented, so we state none. The counts in the other columns come directly from the scorer output.
 
 **dev (540 documents, 22,115 fields)**
 
-| Run | Documents processed | Threshold | Accepted | Correct | Wrong | Halluc. | Precision | Coverage | Net (E=100) | E=20 | E=500 |
+| Run (label from file name) | Documents processed (from file name) | Threshold | Accepted | Correct | Wrong | Halluc. | Precision | Coverage | Net (E=100) | E=20 | E=500 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | `never` | all | any | 0 | 0 | 0 | 0 | n/a | 0.0% | **0.0%** | 0.0% | 0.0% |
 | LLM, model confidence only | 307 | 0.95 | 1,220 | 1,055 | 159 | 6 | 86.5% | 13.0% | −69.1% | −9.4% | −367.5% |
@@ -83,7 +85,7 @@ These runs cover a part of each split (document counts below). The scorer was ru
 
 **test_public (176 documents, 6,962 fields). Scored for reporting only. No prompt, method or threshold was derived from it.**
 
-| Run | Documents processed | Threshold | Accepted | Correct | Wrong | Halluc. | Precision | Coverage | Net (E=100) | E=20 | E=500 |
+| Run (label from file name) | Documents processed (from file name) | Threshold | Accepted | Correct | Wrong | Halluc. | Precision | Coverage | Net (E=100) | E=20 | E=500 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | `never` | all | any | 0 | 0 | 0 | 0 | n/a | 0.0% | **0.0%** | 0.0% | 0.0% |
 | `common` | all | 0.95 | 319 | 192 | 125 | 2 | 60.2% | 11.1% | −177.8% | −31.9% | −907.5% |
@@ -140,7 +142,7 @@ With 0 errors among n accepted fields, the 95% Wilson upper bound of the error r
 | probly `k_agreement_conf`, dev_audit (7 documents) | 75.0% | −12.3% | −73.8% | −381.5% |
 | `common`, test_public (threshold 0.95) | 60.2% | −31.9% | −177.8% | −907.5% |
 
-At error cost 20 the probly pipeline is slightly positive on dev (+0.2%) but not on test_public. At 100 and 500 every active variant is negative. All-abstain is the only variant that is never negative, at any error cost.
+At error cost 20 the probly pipeline is slightly positive on dev (+0.2%) but not on test_public. At 100 and 500 every active variant is negative. All-abstain saves nothing and produces no automated errors, at any error cost.
 
 ### F. Why coverage is low
 
@@ -178,6 +180,8 @@ Two causes, both fixed: the prompt (v2) did not send the `$defs`, so the model n
 | dev_select, K=3 | `gemini-3.8-flash` | 7 | 60 | 0 | 0 | no | 1,679 s |
 | dev_audit, K=3 | `gemini-3.8-flash` | 7 | 57 | 0 | 0 | no | 1,455 s |
 | 10 dev documents, K=1 | `gemini-3.7-flash` | 10 | 48 | not recorded | 0 | no | 303 s |
+
+The manifests and result files of the dev_select and dev_audit runs (`results/uq_v2_*_run.manifest.json`, `uq_v2_audit_result.json`, `uq_v2_frozen*.json`) were removed from the repository in commit `63fa8aa`. The numbers in this table and in section C were read from them before the removal. They can be checked with `git show 63fa8aa^:Project_1/results/<file>`. The ablation reports in `results/uq_v2_*_ablation/` and `results/post_schema_v3/` are still in the repository.
 
 The dev_cal subset run is the measurement stored in `submission/decision.json`: 2 accepted fields, 1 wrong, net −49.2% at threshold 0.95 (E=20: −9.0%; E=500: −250.3%). It is a functional test, not a representative measurement.
 
@@ -218,7 +222,7 @@ bash run_hidden.sh <input.jsonl> <output.jsonl>
 
 `run_hidden.sh` picks `.venv/bin/python`, `.venv/Scripts/python.exe` or `python3` and runs
 `4_extract.py --data "$1" --out "$2" --mode llm --on-error abstain --decision submission/decision.json`.
-The exit code of the extractor is passed on (0 on success, 2 for wrong arguments, 1 for any error). **The output path must not exist yet**: the extractor refuses to overwrite a file.
+The exit code of the extractor is passed on (0 on success, 2 for wrong arguments, 1 for any error). An output file that already exists is removed first, together with its side files (`<out>.diagnostics.jsonl`, `<out>.manifest.json`, `<out>.samples.jsonl`). So the script can be called twice, or with a pre-created output file, and an old output is never reused. Called directly, `4_extract.py` still refuses to overwrite a file.
 
 Check a prediction file without gold:
 
@@ -253,11 +257,11 @@ In an active run the text of each document part and the field prompts are sent t
 
 ## Limits
 
-- **The submitted system saves nothing.** It is exactly as good as full human review (0.0%). It only avoids losing money.
+- **The submitted system saves nothing.** It is exactly as good as full human review (0.0%): it saves nothing and produces no automated errors.
 - **Coverage of the active pipeline is low** (1.4% on dev, 7.2% on test_public at 0.99) and zero for CUAD.
 - **No active variant reaches 99% precision.** The best is 97.0% (132 accepted, 4 errors).
 - **Prompt v4 and the five last fixes are not measured on the API.**
-- **The large runs cover only a part of the splits** (78 and 307 of 540 dev documents; 40 and 75 of 176 test_public documents). Their percentages are diluted by the unprocessed documents, and their manifests are not in the repository. The plain LLM run and the probly run cover different documents, so their rows are not a paired comparison.
+- **The large runs cover only a part of the splits** (by file name: 78 and 307 of 540 dev documents; 40 and 75 of 176 test_public documents). Their percentages are diluted by the unprocessed documents. **Their manifests and prediction files are not in the repository: run labels and document counts are derived from file names only, and model, K, decision rule and prompt version are undocumented.** The plain LLM run and the probly run cover different documents, so their rows are not a paired comparison.
 - **Two model versions** (`gemini-3.7-flash`, `gemini-3.8-flash`) were used in different runs and never compared on the same documents.
 - The select and audit sets are tiny (7 documents each) and prefer short documents.
 - The confidence is an uncalibrated score. `make_prediction(..., method="calibrated")` raises an error: no calibrator is implemented.
