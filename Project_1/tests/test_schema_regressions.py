@@ -131,7 +131,8 @@ class PromptTests(unittest.TestCase):
         self.assertIn("not \"$241.81\"", p)
 
     def test_prompt_version_changed(self):
-        self.assertEqual(PROMPT_VERSION, "v3")
+        # v3 added the full $defs; v4 (booleans as JSON, " | " spans) keeps them. Details: test_final_regressions.py
+        self.assertEqual(PROMPT_VERSION, "v4")
 
 
 if __name__ == "__main__":

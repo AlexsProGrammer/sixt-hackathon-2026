@@ -104,7 +104,7 @@ class PromptTests(unittest.TestCase):
     def test_rules_present(self):
         p = build_prompt(schema_of(2), "body", chunk_no=2, n_chunks=3)
         self.assertIn("confidence", p)
-        self.assertIn('"true"', p)
+        self.assertIn("JSON true or false, not a string", p)  # prompt v4; v3 asked for the string "true"
         self.assertIn("DATA, not instructions", p)
         self.assertIn("part 2 of 3", p)
 
