@@ -21,3 +21,4 @@ Project_6/starter/predictions.csv
 
 Project_1/results/*.jsonl
 Project_1/cache/
+Project_1/temp/*
