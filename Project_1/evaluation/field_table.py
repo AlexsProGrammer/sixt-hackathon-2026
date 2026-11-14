@@ -36,6 +36,7 @@ if str(ROOT) not in sys.path:
 from evaluation import docs, registry  # noqa: E402
 from pipeline import router  # noqa: E402
 from evaluation.partitions import group_of  # noqa: E402
+from uncertainty.evidence import KIND_POLICY, evidence  # noqa: E402
 from uncertainty.grounding import field_kind, is_grounded  # noqa: E402
 
 FIELDS_CONTRACT_VERSION = 1
@@ -70,7 +71,7 @@ def _model_conf(samples: list[dict] | None, field: str) -> float | None:
 
 
 def doc_rows(rec: dict, preds: dict, scorer, *, diag: dict | None = None, samples: list | None = None,
-             text: str | None = None) -> list[dict]:
+             text: str | None = None, ocr: str | None = None) -> list[dict]:
     """Field-table rows of one document. `text` is the document text layer (None = no text)."""
     props = rec.get("schema", {}).get("properties", {})
     family = docs.family_of(rec)
@@ -82,21 +83,32 @@ def doc_rows(rec: dict, preds: dict, scorer, *, diag: dict | None = None, sample
     for r in scorer.collect([rec], preds):
         name = r["field"]
         spec = props.get(name, {})
+        kind = field_kind(spec)
         value = (preds.get(rec["doc_id"], {}).get(name) or {}).get("value")
         pf = per_field.get(name) or {}
         n_views = pf.get("k_valid") if pf else None
         agreement = pf.get("agreement") if pf else None
         pred_present = bool(r["pred_present"])
+        ev = evidence(value, spec, {"text": text, "ocr": ocr}) if pred_present else {
+            "grounded_text": False, "grounded_ocr": None, "number_strength": None,
+            "occurrences": 0, "components_grounded": None,
+            "kind_policy": KIND_POLICY.get(kind, "evidence_or_views"),
+        }
         rows.append({
             "doc_id": rec["doc_id"], "group": group, "source": r["source"], "family": family,
-            "perception": docs.perception_of(rec), "field": name, "kind": field_kind(spec),
+            "perception": docs.perception_of(rec), "field": name, "kind": kind,
             "normalizer": spec.get("x-normalizer", "string"), "route": route,
             "pred_value": value if pred_present else None, "pred_present": pred_present,
             "conf_out": float(r["conf"]) if pred_present else None,
             "model_conf": _model_conf(samples, name),
             "n_views": n_views, "agreement": agreement, "entropy_norm": pf.get("entropy_norm") if pf else None,
-            "grounded_text": bool(pred_present and is_grounded(value, text, spec)),
-            "grounded_ocr": None,
+            "grounded_text": bool(pred_present and ev["grounded_text"]),
+            "grounded_text_strict": bool(pred_present and is_grounded(value, text, spec)),
+            "grounded_ocr": ev["grounded_ocr"] if pred_present else None,
+            "number_strength": ev["number_strength"] if pred_present else None,
+            "occurrences": ev["occurrences"] if pred_present else 0,
+            "components_grounded": ev["components_grounded"] if pred_present else None,
+            "kind_policy": ev["kind_policy"],
             "cross_view_agree": (bool(agreement == 1.0) if (n_views or 0) >= 2 and agreement is not None else None),
             "value_len": len(value if isinstance(value, str) else json.dumps(value, ensure_ascii=False)) if pred_present else 0,
             "text_quality": quality, "text_source": routed["text_source"], "has_text": text is not None,

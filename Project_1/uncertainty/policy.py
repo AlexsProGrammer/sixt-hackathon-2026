@@ -16,7 +16,8 @@ from __future__ import annotations
 
 import math
 
-from .grounding import canonical_number, is_grounded
+from .evidence import evidence
+from .grounding import canonical_number, field_kind, is_grounded
 from .schema_check import check_value
 
 
@@ -61,20 +62,32 @@ def apply_policy(answer: dict, schema: dict, text: str | None) -> dict:
 
 # ---------------------------------------------------------------- contract version 2
 
-def classify_field_v2(obs: dict, field_schema: dict, text: str | None, defs: dict | None = None) -> dict:
+def classify_field_v2(
+    obs: dict,
+    field_schema: dict,
+    text: str | None,
+    defs: dict | None = None,
+    *,
+    evidence_mode: str = "strict",
+    sources: dict | None = None,
+) -> dict:
     """Hard exclusions for one V2 field observation (merge_sample_v2 output).
 
-    Returns {"status", "value", "model_confidence", "reason"}. The status is one of:
-    present (grounded, valid confidence), absent (explicit null), unsupported (not grounded in the text),
-    unreadable (no text layer), invalid / missing / error (taken over from the merge).
-    The model confidence is kept separate from these hard exclusions and is never raised.
+    Returns {"status", "value", "model_confidence", "reason"} (plus "evidence" when evidence_mode="features").
+    In "strict" mode (default, legacy), ungrounded values become "unsupported" and missing text becomes "unreadable".
+    In "features" mode (T08), hard rejection stays only for schema-invalid values and json; grounding is returned
+    as the `evidence` feature dict so the selector (T10) decides.
     """
+    if evidence_mode not in ("strict", "features", "evidence"):
+        raise ValueError(f"unknown evidence_mode {evidence_mode!r}")
+    strict = evidence_mode == "strict"
+
     status = obs.get("status") if isinstance(obs, dict) else None
     if status == "absent":
         return {"status": "absent", "value": None, "model_confidence": obs.get("model_confidence"),
                 "reason": obs.get("reason", "")}
     if status == "present":
-        if text is None or not str(text).strip():
+        if strict and (text is None or not str(text).strip()):
             return {"status": "unreadable", "value": None, "model_confidence": None, "reason": "no text layer"}
         value = obs.get("value")
         conf = valid_confidence(obs.get("model_confidence"))
@@ -85,14 +98,24 @@ def classify_field_v2(obs: dict, field_schema: dict, text: str | None, defs: dic
         schema_ok, schema_reason = check_value(value, field_schema, defs)
         if not schema_ok:
             return {"status": "invalid", "value": None, "model_confidence": None, "reason": schema_reason}
-        # 2. textual evidence is checked second; a schema-valid value can still be unsupported
-        if not is_grounded(value, text, field_schema if isinstance(field_schema, dict) else {}):
+        schema = field_schema if isinstance(field_schema, dict) else {}
+        if strict:
+            # 2. textual evidence is checked second; a schema-valid value can still be unsupported
+            if not is_grounded(value, text, schema):
+                return {"status": "unsupported", "value": None, "model_confidence": None,
+                        "reason": "value not grounded in the document text"}
+            # 3. a whole number is written in the JSON form the document prints (45442 vs 7689.0): the scorer compares
+            #    str(value), so 45442.0 for a printed "45,442" would be an accepted wrong value
+            value = canonical_number(value, text, schema)
+            return {"status": "present", "value": value, "model_confidence": conf, "reason": ""}
+
+        if field_kind(schema) == "json":
             return {"status": "unsupported", "value": None, "model_confidence": None,
-                    "reason": "value not grounded in the document text"}
-        # 3. a whole number is written in the JSON form the document prints (45442 vs 7689.0): the scorer compares
-        #    str(value), so 45442.0 for a printed "45,442" would be an accepted wrong value
-        value = canonical_number(value, text, field_schema if isinstance(field_schema, dict) else {})
-        return {"status": "present", "value": value, "model_confidence": conf, "reason": ""}
+                    "reason": "json fields are never booked"}
+        src = sources if isinstance(sources, dict) else {"text": text, "ocr": None}
+        ev = evidence(value, schema, src)
+        value = canonical_number(value, src.get("text") if text is None else text, schema)
+        return {"status": "present", "value": value, "model_confidence": conf, "reason": "", "evidence": ev}
     if status in ("invalid", "missing", "error", "unsupported", "unreadable"):
         return {"status": status, "value": None, "model_confidence": None, "reason": str(obs.get("reason", ""))}
     return {"status": "invalid", "value": None, "model_confidence": None, "reason": "unknown status"}

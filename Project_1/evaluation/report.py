@@ -36,7 +36,7 @@ from evaluation import registry  # noqa: E402
 from evaluation.field_table import load_field_table, outcome_counts  # noqa: E402
 
 ERROR_COSTS = (20, 100, 500)
-EVIDENCE = ("none", "grounded_text", "grounded", "cross_view")
+EVIDENCE = ("none", "grounded_text", "grounded_text_strict", "grounded", "cross_view")
 GRID_MIN_N = (3, 5, 10, 20)
 GRID_MIN_GROUPS = (1, 3)
 GRID_EVIDENCE = ("grounded_text", "none")
@@ -84,6 +84,8 @@ def passes_evidence(r: dict, evidence: str) -> bool:
         return True
     if evidence == "grounded_text":
         return bool(r.get("grounded_text"))
+    if evidence == "grounded_text_strict":
+        return bool(r["grounded_text_strict"] if "grounded_text_strict" in r else r.get("grounded_text"))
     if evidence == "grounded":
         return bool(r.get("grounded_text") or r.get("grounded_ocr"))
     if evidence == "cross_view":
@@ -91,12 +93,12 @@ def passes_evidence(r: dict, evidence: str) -> bool:
     raise ValueError(f"unknown evidence requirement {evidence!r}; allowed: {', '.join(EVIDENCE)}")
 
 
-def cell_of(r: dict) -> tuple:
-    return tuple(r[k] for k in CELL)
+def cell_of(r: dict, cell_keys: tuple[str, ...] = CELL) -> tuple:
+    return tuple(r.get(k) for k in cell_keys)
 
 
 def logo_decisions(rows: list[dict], *, min_n: int = 3, min_groups: int = 1, evidence: str = "grounded_text",
-                   conf: float = 0.0) -> list[tuple[dict, str]]:
+                   conf: float = 0.0, cell_keys: tuple[str, ...] = CELL) -> list[tuple[dict, str]]:
     """(row, reason) for every row. reason == "booked" means the whitelist books the prediction.
 
     Own-group exclusion: the cell statistics are computed once over all candidates and the row's own group
@@ -109,7 +111,7 @@ def logo_decisions(rows: list[dict], *, min_n: int = 3, min_groups: int = 1, evi
     grp_n: Counter = Counter()
     grp_err: Counter = Counter()
     for r in cand:
-        k, g = cell_of(r), r["group"]
+        k, g = cell_of(r, cell_keys), r["group"]
         cell_n[k] += 1
         grp_n[(k, g)] += 1
         if not r["match"]:
@@ -124,7 +126,7 @@ def logo_decisions(rows: list[dict], *, min_n: int = 3, min_groups: int = 1, evi
             ok_evidence = passes_evidence(r, evidence)
             out.append((r, "no_evidence" if not ok_evidence else "below_confidence"))
         else:
-            k, g = cell_of(r), r["group"]
+            k, g = cell_of(r, cell_keys), r["group"]
             n_other = cell_n[k] - grp_n[(k, g)]
             err_other = cell_err[k] - grp_err[(k, g)]
             groups_other = cell_groups[k] - 1
@@ -189,9 +191,12 @@ def conf_bucket(r: dict) -> str:
 
 
 def build_report(rows: list[dict], *, min_n: int = 3, min_groups: int = 1, evidence: str = "grounded_text",
-                 conf: float = 0.0) -> dict:
+                 conf: float = 0.0, cell_keys: tuple[str, ...] = CELL) -> dict:
     n_fields = len(rows)
-    params = {"min_n": min_n, "min_groups": min_groups, "evidence": evidence, "conf": conf}
+    params: dict = {"min_n": min_n, "min_groups": min_groups, "evidence": evidence, "conf": conf}
+    if tuple(cell_keys) != CELL:
+        params["cell_keys"] = tuple(cell_keys)
+    grid_extra = {"cell_keys": tuple(cell_keys)} if tuple(cell_keys) != CELL else {}
     return {
         "n_docs": len({r["doc_id"] for r in rows}), "n_groups": len({r["group"] for r in rows}), "n_fields": n_fields,
         "outcomes": outcome_counts(rows),
@@ -203,7 +208,7 @@ def build_report(rows: list[dict], *, min_n: int = 3, min_groups: int = 1, evide
         "by_route": group_table(rows, lambda r: r["route"]),
         "whitelist_params": params,
         "whitelist": simulate(rows, n_fields, **params),
-        "whitelist_grid": [simulate(rows, n_fields, min_n=m, min_groups=g, evidence=e)
+        "whitelist_grid": [simulate(rows, n_fields, min_n=m, min_groups=g, evidence=e, **grid_extra)
                            for e in GRID_EVIDENCE for g in GRID_MIN_GROUPS for m in GRID_MIN_N],
         "missed_savings": missed_savings(rows, **params),
     }
@@ -425,6 +430,7 @@ def main(argv=None) -> int:
     ap.add_argument("--min-groups", type=int, default=1)
     ap.add_argument("--evidence", choices=EVIDENCE, default="grounded_text")
     ap.add_argument("--conf", type=float, default=0.0, help="confidence floor of the candidates")
+    ap.add_argument("--cell-keys", nargs="+", default=list(CELL), help="columns forming the LOGO cell key")
     ap.add_argument("--legacy-families", action="store_true",
                     help="treat untitled documents as one family '?' (reproduces analyse_fields.py: 378 booked at min_n=3)")
     ap.add_argument("--no-write", action="store_true", help="print only, do not write report.md/json")
@@ -447,6 +453,8 @@ def main(argv=None) -> int:
     if a.legacy_families:
         rows = legacy_families(rows)
     params = {"min_n": a.min_n, "min_groups": a.min_groups, "evidence": a.evidence, "conf": a.conf}
+    if tuple(a.cell_keys) != CELL:
+        params["cell_keys"] = tuple(a.cell_keys)
     rep = build_report(rows, **params)
     if not a.no_write:
         write_report(run_dir, rows, **params)
