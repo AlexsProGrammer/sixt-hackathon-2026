@@ -74,6 +74,8 @@ class RunState:
         self.waited = 0.0
         self.requests = 0
         self.cache_hits = 0
+        self.requests_by_model: dict[str, int] = {}
+        self.cache_hits_by_model: dict[str, int] = {}
         self.warnings: list[str] = []
         self._next_request_at = 0.0
 
@@ -91,6 +93,14 @@ class RunState:
     def bump(self, name: str, n: int = 1) -> None:
         with self._lock:
             setattr(self, name, getattr(self, name) + n)
+
+    def bump_model(self, kind: str, model: str | None, n: int = 1) -> None:
+        if not model:
+            return
+        attr = "requests_by_model" if kind == "requests" else "cache_hits_by_model"
+        with self._lock:
+            counts = getattr(self, attr)
+            counts[model] = counts.get(model, 0) + n
 
     def warn(self, message: str) -> None:
         with self._lock:
@@ -234,6 +244,7 @@ def call_with_retry(cfg: dict, messages: list[dict], temperature: float, state: 
             raise TransportError("stopped", "run stopped after rate limit; request not sent")
         state.pace(sleep=sleep)
         state.bump("requests")
+        state.bump_model("requests", model or cfg.get("LLM_MODEL"))
         try:
             return post_chat(cfg, messages, temperature, **extra)
         except TransportError as e:
@@ -397,6 +408,7 @@ def execute_job(job: dict, *, cfg: dict, cache: ReplyCache, state: RunState, tem
         entry = cache.get(key, model, prompt_version)
         if entry is not None:
             state.bump("cache_hits")
+            state.bump_model("cache_hits", model)
             answer = entry["answer"]
         else:
             _LAST.usage = None

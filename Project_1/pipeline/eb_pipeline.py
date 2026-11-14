@@ -352,7 +352,15 @@ def extract_document(rec: dict, routed: dict, ctx, *, data_dir: Path | None = No
         agg = aggregate_single_view(views[0], schema, routed.get("text"), route=routed["route"])
         method = eb.get("uq_method") or "k1_grounded"
         uq_called = False
-    fields = make_prediction(agg, schema, method=method)
+    if method == "selector":
+        from evaluation.docs import family_of
+        fields = make_prediction(
+            agg, schema, method="selector",
+            selector=getattr(ctx, "selector", None),
+            record_meta={"source": rec.get("source_dataset"), "family": family_of(rec)},
+        )
+    else:
+        fields = make_prediction(agg, schema, method=method)
     failures = sorted({e for v in views for e in v["errors"]})
     diag = dict(agg["diagnostics"])
     diag.update({"complete": all(v["complete"] for v in views), "uq_method": method, "uq_called": uq_called,

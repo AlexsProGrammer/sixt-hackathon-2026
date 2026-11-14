@@ -24,4 +24,20 @@ fi
 OUT_BASE="${2%.*}"
 case "$(basename -- "$2")" in *.*) ;; *) OUT_BASE="$2" ;; esac
 rm -f -- "$2" "$OUT_BASE.diagnostics.jsonl" "$OUT_BASE.manifest.json" "$OUT_BASE.samples.jsonl"
+"$PY" -c '
+import json, os, sys
+from pathlib import Path
+from pipeline.extractor import load_env, llm_config
+if os.environ.get("EXTRACT_SKIP_DOTENV") != "1":
+    load_env()
+dec_path = Path("submission/decision.json")
+if dec_path.exists():
+    dec = json.loads(dec_path.read_text(encoding="utf-8"))
+    if dec.get("abstain_all") is False:
+        try:
+            llm_config()
+        except RuntimeError as e:
+            print(f"ERROR: {e}", file=sys.stderr)
+            sys.exit(1)
+'
 "$PY" 4_extract.py --data "$1" --out "$2" --mode llm --on-error abstain --decision submission/decision.json
