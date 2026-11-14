@@ -1,0 +1,8 @@
+# Optional dashboard dependencies (Project 1 CLI and run_hidden.sh never depend on these).
+# Install into the project virtualenv:
+#   .venv/bin/pip install -r requirements-dashboard.txt
+# Start the dashboard from Project_1/:
+#   .venv/bin/streamlit run dashboard/app.py --server.address 127.0.0.1
+streamlit==1.67.0
+pandas==3.1.1
+altair==6.3.0
