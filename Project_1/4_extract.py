@@ -78,14 +78,26 @@ def load_env(path: Path = HERE / ".env") -> list[str]:
 
 
 def llm_config() -> dict:
-    """The three LLM settings. Raises RuntimeError naming the missing variables, never their values."""
-    cfg = {k: os.environ.get(k, "").strip() for k in LLM_VARS}
+    """The default LLM settings plus optional per-role (A, B, C, OCR) URL/key overrides.
+    Raises RuntimeError naming the missing variables, never their values."""
+    cfg = {k: (os.environ.get(k, "").strip() or os.environ.get(f"{k}_DEFAULT", "").strip()) for k in LLM_VARS}
     missing = [k for k, v in cfg.items() if not v]
     if missing:
         raise RuntimeError("LLM config missing: " + ", ".join(missing)
                            + " (set in the environment or in Project_1/.env)")
     if not cfg["LLM_BASE_URL"].lower().startswith(("https://", "http://")):
         raise RuntimeError("LLM_BASE_URL has no http:// or https:// scheme (fix the value in Project_1/.env)")
+    endpoints = {}
+    for role in ("A", "B", "C", "OCR"):
+        m = os.environ.get(f"LLM_MODEL_{role}", "").strip()
+        u = os.environ.get(f"LLM_BASE_URL_{role}", "").strip()
+        k = os.environ.get(f"LLM_API_KEY_{role}", "").strip()
+        if u and not u.lower().startswith(("https://", "http://")):
+            raise RuntimeError(f"LLM_BASE_URL_{role} has no http:// or https:// scheme (fix the value in Project_1/.env)")
+        if m and (u or k):
+            endpoints[m] = {"LLM_BASE_URL": u or cfg["LLM_BASE_URL"], "LLM_API_KEY": k or cfg["LLM_API_KEY"]}
+    if endpoints:
+        cfg["endpoints"] = endpoints
     return cfg
 
 
@@ -447,7 +459,9 @@ def main(argv=None) -> int:
         base = dec["pipeline"]
         pipeline_values = {k: base.get(k, DEFAULTS[k]) for k in DEFAULTS}
     else:
-        pipeline_values = {k: (cli_pipeline[k] if cli_pipeline[k] is not None else DEFAULTS[k]) for k in DEFAULTS}
+        env_chunk = os.environ.get("LLM_CHUNK_CHARS", "").strip()
+        defaults = {**DEFAULTS, "chunk_chars": int(env_chunk)} if env_chunk else DEFAULTS
+        pipeline_values = {k: (cli_pipeline[k] if cli_pipeline[k] is not None else defaults[k]) for k in DEFAULTS}
 
     cfg = None
     if mode in ("llm", "auto"):

@@ -78,6 +78,15 @@ class TestCuadPipeline(unittest.TestCase):
         self.assertEqual(jobs[0]["start"], 0)
         self.assertEqual(jobs[1]["end"], len(text))
 
+    def test_resolve_cuad_chunk_chars_env_overrides(self):
+        cfg = cuad_pipeline.resolve_cuad(env={"LLM_CHUNK_CHARS": "35000", "LLM_CHUNK_CHARS_A": "20000"})
+        self.assertEqual(cfg["chunk_chars_a"], 20000)
+        self.assertEqual(cfg["chunk_chars_b"], 35000)
+        schema = _make_cuad_schema(["Document Name", "Governing Law"])
+        jobs = cuad_pipeline.plan_jobs("A" * 50_000, schema, GEMINI, max_chars=cfg["chunk_chars_a"])
+        self.assertEqual(len(jobs), 3)
+        self.assertTrue(all(len(j["text"]) <= 20000 for j in jobs))
+
     def test_spans_joined_in_document_order_and_grounded_with_glyph_norm(self):
         text = (
             'MASTER SERVICES AGREEMENT.\n'

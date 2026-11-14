@@ -33,6 +33,8 @@ RETRY_STATUSES = (429, 500, 502, 503, 504)
 
 
 _LAST = threading.local()  # usage block of the last successful post_chat in this thread (best effort metadata)
+_NO_JSON_MODE: set[str] = set()  # models whose endpoint rejected response_format=json_object
+_NO_JSON_LOCK = threading.Lock()
 
 
 class TransportError(Exception):
@@ -149,16 +151,39 @@ def parse_reply(reply: object) -> dict:
     return obj
 
 
+def resolve_endpoint(cfg: dict, model: str | None = None) -> tuple[str, str, str]:
+    """Return (base_url, api_key, model) for `model`, falling back to cfg defaults."""
+    m = model or cfg["LLM_MODEL"]
+    override = (cfg.get("endpoints") or {}).get(m) or {}
+    url = (override.get("LLM_BASE_URL") or cfg["LLM_BASE_URL"]).rstrip("/")
+    key = override.get("LLM_API_KEY") or cfg["LLM_API_KEY"]
+    return url, key, m
+
+
+def _use_json_mode(model: str, json_mode: bool | None) -> bool:
+    if json_mode is False:
+        return False
+    if json_mode is None and os.environ.get("LLM_JSON_MODE", "1").strip().lower() in ("0", "false", "no", "off"):
+        return False
+    with _NO_JSON_LOCK:
+        return model not in _NO_JSON_MODE
+
+
 def post_chat(cfg: dict, messages: list[dict], temperature: float, *, model: str | None = None,
-              timeout: float = TIMEOUT_S) -> str:
+              timeout: float = TIMEOUT_S, json_mode: bool | None = None) -> str:
     """One HTTP request to `model` (default cfg["LLM_MODEL"]). Returns the assistant text.
+    Uses response_format={"type": "json_object"} when enabled (default) and falls back automatically if a model
+    rejects response_format with HTTP 400.
     Raises TransportError with a kind, status and a redacted body excerpt (max 200 chars) only.
     Usage and elapsed seconds of the call are available through last_call_meta() in the same thread."""
-    key = cfg["LLM_API_KEY"]
-    model = model or cfg["LLM_MODEL"]
-    body = json.dumps({"model": model, "temperature": temperature, "messages": messages}).encode("utf-8")
+    url, key, model = resolve_endpoint(cfg, model)
+    use_json = _use_json_mode(model, json_mode)
+    payload_dict: dict = {"model": model, "temperature": temperature, "messages": messages}
+    if use_json:
+        payload_dict["response_format"] = {"type": "json_object"}
+    body = json.dumps(payload_dict).encode("utf-8")
     req = urllib.request.Request(
-        cfg["LLM_BASE_URL"].rstrip("/") + "/chat/completions", body,
+        url + "/chat/completions", body,
         {"Content-Type": "application/json", "Authorization": f"Bearer {key}"})
     t0 = time.monotonic()
     try:
@@ -166,6 +191,10 @@ def post_chat(cfg: dict, messages: list[dict], temperature: float, *, model: str
             raw = r.read()
     except urllib.error.HTTPError as e:
         detail = redact(e.read(300).decode("utf-8", "replace"), [key]).strip()[:200]
+        if e.code == 400 and use_json and any(tok in detail.lower() for tok in ("response_format", "json_object", "json mode")):
+            with _NO_JSON_LOCK:
+                _NO_JSON_MODE.add(model)
+            return post_chat(cfg, messages, temperature, model=model, timeout=timeout, json_mode=False)
         raise TransportError("http", f"HTTP {e.code}" + (f": {detail}" if detail else ""),
                              status=e.code, retryable=e.code in RETRY_STATUSES,
                              retry_after=parse_retry_after(e.headers.get("Retry-After"))) from None
@@ -208,7 +237,7 @@ def call_with_retry(cfg: dict, messages: list[dict], temperature: float, state: 
         try:
             return post_chat(cfg, messages, temperature, **extra)
         except TransportError as e:
-            if e.status == 400:
+            if e.status in (400, 429):
                 state.warn(f"{model or cfg.get('LLM_MODEL')}: {e}"[:260])
             if not e.retryable:
                 raise
@@ -218,7 +247,12 @@ def call_with_retry(cfg: dict, messages: list[dict], temperature: float, state: 
                 raise TransportError("rate_limited", "HTTP 429 after retry; run stopped", status=429) from None
             if attempt >= max_retries:
                 raise
-            wait = e.retry_after if e.retry_after is not None else 2.0 * (2 ** attempt)
+            if e.retry_after is not None:
+                wait = e.retry_after
+            elif e.status == 429:
+                wait = min(60.0, 10.0 * (2 ** attempt))
+            else:
+                wait = 2.0 * (2 ** attempt)
             if e.status == 429 and wait > state.wait_budget:
                 state.stop.set()
                 raise TransportError("rate_limited", f"HTTP 429, Retry-After {wait:.0f}s exceeds budget; run stopped",
@@ -355,8 +389,8 @@ def execute_job(job: dict, *, cfg: dict, cache: ReplyCache, state: RunState, tem
         else:
             messages, input_kind, attachment_sha = built, "text", None
         temp = sample_temperature(job["sample_idx"], temperature, sampling)
-        model = model or cfg["LLM_MODEL"]
-        key = ReplyCache.make_key(endpoint=cfg["LLM_BASE_URL"].rstrip("/"), model=model,
+        endpoint, _, model = resolve_endpoint(cfg, model)
+        key = ReplyCache.make_key(endpoint=endpoint, model=model,
                                   temperature=temp, sample_idx=job["sample_idx"],
                                   prompt_version=prompt_version, messages=key_messages(messages),
                                   input_kind=input_kind, attachment_sha256=attachment_sha)

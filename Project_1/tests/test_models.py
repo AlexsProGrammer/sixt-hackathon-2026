@@ -85,7 +85,7 @@ class RegistryTests(unittest.TestCase):
 
     def test_model_roles(self):
         env = {"LLM_MODEL": "d", "LLM_MODEL_B": "b", "LLM_MODEL_OCR": " "}
-        self.assertEqual(model_roles(env), {"default": "d", "A": "d", "B": "b", "ocr": None})
+        self.assertEqual(model_roles(env), {"default": "d", "A": "d", "B": "b", "C": None, "ocr": None})
         self.assertEqual(model_roles({"LLM_MODEL": "d", "LLM_MODEL_A": "a"})["A"], "a")
 
 
@@ -208,6 +208,49 @@ class TransportTests(unittest.TestCase):
         entry = json.loads(files[0].read_text())
         self.assertEqual(entry["input_kind"], "pdf")
         self.assertNotIn(base64.b64encode(PDF).decode(), files[0].read_text())
+
+    def test_resolve_endpoint_uses_per_model_override_and_falls_back(self):
+        cfg = {
+            "LLM_BASE_URL": "https://default.example/v1",
+            "LLM_API_KEY": "sk-default",
+            "LLM_MODEL": "m-default",
+            "endpoints": {
+                "m-b": {"LLM_BASE_URL": "https://b.example/v1/", "LLM_API_KEY": "sk-b"},
+                "m-c": {"LLM_BASE_URL": "https://default.example/v1", "LLM_API_KEY": "sk-c"},
+            },
+        }
+        self.assertEqual(transport.resolve_endpoint(cfg), ("https://default.example/v1", "sk-default", "m-default"))
+        self.assertEqual(transport.resolve_endpoint(cfg, "m-b"), ("https://b.example/v1", "sk-b", "m-b"))
+        self.assertEqual(transport.resolve_endpoint(cfg, "m-c"), ("https://default.example/v1", "sk-c", "m-c"))
+        self.assertEqual(transport.resolve_endpoint(cfg, "m-other"), ("https://default.example/v1", "sk-default", "m-other"))
+        roles = model_roles({"LLM_MODEL": "m-def", "LLM_MODEL_C": "m-c"})
+        self.assertEqual(roles["C"], "m-c")
+
+    def test_json_mode_and_400_fallback(self):
+        import io, urllib.error
+        transport._NO_JSON_MODE.clear()
+        seen_bodies = []
+
+        def fake_urlopen(req, timeout=300):
+            body = json.loads(req.data)
+            seen_bodies.append(body)
+            if "response_format" in body:
+                raise urllib.error.HTTPError("u", 400, "Bad", {}, io.BytesIO(b'{"error":"response_format not supported"}'))
+            resp = mock.MagicMock()
+            resp.__enter__ = mock.Mock(return_value=resp)
+            resp.__exit__ = mock.Mock(return_value=False)
+            resp.read.return_value = json.dumps({"choices": [{"message": {"content": '{"ok": true}'}}]}).encode()
+            return resp
+
+        with mock.patch.object(transport.urllib.request, "urlopen", side_effect=fake_urlopen):
+            out1 = transport.post_chat(self.cfg, [{"role": "user", "content": "q"}], 0.0, model="gemma-no-json")
+            out2 = transport.post_chat(self.cfg, [{"role": "user", "content": "q"}], 0.0, model="gemma-no-json")
+        self.assertEqual(out1, '{"ok": true}')
+        self.assertEqual(out2, '{"ok": true}')
+        self.assertEqual(len(seen_bodies), 3)  # 1st tried json_object -> 400 -> fallback; 2nd skipped json_object directly
+        self.assertIn("response_format", seen_bodies[0])
+        self.assertNotIn("response_format", seen_bodies[1])
+        self.assertNotIn("response_format", seen_bodies[2])
 
 
 @unittest.skipUnless(shutil.which("pdftoppm"), "pdftoppm not installed")

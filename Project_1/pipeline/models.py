@@ -13,7 +13,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent.parent
 MODELS_PATH = HERE / "models.json"
 INPUT_KINDS = ("pdf_file", "pdf_image_url", "png", "text")  # preference order
-ROLE_VARS = {"A": "LLM_MODEL_A", "B": "LLM_MODEL_B", "ocr": "LLM_MODEL_OCR"}
+ROLE_VARS = {"A": "LLM_MODEL_A", "B": "LLM_MODEL_B", "C": "LLM_MODEL_C", "ocr": "LLM_MODEL_OCR"}
 
 _FALLBACK_DEFAULTS = {
     "family": "unknown",
@@ -93,8 +93,8 @@ def update_supports(updates: dict[str, dict[str, bool]], path: Path | None = Non
 
 
 def model_roles(env: dict | None = None) -> dict[str, str | None]:
-    """Default model plus the optional roles LLM_MODEL_A / LLM_MODEL_B / LLM_MODEL_OCR.
-    A falls back to LLM_MODEL; B and ocr stay None when unset."""
+    """Default model plus the optional roles LLM_MODEL_A / LLM_MODEL_B / LLM_MODEL_C / LLM_MODEL_OCR.
+    A falls back to LLM_MODEL; B, C and ocr stay None when unset."""
     env = os.environ if env is None else env
 
     def get(name: str) -> str | None:
@@ -103,4 +103,4 @@ def model_roles(env: dict | None = None) -> dict[str, str | None]:
 
     default = get("LLM_MODEL")
     return {"default": default, "A": get(ROLE_VARS["A"]) or default,
-            "B": get(ROLE_VARS["B"]), "ocr": get(ROLE_VARS["ocr"])}
+            "B": get(ROLE_VARS["B"]), "C": get(ROLE_VARS["C"]), "ocr": get(ROLE_VARS["ocr"])}

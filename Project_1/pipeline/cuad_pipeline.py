@@ -11,6 +11,7 @@ Gold is never read.
 from __future__ import annotations
 
 import json
+import os
 import re
 from concurrent.futures import ThreadPoolExecutor
 from functools import lru_cache
@@ -65,12 +66,30 @@ def cuad_models(env: dict | None = None) -> dict[str, str]:
     return {"A": roles.get("A") or DEFAULT_MODEL_A, "B": roles.get("B") or DEFAULT_MODEL_B}
 
 
+def _env_pos_int(env: dict, name: str) -> int | None:
+    raw = str(env.get(name) or "").strip()
+    if not raw:
+        return None
+    val = int(raw)
+    if val <= 0:
+        raise ValueError(f"{name} must be a positive integer, got {raw!r}")
+    return val
+
+
 def resolve_cuad(overrides: dict | None = None, env: dict | None = None) -> dict:
+    env_map = os.environ if env is None else env
     cfg = {**DEFAULT_CUAD, **(overrides or {})}
-    models = cuad_models(env)
+    models = cuad_models(env_map)
     cfg["model_a"] = cfg.get("model_a") or models["A"]
     cfg["model_b"] = cfg.get("model_b") or models["B"]
     cfg["views"] = list(cfg["views"])
+    default_chunk = _env_pos_int(env_map, "LLM_CHUNK_CHARS")
+    if cfg.get("chunk_chars_a") is None:
+        cfg["chunk_chars_a"] = _env_pos_int(env_map, "LLM_CHUNK_CHARS_A") or default_chunk
+    if cfg.get("chunk_chars_b") is None:
+        cfg["chunk_chars_b"] = _env_pos_int(env_map, "LLM_CHUNK_CHARS_B") or default_chunk
+    if default_chunk is not None and (not overrides or "chunk_chars" not in overrides):
+        cfg["chunk_chars"] = default_chunk
     return cfg
 
 
@@ -95,20 +114,22 @@ def parse_views(spec: str | list[str] | None) -> list[str]:
 
 
 def plan_jobs(text: str, schema: dict, model: str, *, chunk_chars: int = 300_000,
-              overlap_chars: int = 5_000) -> list[dict]:
-    """Single-request whole contract when len(text) <= model.max_context_chars; else large chunks."""
+              overlap_chars: int = 5_000, max_chars: int | None = None) -> list[dict]:
+    """Single-request whole contract when len(text) <= limit; else chunks of at most limit.
+    `limit` is model.max_context_chars, or min(max_context_chars, max_chars) when max_chars is set."""
     if not isinstance(text, str):
         raise ValueError("cuad_pipeline needs document text")
     props = schema.get("properties", {})
     if not props:
         return []
     max_ctx = int(model_registry.model_spec(model).get("max_context_chars") or 200_000)
+    limit = min(max_ctx, int(max_chars)) if max_chars else max_ctx
     batch_size = len(props)
-    if len(text) <= max_ctx:
+    if len(text) <= limit:
         use_chunk = max(len(text), 1)
         use_overlap = 0
     else:
-        use_chunk = max(1, min(int(chunk_chars), max_ctx))
+        use_chunk = max(1, min(int(chunk_chars), limit))
         use_overlap = min(int(overlap_chars), max(0, use_chunk - 1))
     return build_jobs(text, schema, chunk_chars=use_chunk, overlap_chars=use_overlap,
                       batch_size=batch_size, samples=1)
@@ -198,8 +219,10 @@ def _failed_view(view_id: str, model: str, schema: dict, reason: str) -> dict:
 
 def run_text_view(view_id: str, model: str, rec: dict, text: str, ctx, cuad_cfg: dict) -> dict:
     schema = rec["schema"]
+    role, _ = parse_view_id(view_id)
+    role_max = cuad_cfg.get("chunk_chars_a") if role == "A" else cuad_cfg.get("chunk_chars_b")
     jobs = plan_jobs(text, schema, model, chunk_chars=cuad_cfg["chunk_chars"],
-                     overlap_chars=cuad_cfg["overlap_chars"])
+                     overlap_chars=cuad_cfg["overlap_chars"], max_chars=role_max)
 
     def build(job):
         prompt = build_cuad_prompt(job["schema"], job["text"], chunk_no=job["chunk_id"] + 1,
