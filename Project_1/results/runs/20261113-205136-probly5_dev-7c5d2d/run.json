@@ -53,5 +53,7 @@
       }
     },
     "scored_at": "2026-11-13T21:00:36"
-  }
+  },
+  "fields_contract_version": 1,
+  "n_field_rows": 5262
 }

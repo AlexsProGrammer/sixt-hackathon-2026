@@ -1,32 +1,65 @@
-# Project 1 Dashboard (T12)
+# Project 1 — Local Extraction & UQ Dashboard (v2)
 
-Local Streamlit web application for running small extraction batches, reviewing documents side-by-side with extracted values and gold, recording human review actions, and inspecting analytics across stored and session runs.
+The dashboard is an optional local web UI built with Streamlit (`1.67.0`) for running extractions, reviewing document fields, comparing UQ methods, and inspecting run artifacts. CLI scripts (`4_extract.py`, `5_score.py`, `run_hidden.sh`, `evaluation/*`, `pipeline/*`, `uncertainty/*`) never import it.
 
-The dashboard is an **optional** component: `4_extract.py`, `5_score.py`, and `run_hidden.sh` never import or depend on it.
-
-## Installation
+## Starting the dashboard
 
 From `Project_1/`:
 
 ```bash
 .venv/bin/pip install -r requirements-dashboard.txt
-```
-
-Pinned packages: `streamlit==1.67.0`, `pandas==3.1.1`, `altair==6.3.0`.
-
-## Starting the Dashboard
-
-From `Project_1/`:
-
-```bash
 .venv/bin/streamlit run dashboard/app.py --server.address 127.0.0.1
 ```
 
-It binds to `127.0.0.1` only. Document text never leaves the machine except through the configured LLM endpoint.
+Theme and server defaults live in `.streamlit/config.toml`.
 
 ## Pages
 
-1. **Run**: Select `dev`, `test_public`, a split (`fit`, `select`, `audit`, `audit2`, `smoke`), a single `doc_id`, a stratified random sample (with reproducible seed), or upload a PDF + schema JSON. Runs execute in a background thread with live progress and stay in session state (`tags=["session"]`) until you click **Save to registry**.
-2. **Review**: Pick a run and document. Left pane renders the PDF (via `st.pdf`, base64 `<iframe>`, or `pdftoppm` PNGs) or CUAD contract text (predicted spans highlighted, gold spans underlined). Right pane shows per-field values, gold, confidence, decision (`booked` / `to human`), reason, evidence flags, and per-view observations, with **Accept**, **Decline**, and **Edit** buttons writing to `results/reviews.jsonl`.
-3. **Analytics**: Run comparison table, precision vs coverage curve, net saving vs threshold (`E=20/100/500`), reliability chart, route/kind breakdown bars, and family × field heatmap. Unsaved session runs are overlaid with dashed lines.
-4. **Latest run**: Manifest summary (models, routes, prompt versions, selector SHA-256, requests/cache hits per model, time per doc, failures) and business headline (`X% of fields need no human; net saving Y at E=100; Z errors`).
+1. **Home** (`dashboard/views/home.py`): Project showcase with the cost model (`Human = 1`, `Booked correct = 0`, `Booked wrong = 100`), live benchmark KPIs from a selected showcase run, a dynamic Mermaid pipeline diagram reflecting the active decision file, models, routes, and declared threshold τ, plus the model/route matrix and UQ method explainers.
+2. **Run** (`dashboard/views/run.py`): Two-column Run Builder + live Run Preview. Supports `Random N`, `Single doc`, `Full split`, and `Upload` inputs; validates UQ method / sample count K combinations before launch; previews routes, models, estimated calls, and reply-cache status; streams live per-doc progress KPIs and shows a post-run result card.
+3. **Review** (`dashboard/views/review.py`): Side-by-side document viewer and extracted fields table with row selection detail drawer, shared decision filters (`All`, `Only booked`, `Only to human`, `Only missed savings`, `Only errors`), and an interactive **Review queue** (`dashboard/components/review_queue.py`) with per-row **Accept** (`✓`), **Edit** (`✎`), and **Decline** (`⦸`) icon buttons, bulk "Accept all booked", pagination, and CSV export.
+4. **Analytics** (`dashboard/views/analytics.py`): Five sub-tabs (**Overview**, **Methods**, **Curves**, **Field diagnostics**, **Compare two runs**) with an `E ∈ {20, 100, 500}` error-cost selector, success verdicts, curve-wide average precision and net saving tables, UQ method leaderboard, signal quality charts (agreement, entropy, grounding), reliability diagrams, route/kind breakdowns, family×field heatmap, and field-level run diffs.
+5. **Run details** (`dashboard/views/latest.py`): Hero business headline, KPI row, metadata & provenance grid, per-model request/cache-hit bars, score breakdowns (`by_source`, `by_condition`), downloadable artifacts, and generate buttons.
+
+## Sidebar & global settings
+
+- **Active context**: active run badge, session run count, LLM endpoint status (without exposing API keys), and reply cache size.
+- **Quick actions**: jump to Run, open active run in Review, or clear cached data.
+- **Settings** (pinned at the bottom): **Decision file** selector and **Declared threshold τ** slider, plus a one-click helper to match the decision file's threshold.
+
+## Success definition
+
+- **Human-only baseline**: `0.0%` net saving (every field reviewed by a human at cost `1`).
+- **Net saving**: `(accepted - E * errors) / n_fields`, where `errors = wrong + hallucinated`.
+- **Break-even precision**: `E / (E + 1)` (`95.2%` at `E=20`, `99.0%` at `E=100`, `99.8%` at `E=500`).
+- **Verdict**:
+  - `Full success`: `accepted > 0`, `precision >= τ`, and `net_saving > 0`.
+  - `Partial`: `net_saving > 0` below `τ`, or `precision >= τ` with `0` net saving.
+  - `Not yet`: `net_saving < 0`.
+
+## Generate actions (`dashboard/actions.py`)
+
+Empty states and artifact panels offer whitelisted CLI buttons (`shell=False`, validated run IDs):
+
+| Action | CLI executed |
+|---|---|
+| Build field table | `python -m evaluation.field_table <run>` |
+| Re-score at τ | `python -m evaluation.registry score <run> --threshold <τ>` |
+| Generate report | `python -m evaluation.report --run <run>` |
+| Generate diff report | `python -m evaluation.report --run <B> --diff <A> <B>` |
+| Rebuild index | `python -m evaluation.registry rebuild` |
+| Import legacy runs | `python tools/import_legacy_runs.py` |
+| Generate comparison plots | `python tools/compare_results.py` |
+
+## Mermaid diagram (offline support)
+
+`dashboard/components/mermaid.py` prefers a vendored `dashboard/assets/mermaid.min.js` when present, falling back to jsDelivr CDN and a Graphviz DOT fallback. To vendor Mermaid locally:
+
+```bash
+curl -L -o dashboard/assets/mermaid.min.js https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js
+```
+
+## Troubleshooting
+
+- **Double-click navigation**: Fixed in v2 by replacing the sidebar `st.radio` with `st.navigation(..., position="top")` and `st.switch_page`.
+- **Dark mode**: `.streamlit/config.toml` sets `base = "light"` with semantic badge palettes for consistent contrast.

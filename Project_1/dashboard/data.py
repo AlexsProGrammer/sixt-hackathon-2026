@@ -81,7 +81,12 @@ def load_fields_table(run_dir: Path | str) -> list[dict]:
     return _read_jsonl(Path(run_dir) / "fields.jsonl")
 
 
-def load_run_bundle(run_id_or_dir: str | Path, runs_dir: Path | None = None) -> dict[str, Any]:
+def load_run_bundle(
+    run_id_or_dir: str | Path,
+    runs_dir: Path | None = None,
+    *,
+    include_samples: bool = True,
+) -> dict[str, Any]:
     """Load all available artifacts for a run folder into a single dict."""
     rdir_base = Path(runs_dir) if runs_dir else RUNS_DIR
     candidate = Path(run_id_or_dir)
@@ -103,11 +108,15 @@ def load_run_bundle(run_id_or_dir: str | Path, runs_dir: Path | None = None) -> 
         for r in _read_jsonl(run_dir / "diagnostics.jsonl")
         if "doc_id" in r
     }
-    samples = {
-        r["doc_id"]: r.get("samples") or []
-        for r in _read_jsonl(run_dir / "samples.jsonl")
-        if "doc_id" in r
-    }
+    samples = (
+        {
+            r["doc_id"]: r.get("samples") or []
+            for r in _read_jsonl(run_dir / "samples.jsonl")
+            if "doc_id" in r
+        }
+        if include_samples
+        else {}
+    )
     gold = {r["doc_id"]: r for r in _read_jsonl(run_dir / "gold.jsonl") if "doc_id" in r}
     inputs = {r["doc_id"]: r for r in _read_jsonl(run_dir / "input.jsonl") if "doc_id" in r}
     fields = load_fields_table(run_dir)
@@ -228,9 +237,23 @@ def sample_stratified_records(records: list[dict], n: int, seed: int = 42) -> li
 # ------------------------------------------------------------------ human reviews
 
 def load_reviews(reviews_path: Path | None = None) -> list[dict]:
-    """Load human review actions from `results/reviews.jsonl`."""
+    """Load human review actions from `results/reviews.jsonl` (tolerates partial last line)."""
     path = Path(reviews_path) if reviews_path else REVIEWS_PATH
-    return _read_jsonl(path)
+    if not path.is_file():
+        return []
+    rows: list[dict] = []
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            s = line.strip()
+            if not s:
+                continue
+            try:
+                obj = json.loads(s)
+                if isinstance(obj, dict):
+                    rows.append(obj)
+            except ValueError:
+                continue
+    return rows
 
 
 def append_review(entry: dict, reviews_path: Path | None = None) -> dict:
@@ -246,6 +269,8 @@ def append_review(entry: dict, reviews_path: Path | None = None) -> dict:
         "value": entry.get("value"),
         "reviewer": str(entry.get("reviewer") or "reviewer"),
     }
+    if "original_value" in entry:
+        record["original_value"] = entry.get("original_value")
     with open(path, "a", encoding="utf-8", newline="\n") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
     return record
@@ -259,6 +284,67 @@ def latest_reviews_map(reviews: list[dict], run_id: str | None = None) -> dict[t
             continue
         key = (str(row.get("doc_id") or ""), str(row.get("field") or ""))
         out[key] = row
+    return out
+
+
+def review_status(rev: dict | None) -> str:
+    """Map a latest review entry to `'pending' | 'accepted' | 'edited' | 'declined'`."""
+    if not rev:
+        return "pending"
+    act = str(rev.get("action") or "").lower()
+    if act == "accept":
+        return "accepted"
+    if act == "edit":
+        return "edited"
+    if act == "decline":
+        return "declined"
+    return "pending"
+
+
+def review_progress(rows: list[dict], rev_map: dict[tuple[str, str], dict], doc_id: str) -> dict[str, int]:
+    """Compute review counts for a document's field rows."""
+    counts = {"total": len(rows), "reviewed": 0, "accepted": 0, "edited": 0, "declined": 0, "pending": 0}
+    for r in rows:
+        st_name = review_status(rev_map.get((doc_id, str(r.get("field") or ""))))
+        counts[st_name] += 1
+        if st_name != "pending":
+            counts["reviewed"] += 1
+    return counts
+
+
+DECISION_FILTERS = ("All", "Only booked", "Only to human", "Only missed savings", "Only errors")
+
+
+def filter_field_rows(rows: list[dict], mode: str) -> list[dict]:
+    """Filter `build_doc_field_rows` output by decision/outcome mode."""
+    if mode == "Only booked":
+        return [r for r in rows if r.get("booked")]
+    if mode == "Only to human":
+        return [r for r in rows if not r.get("booked")]
+    if mode == "Only missed savings":
+        return [r for r in rows if not r.get("booked") and r.get("outcome") == "correct"]
+    if mode == "Only errors":
+        return [r for r in rows if r.get("booked") and r.get("outcome") in ("wrong", "hallucinated")]
+    return list(rows)
+
+
+def filter_field_table(fields: list[dict], mode: str, threshold: float) -> list[dict]:
+    """Filter `fields.jsonl` rows by decision/outcome mode at `threshold`."""
+    if mode == "All":
+        return list(fields)
+    out: list[dict] = []
+    for r in fields:
+        conf = r.get("conf_out")
+        booked = bool(r.get("pred_present") and conf is not None and float(conf) >= threshold)
+        outcome = r.get("outcome")
+        if mode == "Only booked" and booked:
+            out.append(r)
+        elif mode == "Only to human" and not booked:
+            out.append(r)
+        elif mode == "Only missed savings" and (not booked and outcome == "correct"):
+            out.append(r)
+        elif mode == "Only errors" and (booked and outcome in ("wrong", "hallucinated")):
+            out.append(r)
     return out
 
 

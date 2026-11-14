@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import queue
 import tempfile
@@ -14,6 +15,37 @@ from typing import Any, Callable
 from dashboard import data
 from evaluation import field_table, registry
 from pipeline import extractor
+
+
+def validate_overrides(overrides: dict[str, Any], decision_path: str | Path | None = None) -> list[str]:
+    """Return human-readable validation errors for run overrides (mirrors `extractor.load_config` rules)."""
+    errors: list[str] = []
+    samples = int(overrides.get("samples") or 1)
+    uq = overrides.get("uq_method")
+    mode = str(overrides.get("mode") or "auto")
+
+    if uq == "k1_grounded" and samples != 1:
+        errors.append("`k1_grounded` requires samples K = 1.")
+    elif uq in ("k_agreement_only", "k_agreement_conf", "k_entropy") and samples < 2:
+        errors.append(f"`{uq}` requires samples K >= 2.")
+    elif uq == "selector":
+        has_sel = False
+        if decision_path and Path(decision_path).is_file():
+            try:
+                dec = json.loads(Path(decision_path).read_text(encoding="utf-8"))
+                has_sel = bool(dec.get("selector") or dec.get("selector_path"))
+            except (OSError, ValueError):
+                has_sel = False
+        if not has_sel:
+            errors.append("`selector` UQ requires a decision file that includes a trained selector.")
+
+    if mode == "llm":
+        extractor.load_env(data.ROOT / ".env")
+        missing = [k for k in extractor.LLM_VARS if not (os.environ.get(k) or "").strip()]
+        if missing:
+            errors.append(f"LLM mode requires environment variables: {', '.join(missing)}.")
+
+    return errors
 
 
 def make_session_run_id(name: str = "session") -> str:
@@ -107,9 +139,24 @@ def start_session_run_thread(
 ) -> tuple[threading.Thread, queue.Queue]:
     """Start `execute_session_run` in a daemon thread and return `(thread, event_queue)`."""
     q: queue.Queue = queue.Queue()
+    t_start = time.monotonic()
+    last_tick = [t_start]
 
     def _on_progress(done: int, total: int, doc_id: str, res: dict) -> None:
-        q.put(("progress", {"done": done, "total": total, "doc_id": doc_id, "res": res}))
+        now = time.monotonic()
+        doc_s = round(now - last_tick[0], 2)
+        last_tick[0] = now
+        q.put((
+            "progress",
+            {
+                "done": done,
+                "total": total,
+                "doc_id": doc_id,
+                "res": res,
+                "doc_s": doc_s,
+                "elapsed_s": round(now - t_start, 2),
+            },
+        ))
 
     def _worker() -> None:
         try:

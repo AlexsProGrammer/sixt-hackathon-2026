@@ -153,6 +153,38 @@ class DashboardDataTests(unittest.TestCase):
             self.assertTrue((dest / "run.json").is_file())
             self.assertEqual(len(data.load_index(runs_dir)), 1)
 
+    def test_filters_and_review_progress(self) -> None:
+        rows = [
+            {"field": "a", "booked": True, "outcome": "correct"},
+            {"field": "b", "booked": True, "outcome": "wrong"},
+            {"field": "c", "booked": False, "outcome": "correct"},
+            {"field": "d", "booked": False, "outcome": "true_null"},
+        ]
+        self.assertEqual(len(data.filter_field_rows(rows, "All")), 4)
+        self.assertEqual([r["field"] for r in data.filter_field_rows(rows, "Only booked")], ["a", "b"])
+        self.assertEqual([r["field"] for r in data.filter_field_rows(rows, "Only to human")], ["c", "d"])
+        self.assertEqual([r["field"] for r in data.filter_field_rows(rows, "Only missed savings")], ["c"])
+        self.assertEqual([r["field"] for r in data.filter_field_rows(rows, "Only errors")], ["b"])
+
+        ft_rows = [
+            {"field": "a", "pred_present": True, "conf_out": 0.995, "outcome": "correct"},
+            {"field": "b", "pred_present": True, "conf_out": 0.995, "outcome": "hallucinated"},
+            {"field": "c", "pred_present": True, "conf_out": 0.80, "outcome": "correct"},
+            {"field": "d", "pred_present": False, "conf_out": None, "outcome": "true_null"},
+        ]
+        self.assertEqual([r["field"] for r in data.filter_field_table(ft_rows, "Only to human", 0.99)], ["c", "d"])
+        self.assertEqual([r["field"] for r in data.filter_field_table(ft_rows, "Only booked", 0.99)], ["a", "b"])
+        self.assertEqual([r["field"] for r in data.filter_field_table(ft_rows, "Only errors", 0.99)], ["b"])
+
+        self.assertEqual(data.review_status(None), "pending")
+        self.assertEqual(data.review_status({"action": "accept"}), "accepted")
+        self.assertEqual(data.review_status({"action": "edit"}), "edited")
+        self.assertEqual(data.review_status({"action": "decline"}), "declined")
+
+        rev_map = {("doc1", "a"): {"action": "accept"}, ("doc1", "b"): {"action": "edit"}}
+        prog = data.review_progress(rows, rev_map, "doc1")
+        self.assertEqual(prog, {"total": 4, "reviewed": 2, "accepted": 1, "edited": 1, "declined": 0, "pending": 2})
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,20 +1,21 @@
-"""Review page: inspect one document side-by-side with extracted fields, gold, and human review actions."""
+"""Review page (WP7): inspect one document side-by-side with extracted fields and Review Queue."""
 from __future__ import annotations
 
 import json
+import random
 from typing import Any
 
 import pandas as pd
 import streamlit as st
 
-from dashboard import cache, data
-from dashboard.components import pdf as pdf_comp
+from dashboard import cache, data, nav, state
+from dashboard.components import action_button, filters, pdf as pdf_comp, review_queue, run_picker, ui
 
-COLOR_STYLES = {
+_COLOR_STYLES = {
     "green": "background-color: #dcfce7; color: #14532d;",
     "red": "background-color: #fee2e2; color: #7f1d1d;",
-    "yellow": "background-color: #fef9c3; color: #713f12;",
-    "grey": "background-color: #f3f4f6; color: #4b5563;",
+    "yellow": "background-color: #fef3c7; color: #78350f;",
+    "grey": "background-color: #f1f5f9; color: #475569;",
     "neutral": "",
 }
 
@@ -27,166 +28,178 @@ def _fmt_val(v: Any) -> str:
     return str(v)
 
 
-def _pick_bundle() -> dict[str, Any] | None:
-    session_runs: dict[str, dict] = st.session_state.get("session_runs") or {}
-    reg_ids = data.list_run_ids()
-    options: list[str] = []
-    for rid in session_runs:
-        options.append(f"[session] {rid}")
-    for rid in reg_ids:
-        options.append(rid)
-    if not options:
-        st.info("No runs available yet. Start a run on the Run page.")
-        return None
+def render() -> None:
+    """Render the Document Review page."""
+    ui.page_header(
+        "Document review",
+        "Inspect extracted fields side-by-side with the source document, then confirm or edit values.",
+        icon=":material/fact_check:",
+    )
 
-    active = st.session_state.get("active_run_id")
-    default_idx = 0
-    if active:
-        for i, opt in enumerate(options):
-            if opt == active or opt == f"[session] {active}":
-                default_idx = i
-                break
-
-    choice = st.selectbox("Run", options, index=default_idx)
-    if choice.startswith("[session] "):
-        rid = choice[len("[session] "):]
-        return session_runs[rid]
-    return cache.get_run_bundle(choice)
-
-
-def render(sidebar_state: dict[str, Any]) -> None:
-    st.header("Document Review")
-    bundle = _pick_bundle()
-    if bundle is None:
+    c_run, c_doc, c_prev, c_next, c_rand = st.columns([2.2, 2.2, 0.45, 0.45, 0.7], gap="small", vertical_alignment="bottom")
+    with c_run:
+        run_id, bundle = run_picker.pick_run("review_run_pick", label="Run")
+    if bundle is None or run_id is None:
+        ui.empty_state(
+            ":material/inbox:",
+            "No runs available yet",
+            "Start a run on the Run page to inspect predictions and review fields.",
+            action=lambda: nav.switch_to("run") if st.button("Start a run", type="primary") else None,
+        )
         return
 
-    run_id = bundle["run_id"]
-    doc_ids = sorted(bundle.get("preds", {}).keys())
+    state.set_active_run(run_id)
+    doc_ids = sorted((bundle.get("preds") or {}).keys())
     if not doc_ids:
         st.warning(f"Run `{run_id}` has no predicted documents.")
         return
 
-    c_doc, c_filt = st.columns([2, 2])
-    doc_id = c_doc.selectbox("Document", doc_ids)
-    filt = c_filt.radio(
-        "Filter fields",
-        ["All", "Only booked", "Only missed savings", "Only errors"],
-        horizontal=True,
+    doc_key = f"review_doc_{run_id}"
+    if st.session_state.get(state.K_ACTIVE_DOC) in doc_ids:
+        st.session_state.setdefault(doc_key, st.session_state[state.K_ACTIVE_DOC])
+    if st.session_state.get(doc_key) not in doc_ids:
+        st.session_state[doc_key] = doc_ids[0]
+
+    def _step_doc(delta: int) -> None:
+        cur = st.session_state.get(doc_key, doc_ids[0])
+        idx = doc_ids.index(cur) if cur in doc_ids else 0
+        st.session_state[doc_key] = doc_ids[(idx + delta) % len(doc_ids)]
+
+    def _random_doc() -> None:
+        st.session_state[doc_key] = random.choice(doc_ids)
+
+    with c_prev:
+        st.button("", icon=":material/chevron_left:", help="Previous document", on_click=_step_doc, args=(-1,), width="stretch")
+    with c_next:
+        st.button("", icon=":material/chevron_right:", help="Next document", on_click=_step_doc, args=(1,), width="stretch")
+    with c_rand:
+        st.button("Random", icon=":material/shuffle:", help="Pick a random document", on_click=_random_doc, width="stretch")
+
+    with c_doc:
+        doc_id = st.selectbox(
+            "Document",
+            doc_ids,
+            key=doc_key,
+            format_func=lambda d: f"{'CUAD' if str(d).startswith('cuad') else 'EB'} · {d}",
+        )
+    state.set_active_run(run_id, doc_id)
+
+    # Banner if fields.jsonl is missing
+    if not (bundle.get("fields") or []):
+        b1, b2 = st.columns([3, 1], vertical_alignment="center")
+        b1.info("`fields.jsonl` is not built for this run yet — some outcome colours may be unknown.")
+        with b2:
+            action_button.generate_button(
+                "field_table",
+                {"run_id": run_id, "run_dir": bundle.get("run_dir")},
+                label="Build field table",
+                key=f"rev_ft_{run_id}",
+                width="stretch",
+            )
+
+    threshold = state.threshold()
+    records = data.load_records_by_doc_id([doc_id], run_dir=bundle.get("run_dir"))
+    rec = (
+        records.get(doc_id)
+        or (bundle.get("gold") or {}).get(doc_id)
+        or (bundle.get("input") or {}).get(doc_id)
+        or {"doc_id": doc_id}
     )
 
-    records = data.load_records_by_doc_id([doc_id], run_dir=bundle.get("run_dir"))
-    rec = records.get(doc_id) or (bundle.get("gold") or {}).get(doc_id) or (bundle.get("input") or {}).get(doc_id) or {"doc_id": doc_id}
-    threshold = float(sidebar_state.get("threshold", 0.99))
-    reviewer = str(sidebar_state.get("reviewer") or "reviewer")
-
     all_rows = data.build_doc_field_rows(doc_id, bundle, rec=rec, threshold=threshold)
-    if filt == "Only booked":
-        rows = [r for r in all_rows if r["booked"]]
-    elif filt == "Only missed savings":
-        rows = [r for r in all_rows if r["outcome"] == "correct" and not r["booked"]]
-    elif filt == "Only errors":
-        rows = [r for r in all_rows if r["outcome"] in ("wrong", "hallucinated")]
-    else:
-        rows = all_rows
-
     reviews = cache.get_reviews()
     rev_map = data.latest_reviews_map(reviews, run_id=run_id)
     doc_reviews = [v for (d, _), v in rev_map.items() if d == doc_id]
-    n_to_human = sum(1 for r in all_rows if not r["booked"])
-    sim_human_cost = n_to_human + len(doc_reviews)
 
-    m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Fields", len(all_rows))
-    m2.metric("Booked", sum(1 for r in all_rows if r["booked"]))
-    m3.metric("To human", n_to_human)
-    m4.metric("Simulated human cost", f"{sim_human_cost} ({len(doc_reviews)} reviewed)")
+    n_fields = len(all_rows)
+    n_booked = sum(1 for r in all_rows if r["booked"])
+    n_to_human = n_fields - n_booked
+    n_errors = sum(1 for r in all_rows if r["booked"] and r["outcome"] in ("wrong", "hallucinated"))
+    sim_cost = n_to_human + len(doc_reviews)
+
+    ui.kpi_row([
+        {"label": "Fields", "value": n_fields},
+        {"label": "Booked", "value": n_booked, "foot": f"τ = {threshold:.2f}"},
+        {"label": "To human", "value": n_to_human, "foot": "Low conf / abstained"},
+        {"label": "Errors booked", "value": n_errors, "foot": "Wrong + hallucinated"},
+        {"label": "Simulated cost", "value": sim_cost, "delta": f"saved {n_booked} reviews", "foot": f"{len(doc_reviews)} logged"},
+    ])
+
+    counts = {m: len(data.filter_field_rows(all_rows, m)) for m in data.DECISION_FILTERS}
+    filt = filters.decision_filter(f"review_filter_{run_id}", counts=counts, default="All")
+    rows = data.filter_field_rows(all_rows, filt)
 
     left, right = st.columns([1.05, 1.15], gap="large")
     with left:
-        st.subheader("Document")
-        pdf_comp.render_document_pane(rec, all_rows)
+        with st.container(border=True, height="stretch"):
+            st.subheader("Source document")
+            pdf_comp.render_document_pane(rec, all_rows)
 
     with right:
-        st.subheader("Extracted Fields")
-        if not rows:
-            st.info("No fields match the selected filter.")
-        else:
-            table_data = []
-            row_colors = []
-            for r in rows:
-                rev = rev_map.get((doc_id, r["field"]))
-                views_str = ", ".join(
-                    f"{v['view']}: {_fmt_val(v['value'])}" for v in r["per_view"]
-                ) if r["per_view"] else "—"
-                table_data.append({
-                    "Field": r["field"],
-                    "Value": _fmt_val(r["value"]),
-                    "Gold": _fmt_val(r["gold"]) if r["has_gold"] else "—",
-                    "Conf": round(r["confidence"], 3),
-                    "Decision": r["decision"],
-                    "Reason": r["reason"] or "—",
-                    "Evidence": ", ".join(r["evidence_flags"]) or "—",
-                    "Per-view": views_str,
-                    "Review": f"{rev['action']} ({_fmt_val(rev['value'])})" if rev else "—",
-                })
-                row_colors.append(r["color"])
+        with st.container(border=True, height="stretch"):
+            st.subheader("Extracted fields")
+            ui.badges_row([
+                ("Correct booked", "success"),
+                ("Error booked", "danger"),
+                ("Missed saving", "warning"),
+                ("True null", "neutral"),
+            ])
+            if not rows:
+                st.info("No fields match the selected filter.")
+            else:
+                table_data = []
+                row_colors = []
+                for r in rows:
+                    rev = rev_map.get((doc_id, r["field"]))
+                    table_data.append({
+                        "Field": r["field"],
+                        "Value": _fmt_val(r["value"]),
+                        "Gold": _fmt_val(r["gold"]) if r["has_gold"] else "—",
+                        "Conf": round(r["confidence"], 3),
+                        "Decision": "✓ booked" if r["booked"] else "→ human",
+                        "Outcome": r["outcome"],
+                        "Review": f"{rev['action']}" if rev else "—",
+                    })
+                    row_colors.append(r["color"])
 
-            df = pd.DataFrame(table_data)
+                df = pd.DataFrame(table_data)
 
-            def _style_row(s: pd.Series) -> list[str]:
-                css = COLOR_STYLES.get(row_colors[s.name], "")
-                return [css] * len(s)
+                def _style_rows(_row: pd.Series) -> list[str]:
+                    css = _COLOR_STYLES.get(row_colors[_row.name], "")
+                    return [css] * len(_row)
 
-            st.dataframe(
-                df.style.apply(_style_row, axis=1),
-                use_container_width=True,
-                hide_index=True,
-                height=380,
-            )
+                event = st.dataframe(
+                    df.style.apply(_style_rows, axis=1),
+                    width="stretch",
+                    hide_index=True,
+                    height=430,
+                    on_select="rerun",
+                    selection_mode="single-row",
+                    key=f"rev_tbl_{run_id}_{doc_id}_{filt}",
+                    column_config={
+                        "Field": st.column_config.TextColumn("Field", width="medium"),
+                        "Value": st.column_config.TextColumn("Value", width="medium"),
+                        "Gold": st.column_config.TextColumn("Gold", width="medium"),
+                        "Conf": st.column_config.ProgressColumn("Conf", min_value=0.0, max_value=1.0, format="%.2f"),
+                        "Decision": st.column_config.TextColumn("Decision", width="small"),
+                        "Outcome": st.column_config.TextColumn("Outcome", width="small"),
+                        "Review": st.column_config.TextColumn("Review", width="small"),
+                    },
+                )
 
-            st.caption("Row colors: green = correct & booked · red = wrong/hallucinated & booked · yellow = missed saving · grey = true null")
+                sel_rows = (event.selection.rows if hasattr(event, "selection") and event.selection else []) or []
+                if sel_rows:
+                    detail = rows[sel_rows[0]]
+                    with st.expander(f"Field detail: {detail['field']}", expanded=True):
+                        d1, d2 = st.columns(2)
+                        d1.markdown(f"**Prediction:** `{_fmt_val(detail['value'])}`")
+                        d2.markdown(f"**Gold:** `{_fmt_val(detail['gold']) if detail['has_gold'] else '—'}`")
+                        if detail["evidence_flags"]:
+                            ui.badges_row([(flag, "info") for flag in detail["evidence_flags"]])
+                        if detail["reason"]:
+                            st.caption(f"Reason: {detail['reason']}")
+                        if detail["per_view"]:
+                            st.dataframe(pd.DataFrame(detail["per_view"]), width="stretch", hide_index=True)
 
-            st.subheader("Field Review Action")
-            selected_field = st.selectbox("Field to review", [r["field"] for r in rows])
-            sel_row = next(r for r in rows if r["field"] == selected_field)
-            b1, b2, b3 = st.columns(3)
-            if b1.button("Accept", key=f"acc_{run_id}_{doc_id}_{selected_field}", use_container_width=True):
-                data.append_review({
-                    "run_id": run_id,
-                    "doc_id": doc_id,
-                    "field": selected_field,
-                    "action": "accept",
-                    "value": sel_row["value"],
-                    "reviewer": reviewer,
-                })
-                st.cache_data.clear()
-                st.rerun()
-            if b2.button("Decline", key=f"dec_{run_id}_{doc_id}_{selected_field}", use_container_width=True):
-                data.append_review({
-                    "run_id": run_id,
-                    "doc_id": doc_id,
-                    "field": selected_field,
-                    "action": "decline",
-                    "value": None,
-                    "reviewer": reviewer,
-                })
-                st.cache_data.clear()
-                st.rerun()
-            edited_val = b3.text_input(
-                "Edit value",
-                value="" if sel_row["value"] is None else str(sel_row["value"]),
-                key=f"edit_in_{run_id}_{doc_id}_{selected_field}",
-                label_visibility="collapsed",
-                placeholder="Edited value...",
-            )
-            if st.button("Save Edit", key=f"edit_btn_{run_id}_{doc_id}_{selected_field}"):
-                data.append_review({
-                    "run_id": run_id,
-                    "doc_id": doc_id,
-                    "field": selected_field,
-                    "action": "edit",
-                    "value": edited_val,
-                    "reviewer": reviewer,
-                })
-                st.cache_data.clear()
-                st.rerun()
+    # Bottom interactive Review Queue
+    review_queue.render_review_queue(run_id, doc_id, all_rows)
