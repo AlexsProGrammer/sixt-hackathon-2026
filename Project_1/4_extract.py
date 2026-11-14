@@ -30,7 +30,7 @@ from functools import partial
 from pathlib import Path
 from urllib.parse import urlparse
 
-from pipeline import eb_pipeline, router
+from pipeline import cuad_pipeline, eb_pipeline, router
 from pipeline.merge import merge_sample_v2
 from pipeline.requests import PROMPT_VERSION, build_jobs, build_prompt
 from pipeline.transport import ReplyCache, RunState, execute_job
@@ -155,13 +155,14 @@ def offline_extract(rec: dict) -> dict:
 class Ctx:
     """Everything one run needs. Built once in main()."""
 
-    def __init__(self, cfg, cache, state, pipeline, on_error, eb=None):
+    def __init__(self, cfg, cache, state, pipeline, on_error, eb=None, cuad=None):
         self.cfg = cfg
         self.cache = cache
         self.state = state
         self.pipeline = pipeline
         self.on_error = on_error
         self.eb = eb          # None = text pipeline only; else the resolved ExtractBench vision config (T06)
+        self.cuad = cuad      # None = text pipeline only; else the resolved CUAD long-context config (T07)
 
 
 def build_messages(job: dict) -> list[dict]:
@@ -194,6 +195,8 @@ def extract_llm(rec: dict, ctx: Ctx) -> dict:
     routed = router.route(rec, DATA, text=text)
     if ctx.eb and routed["route"] in eb_pipeline.VISION_ROUTES and eb_pipeline.views_for_route(routed["route"], ctx.eb["views"]):
         return eb_pipeline.extract_document(rec, routed, ctx, data_dir=DATA)   # ExtractBench on the native PDF (T06)
+    if ctx.cuad and routed["route"] == "cuad" and ctx.cuad.get("views"):
+        return cuad_pipeline.extract_document(rec, routed, ctx)               # CUAD long-context pipeline (T07)
     route_info = {"route": routed["route"], "text_source": routed["text_source"], "quality": routed["quality"],
                   "quality_features": routed["quality_features"]}
     if text is None or not text.strip():
@@ -251,7 +254,7 @@ def sha256_obj(obj: object) -> str:
 
 
 CODE_FILES = ("4_extract.py", "pipeline/router.py", "pipeline/requests.py", "pipeline/transport.py", "pipeline/merge.py",
-              "pipeline/eb_pipeline.py", "pipeline/prompts_eb.py", "pipeline/messages.py", "pipeline/models.py",
+              "pipeline/cuad_pipeline.py", "pipeline/eb_pipeline.py", "pipeline/prompts_eb.py", "pipeline/messages.py", "pipeline/models.py",
               "uncertainty/single_view.py", "uncertainty/contracts.py", "uncertainty/grounding.py", "uncertainty/policy.py",
               "uncertainty/schema_check.py",
               "uncertainty/uq_probly.py", "uncertainty/decision.py")
@@ -394,6 +397,8 @@ def main(argv=None) -> int:
                          "'A' = view A only, 'full' = the per-route table (A-pdf, B-pdf, A-text), or a list such as "
                          "A-pdf,B-pdf. Models: LLM_MODEL_A (default LLM_MODEL) and LLM_MODEL_B. Off by default. "
                          "Only view A feeds the prediction until the multi-view aggregation (T09) exists.")
+    ap.add_argument("--cuad-views", default=None, metavar="VIEWS",
+                    help="CUAD long-context pipeline (T07): 'A' = A-text only, 'full' = A-text,B-text. Off by default.")
     ap.add_argument("--chunk-chars", type=int, default=None, help="default 45000")
     ap.add_argument("--overlap-chars", type=int, default=None, help="default 3000")
     ap.add_argument("--batch-size", type=int, default=None, help="fields per request, default 10")
@@ -488,6 +493,21 @@ def main(argv=None) -> int:
         pipeline["eb"]["prompt_version"] = eb_pipeline.EB_PROMPT_VERSION
     elif a.eb_views and mode != "llm":
         print("WARNING: --eb-views is ignored outside the llm mode.", file=sys.stderr)
+    cuad_cfg = None
+    dec_cuad = dec["pipeline"].get("cuad") if dec is not None and not dec["abstain_all"] else None
+    if mode == "llm" and (a.cuad_views or dec_cuad):
+        try:
+            if a.cuad_views and dec_cuad and cuad_pipeline.parse_views(a.cuad_views) != dec_cuad.get("views"):
+                raise SystemExit("ERROR: --cuad-views contradicts the decision file.")
+            cuad_cfg = cuad_pipeline.resolve_cuad({**(dec_cuad or {}), **({"views": cuad_pipeline.parse_views(a.cuad_views)}
+                                                                        if a.cuad_views else {})})
+        except ValueError as e:
+            raise SystemExit(f"ERROR: {e}")
+        pipeline["cuad"] = {k: cuad_cfg[k] for k in ("views", "model_a", "model_b", "chunk_chars", "overlap_chars",
+                                                     "temperature")}
+        pipeline["cuad"]["prompt_version"] = cuad_pipeline.CUAD_PROMPT_VERSION
+    elif a.cuad_views and mode != "llm":
+        print("WARNING: --cuad-views is ignored outside the llm mode.", file=sys.stderr)
     print(f"mode: {mode}", file=sys.stderr)
 
     # ----- input and output files
@@ -507,7 +527,7 @@ def main(argv=None) -> int:
 
     state = RunState()
     cache = ReplyCache(None if a.no_cache else Path(a.cache_dir), state)
-    ctx = Ctx(cfg, cache, state, pipeline, a.on_error, eb_cfg)
+    ctx = Ctx(cfg, cache, state, pipeline, a.on_error, eb_cfg, cuad_cfg)
     if mode == "llm" and any(r["source_dataset"] == "cuad" for r in recs):
         load_cuad()  # once, before any worker pool starts
 

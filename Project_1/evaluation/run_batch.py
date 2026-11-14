@@ -54,6 +54,17 @@ def select_records(a) -> tuple[list[dict], dict]:
         recs = splits.read_jsonl(Path(a.input))
         info = {"kind": "input", "input": a.input}
     n_all = len(recs)
+    if a.source:
+        recs = [r for r in recs if r.get("source_dataset") == a.source]
+        info["source"] = a.source
+    route_filter = getattr(a, "route", None)
+    if route_filter:
+        if route_filter == "cuad":
+            recs = [r for r in recs if r.get("source_dataset") == "cuad"]
+        else:
+            from pipeline import router
+            recs = [r for r in recs if router.route(r, ROOT / "data")["route"] == route_filter]
+        info["route"] = route_filter
     if a.random is not None:
         if a.random < 1:
             raise SystemExit("ERROR: --random needs a positive number.")
@@ -62,9 +73,6 @@ def select_records(a) -> tuple[list[dict], dict]:
     if a.limit:
         recs = recs[: a.limit]
         info["limit"] = a.limit
-    if a.source:
-        recs = [r for r in recs if r.get("source_dataset") == a.source]
-        info["source"] = a.source
     if not recs:
         raise SystemExit("ERROR: the selection is empty.")
     info.update({"n_available": n_all, "n_docs": len(recs),
@@ -74,7 +82,7 @@ def select_records(a) -> tuple[list[dict], dict]:
 
 def whole_file(a, info: dict) -> Path | None:
     """The existing file to hand to 4_extract.py when the selection is a complete file (keeps input_ref stable)."""
-    if info.get("random") is not None or info.get("limit"):
+    if info.get("random") is not None or info.get("limit") or info.get("source") or info.get("route"):
         return None
     if a.split:
         return Path(a.splits_dir or ROOT / "data" / "splits") / f"{a.split}.jsonl"
@@ -94,6 +102,7 @@ def main(argv=None) -> int:
     ap.add_argument("--split", help="frozen split name in data/splits/")
     ap.add_argument("--input", help="jsonl with dev-layout records (alternative to --split)")
     ap.add_argument("--source", help="keep only records of this source_dataset (e.g. extractbench)")
+    ap.add_argument("--route", help="keep only records of this route (e.g. cuad, pdf_text_good)")
     ap.add_argument("--splits-dir", help="default: data/splits")
     ap.add_argument("--limit", type=int, help="first N documents of the selection")
     ap.add_argument("--random", type=int, metavar="N", help="N documents stratified by (source, family)")

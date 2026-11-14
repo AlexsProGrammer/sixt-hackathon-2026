@@ -1,0 +1,1905 @@
+{
+  "summary": {
+    "n_dev_cuad_docs": 381,
+    "n_pred_cuad_docs": 148,
+    "n_fit_cuad_docs": 128,
+    "n_categories": 41,
+    "total_correct": 598,
+    "total_wrong": 800,
+    "total_hallucinated": 256,
+    "overall_f1_hist": {
+      "0.0-0.2": 194,
+      "0.2-0.4": 232,
+      "0.4-0.6": 188,
+      "0.6-0.8": 186
+    },
+    "overall_failure_modes": {
+      "subset": 243,
+      "superset": 28,
+      "missing_passages": 405,
+      "other_location": 75,
+      "paraphrase": 49
+    }
+  },
+  "simulations": {
+    "all_pred_cuad": {
+      "baseline_all_predicted": {
+        "booked": 1654,
+        "correct": 598,
+        "wrong": 800,
+        "hallucinated": 256,
+        "errors": 1056,
+        "precision": 0.3615,
+        "net_e100": -105002
+      },
+      "grounded_only": {
+        "booked": 1577,
+        "correct": 577,
+        "wrong": 751,
+        "hallucinated": 249,
+        "errors": 1000,
+        "precision": 0.3659,
+        "net_e100": -99423
+      },
+      "rule_single_passage_cat": {
+        "booked": 645,
+        "correct": 310,
+        "wrong": 253,
+        "hallucinated": 82,
+        "errors": 335,
+        "precision": 0.4806,
+        "net_e100": -33190
+      },
+      "rule_single_passage_cat_and_pred": {
+        "booked": 645,
+        "correct": 310,
+        "wrong": 253,
+        "hallucinated": 82,
+        "errors": 335,
+        "precision": 0.4806,
+        "net_e100": -33190
+      },
+      "rule_length_0.5_2x": {
+        "booked": 852,
+        "correct": 445,
+        "wrong": 298,
+        "hallucinated": 109,
+        "errors": 407,
+        "precision": 0.5223,
+        "net_e100": -40255
+      },
+      "rule_both_and_grounded": {
+        "booked": 385,
+        "correct": 282,
+        "wrong": 59,
+        "hallucinated": 44,
+        "errors": 103,
+        "precision": 0.7325,
+        "net_e100": -10018
+      }
+    },
+    "non_fit_pred_cuad": {
+      "baseline_all_predicted": {
+        "booked": 759,
+        "correct": 277,
+        "wrong": 371,
+        "hallucinated": 111,
+        "errors": 482,
+        "precision": 0.365,
+        "net_e100": -47923
+      },
+      "grounded_only": {
+        "booked": 724,
+        "correct": 269,
+        "wrong": 349,
+        "hallucinated": 106,
+        "errors": 455,
+        "precision": 0.3715,
+        "net_e100": -45231
+      },
+      "rule_single_passage_cat": {
+        "booked": 291,
+        "correct": 147,
+        "wrong": 110,
+        "hallucinated": 34,
+        "errors": 144,
+        "precision": 0.5052,
+        "net_e100": -14253
+      },
+      "rule_single_passage_cat_and_pred": {
+        "booked": 291,
+        "correct": 147,
+        "wrong": 110,
+        "hallucinated": 34,
+        "errors": 144,
+        "precision": 0.5052,
+        "net_e100": -14253
+      },
+      "rule_length_0.5_2x": {
+        "booked": 391,
+        "correct": 208,
+        "wrong": 137,
+        "hallucinated": 46,
+        "errors": 183,
+        "precision": 0.532,
+        "net_e100": -18092
+      },
+      "rule_both_and_grounded": {
+        "booked": 175,
+        "correct": 137,
+        "wrong": 23,
+        "hallucinated": 15,
+        "errors": 38,
+        "precision": 0.7829,
+        "net_e100": -3663
+      }
+    }
+  },
+  "per_category": {
+    "Document Name": {
+      "gold_present_count": 381,
+      "gold_present_share": 1.0,
+      "gold_passages_mean": 1.02,
+      "gold_passages_median": 1,
+      "gold_passages_max": 2,
+      "gold_single_passage_share": 0.979,
+      "gold_median_tokens": 3,
+      "pred_total": 148,
+      "pred_correct": 132,
+      "pred_wrong": 16,
+      "pred_hallucinated": 0,
+      "pred_abstained_when_gold_present": 0,
+      "precision": 0.8919,
+      "f1_hist": {
+        "0.0-0.2": 0,
+        "0.2-0.4": 3,
+        "0.4-0.6": 4,
+        "0.6-0.8": 9
+      },
+      "failure_modes": {
+        "subset": 4,
+        "superset": 5,
+        "missing_passages": 3,
+        "other_location": 4,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 128,
+        "median_tokens_fit": 3.0,
+        "single_passage_rate_fit": 0.9921875
+      }
+    },
+    "Parties": {
+      "gold_present_count": 381,
+      "gold_present_share": 1.0,
+      "gold_passages_mean": 4.9,
+      "gold_passages_median": 4,
+      "gold_passages_max": 46,
+      "gold_single_passage_share": 0.0026,
+      "gold_median_tokens": 15,
+      "pred_total": 148,
+      "pred_correct": 4,
+      "pred_wrong": 144,
+      "pred_hallucinated": 0,
+      "pred_abstained_when_gold_present": 0,
+      "precision": 0.027,
+      "f1_hist": {
+        "0.0-0.2": 36,
+        "0.2-0.4": 45,
+        "0.4-0.6": 40,
+        "0.6-0.8": 23
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 0,
+        "missing_passages": 119,
+        "other_location": 0,
+        "paraphrase": 25
+      },
+      "fit_stats": {
+        "n_fit_present": 128,
+        "median_tokens_fit": 14.0,
+        "single_passage_rate_fit": 0.0
+      }
+    },
+    "Agreement Date": {
+      "gold_present_count": 353,
+      "gold_present_share": 0.9265,
+      "gold_passages_mean": 1.01,
+      "gold_passages_median": 1,
+      "gold_passages_max": 2,
+      "gold_single_passage_share": 0.9858,
+      "gold_median_tokens": 3,
+      "pred_total": 111,
+      "pred_correct": 101,
+      "pred_wrong": 10,
+      "pred_hallucinated": 0,
+      "pred_abstained_when_gold_present": 25,
+      "precision": 0.9099,
+      "f1_hist": {
+        "0.0-0.2": 1,
+        "0.2-0.4": 4,
+        "0.4-0.6": 0,
+        "0.6-0.8": 5
+      },
+      "failure_modes": {
+        "subset": 4,
+        "superset": 0,
+        "missing_passages": 1,
+        "other_location": 5,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 119,
+        "median_tokens_fit": 3,
+        "single_passage_rate_fit": 0.9915966386554622
+      }
+    },
+    "Effective Date": {
+      "gold_present_count": 291,
+      "gold_present_share": 0.7638,
+      "gold_passages_mean": 1.13,
+      "gold_passages_median": 1,
+      "gold_passages_max": 3,
+      "gold_single_passage_share": 0.8729,
+      "gold_median_tokens": 5,
+      "pred_total": 112,
+      "pred_correct": 70,
+      "pred_wrong": 33,
+      "pred_hallucinated": 9,
+      "pred_abstained_when_gold_present": 7,
+      "precision": 0.625,
+      "f1_hist": {
+        "0.0-0.2": 10,
+        "0.2-0.4": 13,
+        "0.4-0.6": 5,
+        "0.6-0.8": 5
+      },
+      "failure_modes": {
+        "subset": 15,
+        "superset": 0,
+        "missing_passages": 12,
+        "other_location": 6,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 96,
+        "median_tokens_fit": 5.0,
+        "single_passage_rate_fit": 0.875
+      }
+    },
+    "Expiration Date": {
+      "gold_present_count": 300,
+      "gold_present_share": 0.7874,
+      "gold_passages_mean": 1.14,
+      "gold_passages_median": 1.0,
+      "gold_passages_max": 7,
+      "gold_single_passage_share": 0.8933,
+      "gold_median_tokens": 34.0,
+      "pred_total": 32,
+      "pred_correct": 3,
+      "pred_wrong": 26,
+      "pred_hallucinated": 3,
+      "pred_abstained_when_gold_present": 86,
+      "precision": 0.0938,
+      "f1_hist": {
+        "0.0-0.2": 15,
+        "0.2-0.4": 6,
+        "0.4-0.6": 4,
+        "0.6-0.8": 1
+      },
+      "failure_modes": {
+        "subset": 26,
+        "superset": 0,
+        "missing_passages": 0,
+        "other_location": 0,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 96,
+        "median_tokens_fit": 35.0,
+        "single_passage_rate_fit": 0.8645833333333334
+      }
+    },
+    "Renewal Term": {
+      "gold_present_count": 125,
+      "gold_present_share": 0.3281,
+      "gold_passages_mean": 1.22,
+      "gold_passages_median": 1,
+      "gold_passages_max": 5,
+      "gold_single_passage_share": 0.848,
+      "gold_median_tokens": 51,
+      "pred_total": 46,
+      "pred_correct": 0,
+      "pred_wrong": 40,
+      "pred_hallucinated": 6,
+      "pred_abstained_when_gold_present": 7,
+      "precision": 0.0,
+      "f1_hist": {
+        "0.0-0.2": 18,
+        "0.2-0.4": 16,
+        "0.4-0.6": 4,
+        "0.6-0.8": 2
+      },
+      "failure_modes": {
+        "subset": 35,
+        "superset": 0,
+        "missing_passages": 5,
+        "other_location": 0,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 36,
+        "median_tokens_fit": 46.0,
+        "single_passage_rate_fit": 0.8611111111111112
+      }
+    },
+    "Notice Period To Terminate Renewal": {
+      "gold_present_count": 75,
+      "gold_present_share": 0.1969,
+      "gold_passages_mean": 1.15,
+      "gold_passages_median": 1,
+      "gold_passages_max": 3,
+      "gold_single_passage_share": 0.8667,
+      "gold_median_tokens": 54,
+      "pred_total": 26,
+      "pred_correct": 0,
+      "pred_wrong": 25,
+      "pred_hallucinated": 1,
+      "pred_abstained_when_gold_present": 8,
+      "precision": 0.0,
+      "f1_hist": {
+        "0.0-0.2": 10,
+        "0.2-0.4": 8,
+        "0.4-0.6": 6,
+        "0.6-0.8": 1
+      },
+      "failure_modes": {
+        "subset": 23,
+        "superset": 0,
+        "missing_passages": 2,
+        "other_location": 0,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 23,
+        "median_tokens_fit": 49,
+        "single_passage_rate_fit": 0.9130434782608695
+      }
+    },
+    "Governing Law": {
+      "gold_present_count": 326,
+      "gold_present_share": 0.8556,
+      "gold_passages_mean": 1.06,
+      "gold_passages_median": 1.0,
+      "gold_passages_max": 4,
+      "gold_single_passage_share": 0.9479,
+      "gold_median_tokens": 30.0,
+      "pred_total": 101,
+      "pred_correct": 1,
+      "pred_wrong": 98,
+      "pred_hallucinated": 2,
+      "pred_abstained_when_gold_present": 28,
+      "precision": 0.0099,
+      "f1_hist": {
+        "0.0-0.2": 31,
+        "0.2-0.4": 34,
+        "0.4-0.6": 18,
+        "0.6-0.8": 15
+      },
+      "failure_modes": {
+        "subset": 92,
+        "superset": 0,
+        "missing_passages": 4,
+        "other_location": 2,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 108,
+        "median_tokens_fit": 31.0,
+        "single_passage_rate_fit": 0.9351851851851852
+      }
+    },
+    "Most Favored Nation": {
+      "gold_present_count": 21,
+      "gold_present_share": 0.0551,
+      "gold_passages_mean": 1.38,
+      "gold_passages_median": 1,
+      "gold_passages_max": 3,
+      "gold_single_passage_share": 0.7143,
+      "gold_median_tokens": 101,
+      "pred_total": 14,
+      "pred_correct": 5,
+      "pred_wrong": 3,
+      "pred_hallucinated": 6,
+      "pred_abstained_when_gold_present": 1,
+      "precision": 0.3571,
+      "f1_hist": {
+        "0.0-0.2": 0,
+        "0.2-0.4": 0,
+        "0.4-0.6": 1,
+        "0.6-0.8": 2
+      },
+      "failure_modes": {
+        "subset": 2,
+        "superset": 0,
+        "missing_passages": 1,
+        "other_location": 0,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 8,
+        "median_tokens_fit": 130.5,
+        "single_passage_rate_fit": 0.625
+      }
+    },
+    "Non-Compete": {
+      "gold_present_count": 91,
+      "gold_present_share": 0.2388,
+      "gold_passages_mean": 2.21,
+      "gold_passages_median": 2,
+      "gold_passages_max": 12,
+      "gold_single_passage_share": 0.4945,
+      "gold_median_tokens": 85,
+      "pred_total": 30,
+      "pred_correct": 11,
+      "pred_wrong": 9,
+      "pred_hallucinated": 10,
+      "pred_abstained_when_gold_present": 11,
+      "precision": 0.3667,
+      "f1_hist": {
+        "0.0-0.2": 1,
+        "0.2-0.4": 1,
+        "0.4-0.6": 2,
+        "0.6-0.8": 5
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 0,
+        "missing_passages": 7,
+        "other_location": 0,
+        "paraphrase": 2
+      },
+      "fit_stats": {
+        "n_fit_present": 32,
+        "median_tokens_fit": 86.0,
+        "single_passage_rate_fit": 0.53125
+      }
+    },
+    "Exclusivity": {
+      "gold_present_count": 134,
+      "gold_present_share": 0.3517,
+      "gold_passages_mean": 2.24,
+      "gold_passages_median": 2.0,
+      "gold_passages_max": 12,
+      "gold_single_passage_share": 0.4403,
+      "gold_median_tokens": 88.0,
+      "pred_total": 66,
+      "pred_correct": 14,
+      "pred_wrong": 31,
+      "pred_hallucinated": 21,
+      "pred_abstained_when_gold_present": 6,
+      "precision": 0.2121,
+      "f1_hist": {
+        "0.0-0.2": 1,
+        "0.2-0.4": 8,
+        "0.4-0.6": 8,
+        "0.6-0.8": 14
+      },
+      "failure_modes": {
+        "subset": 2,
+        "superset": 2,
+        "missing_passages": 21,
+        "other_location": 4,
+        "paraphrase": 2
+      },
+      "fit_stats": {
+        "n_fit_present": 51,
+        "median_tokens_fit": 90,
+        "single_passage_rate_fit": 0.47058823529411764
+      }
+    },
+    "No-Solicit Of Customers": {
+      "gold_present_count": 23,
+      "gold_present_share": 0.0604,
+      "gold_passages_mean": 1.87,
+      "gold_passages_median": 2,
+      "gold_passages_max": 6,
+      "gold_single_passage_share": 0.4348,
+      "gold_median_tokens": 69,
+      "pred_total": 8,
+      "pred_correct": 2,
+      "pred_wrong": 3,
+      "pred_hallucinated": 3,
+      "pred_abstained_when_gold_present": 5,
+      "precision": 0.25,
+      "f1_hist": {
+        "0.0-0.2": 1,
+        "0.2-0.4": 0,
+        "0.4-0.6": 2,
+        "0.6-0.8": 0
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 0,
+        "missing_passages": 2,
+        "other_location": 1,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 8,
+        "median_tokens_fit": 71.0,
+        "single_passage_rate_fit": 0.375
+      }
+    },
+    "Competitive Restriction Exception": {
+      "gold_present_count": 57,
+      "gold_present_share": 0.1496,
+      "gold_passages_mean": 1.6,
+      "gold_passages_median": 1,
+      "gold_passages_max": 5,
+      "gold_single_passage_share": 0.614,
+      "gold_median_tokens": 78,
+      "pred_total": 30,
+      "pred_correct": 7,
+      "pred_wrong": 9,
+      "pred_hallucinated": 14,
+      "pred_abstained_when_gold_present": 8,
+      "precision": 0.2333,
+      "f1_hist": {
+        "0.0-0.2": 2,
+        "0.2-0.4": 2,
+        "0.4-0.6": 2,
+        "0.6-0.8": 3
+      },
+      "failure_modes": {
+        "subset": 1,
+        "superset": 0,
+        "missing_passages": 3,
+        "other_location": 4,
+        "paraphrase": 1
+      },
+      "fit_stats": {
+        "n_fit_present": 22,
+        "median_tokens_fit": 66.5,
+        "single_passage_rate_fit": 0.5454545454545454
+      }
+    },
+    "No-Solicit Of Employees": {
+      "gold_present_count": 41,
+      "gold_present_share": 0.1076,
+      "gold_passages_mean": 1.54,
+      "gold_passages_median": 1,
+      "gold_passages_max": 4,
+      "gold_single_passage_share": 0.6341,
+      "gold_median_tokens": 74,
+      "pred_total": 12,
+      "pred_correct": 7,
+      "pred_wrong": 4,
+      "pred_hallucinated": 1,
+      "pred_abstained_when_gold_present": 6,
+      "precision": 0.5833,
+      "f1_hist": {
+        "0.0-0.2": 0,
+        "0.2-0.4": 1,
+        "0.4-0.6": 0,
+        "0.6-0.8": 3
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 2,
+        "missing_passages": 2,
+        "other_location": 0,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 12,
+        "median_tokens_fit": 69.0,
+        "single_passage_rate_fit": 0.4166666666666667
+      }
+    },
+    "Non-Disparagement": {
+      "gold_present_count": 24,
+      "gold_present_share": 0.063,
+      "gold_passages_mean": 1.58,
+      "gold_passages_median": 1.5,
+      "gold_passages_max": 3,
+      "gold_single_passage_share": 0.5,
+      "gold_median_tokens": 69.5,
+      "pred_total": 9,
+      "pred_correct": 3,
+      "pred_wrong": 3,
+      "pred_hallucinated": 3,
+      "pred_abstained_when_gold_present": 2,
+      "precision": 0.3333,
+      "f1_hist": {
+        "0.0-0.2": 1,
+        "0.2-0.4": 0,
+        "0.4-0.6": 1,
+        "0.6-0.8": 1
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 0,
+        "missing_passages": 3,
+        "other_location": 0,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 6,
+        "median_tokens_fit": 52.0,
+        "single_passage_rate_fit": 0.6666666666666666
+      }
+    },
+    "Termination For Convenience": {
+      "gold_present_count": 144,
+      "gold_present_share": 0.378,
+      "gold_passages_mean": 1.35,
+      "gold_passages_median": 1.0,
+      "gold_passages_max": 4,
+      "gold_single_passage_share": 0.7361,
+      "gold_median_tokens": 34.5,
+      "pred_total": 52,
+      "pred_correct": 30,
+      "pred_wrong": 12,
+      "pred_hallucinated": 10,
+      "pred_abstained_when_gold_present": 17,
+      "precision": 0.5769,
+      "f1_hist": {
+        "0.0-0.2": 0,
+        "0.2-0.4": 3,
+        "0.4-0.6": 4,
+        "0.6-0.8": 5
+      },
+      "failure_modes": {
+        "subset": 4,
+        "superset": 0,
+        "missing_passages": 7,
+        "other_location": 1,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 49,
+        "median_tokens_fit": 33,
+        "single_passage_rate_fit": 0.7142857142857143
+      }
+    },
+    "Rofr/Rofo/Rofn": {
+      "gold_present_count": 68,
+      "gold_present_share": 0.1785,
+      "gold_passages_mean": 3.91,
+      "gold_passages_median": 2.0,
+      "gold_passages_max": 20,
+      "gold_single_passage_share": 0.2794,
+      "gold_median_tokens": 136.5,
+      "pred_total": 15,
+      "pred_correct": 3,
+      "pred_wrong": 11,
+      "pred_hallucinated": 1,
+      "pred_abstained_when_gold_present": 10,
+      "precision": 0.2,
+      "f1_hist": {
+        "0.0-0.2": 1,
+        "0.2-0.4": 3,
+        "0.4-0.6": 5,
+        "0.6-0.8": 2
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 0,
+        "missing_passages": 9,
+        "other_location": 0,
+        "paraphrase": 2
+      },
+      "fit_stats": {
+        "n_fit_present": 26,
+        "median_tokens_fit": 119.5,
+        "single_passage_rate_fit": 0.38461538461538464
+      }
+    },
+    "Change Of Control": {
+      "gold_present_count": 86,
+      "gold_present_share": 0.2257,
+      "gold_passages_mean": 2.06,
+      "gold_passages_median": 2.0,
+      "gold_passages_max": 11,
+      "gold_single_passage_share": 0.4186,
+      "gold_median_tokens": 92.5,
+      "pred_total": 33,
+      "pred_correct": 12,
+      "pred_wrong": 13,
+      "pred_hallucinated": 8,
+      "pred_abstained_when_gold_present": 9,
+      "precision": 0.3636,
+      "f1_hist": {
+        "0.0-0.2": 1,
+        "0.2-0.4": 8,
+        "0.4-0.6": 1,
+        "0.6-0.8": 3
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 0,
+        "missing_passages": 6,
+        "other_location": 4,
+        "paraphrase": 3
+      },
+      "fit_stats": {
+        "n_fit_present": 31,
+        "median_tokens_fit": 91,
+        "single_passage_rate_fit": 0.4838709677419355
+      }
+    },
+    "Anti-Assignment": {
+      "gold_present_count": 279,
+      "gold_present_share": 0.7323,
+      "gold_passages_mean": 1.78,
+      "gold_passages_median": 1,
+      "gold_passages_max": 10,
+      "gold_single_passage_share": 0.5842,
+      "gold_median_tokens": 60,
+      "pred_total": 80,
+      "pred_correct": 45,
+      "pred_wrong": 33,
+      "pred_hallucinated": 2,
+      "pred_abstained_when_gold_present": 28,
+      "precision": 0.5625,
+      "f1_hist": {
+        "0.0-0.2": 3,
+        "0.2-0.4": 5,
+        "0.4-0.6": 9,
+        "0.6-0.8": 16
+      },
+      "failure_modes": {
+        "subset": 4,
+        "superset": 9,
+        "missing_passages": 17,
+        "other_location": 3,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 90,
+        "median_tokens_fit": 60.0,
+        "single_passage_rate_fit": 0.5555555555555556
+      }
+    },
+    "Revenue/Profit Sharing": {
+      "gold_present_count": 130,
+      "gold_present_share": 0.3412,
+      "gold_passages_mean": 2.55,
+      "gold_passages_median": 2.0,
+      "gold_passages_max": 11,
+      "gold_single_passage_share": 0.4077,
+      "gold_median_tokens": 98.0,
+      "pred_total": 41,
+      "pred_correct": 8,
+      "pred_wrong": 21,
+      "pred_hallucinated": 12,
+      "pred_abstained_when_gold_present": 10,
+      "precision": 0.1951,
+      "f1_hist": {
+        "0.0-0.2": 2,
+        "0.2-0.4": 5,
+        "0.4-0.6": 7,
+        "0.6-0.8": 7
+      },
+      "failure_modes": {
+        "subset": 1,
+        "superset": 1,
+        "missing_passages": 12,
+        "other_location": 6,
+        "paraphrase": 1
+      },
+      "fit_stats": {
+        "n_fit_present": 40,
+        "median_tokens_fit": 103.0,
+        "single_passage_rate_fit": 0.375
+      }
+    },
+    "Price Restrictions": {
+      "gold_present_count": 10,
+      "gold_present_share": 0.0262,
+      "gold_passages_mean": 2,
+      "gold_passages_median": 1.0,
+      "gold_passages_max": 7,
+      "gold_single_passage_share": 0.6,
+      "gold_median_tokens": 56.5,
+      "pred_total": 33,
+      "pred_correct": 0,
+      "pred_wrong": 3,
+      "pred_hallucinated": 30,
+      "pred_abstained_when_gold_present": 2,
+      "precision": 0.0,
+      "f1_hist": {
+        "0.0-0.2": 0,
+        "0.2-0.4": 2,
+        "0.4-0.6": 0,
+        "0.6-0.8": 1
+      },
+      "failure_modes": {
+        "subset": 1,
+        "superset": 0,
+        "missing_passages": 0,
+        "other_location": 2,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 2,
+        "median_tokens_fit": 54.5,
+        "single_passage_rate_fit": 1.0
+      }
+    },
+    "Minimum Commitment": {
+      "gold_present_count": 127,
+      "gold_present_share": 0.3333,
+      "gold_passages_mean": 2.61,
+      "gold_passages_median": 2,
+      "gold_passages_max": 14,
+      "gold_single_passage_share": 0.378,
+      "gold_median_tokens": 92,
+      "pred_total": 31,
+      "pred_correct": 5,
+      "pred_wrong": 18,
+      "pred_hallucinated": 8,
+      "pred_abstained_when_gold_present": 22,
+      "precision": 0.1613,
+      "f1_hist": {
+        "0.0-0.2": 5,
+        "0.2-0.4": 6,
+        "0.4-0.6": 3,
+        "0.6-0.8": 4
+      },
+      "failure_modes": {
+        "subset": 1,
+        "superset": 1,
+        "missing_passages": 9,
+        "other_location": 6,
+        "paraphrase": 1
+      },
+      "fit_stats": {
+        "n_fit_present": 39,
+        "median_tokens_fit": 93,
+        "single_passage_rate_fit": 0.358974358974359
+      }
+    },
+    "Volume Restriction": {
+      "gold_present_count": 62,
+      "gold_present_share": 0.1627,
+      "gold_passages_mean": 1.85,
+      "gold_passages_median": 1.0,
+      "gold_passages_max": 6,
+      "gold_single_passage_share": 0.5323,
+      "gold_median_tokens": 55.5,
+      "pred_total": 9,
+      "pred_correct": 0,
+      "pred_wrong": 2,
+      "pred_hallucinated": 7,
+      "pred_abstained_when_gold_present": 15,
+      "precision": 0.0,
+      "f1_hist": {
+        "0.0-0.2": 1,
+        "0.2-0.4": 0,
+        "0.4-0.6": 0,
+        "0.6-0.8": 1
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 0,
+        "missing_passages": 1,
+        "other_location": 1,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 20,
+        "median_tokens_fit": 62.5,
+        "single_passage_rate_fit": 0.5
+      }
+    },
+    "Ip Ownership Assignment": {
+      "gold_present_count": 88,
+      "gold_present_share": 0.231,
+      "gold_passages_mean": 2.69,
+      "gold_passages_median": 2.0,
+      "gold_passages_max": 15,
+      "gold_single_passage_share": 0.3295,
+      "gold_median_tokens": 125.5,
+      "pred_total": 51,
+      "pred_correct": 9,
+      "pred_wrong": 18,
+      "pred_hallucinated": 24,
+      "pred_abstained_when_gold_present": 7,
+      "precision": 0.1765,
+      "f1_hist": {
+        "0.0-0.2": 2,
+        "0.2-0.4": 6,
+        "0.4-0.6": 5,
+        "0.6-0.8": 5
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 0,
+        "missing_passages": 13,
+        "other_location": 3,
+        "paraphrase": 2
+      },
+      "fit_stats": {
+        "n_fit_present": 29,
+        "median_tokens_fit": 171,
+        "single_passage_rate_fit": 0.2413793103448276
+      }
+    },
+    "Joint Ip Ownership": {
+      "gold_present_count": 36,
+      "gold_present_share": 0.0945,
+      "gold_passages_mean": 2.61,
+      "gold_passages_median": 1.0,
+      "gold_passages_max": 11,
+      "gold_single_passage_share": 0.5278,
+      "gold_median_tokens": 77.0,
+      "pred_total": 7,
+      "pred_correct": 3,
+      "pred_wrong": 2,
+      "pred_hallucinated": 2,
+      "pred_abstained_when_gold_present": 3,
+      "precision": 0.4286,
+      "f1_hist": {
+        "0.0-0.2": 1,
+        "0.2-0.4": 0,
+        "0.4-0.6": 0,
+        "0.6-0.8": 1
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 0,
+        "missing_passages": 2,
+        "other_location": 0,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 13,
+        "median_tokens_fit": 89,
+        "single_passage_rate_fit": 0.46153846153846156
+      }
+    },
+    "License Grant": {
+      "gold_present_count": 201,
+      "gold_present_share": 0.5276,
+      "gold_passages_mean": 3.0,
+      "gold_passages_median": 2,
+      "gold_passages_max": 16,
+      "gold_single_passage_share": 0.3831,
+      "gold_median_tokens": 107,
+      "pred_total": 78,
+      "pred_correct": 23,
+      "pred_wrong": 50,
+      "pred_hallucinated": 5,
+      "pred_abstained_when_gold_present": 4,
+      "precision": 0.2949,
+      "f1_hist": {
+        "0.0-0.2": 3,
+        "0.2-0.4": 13,
+        "0.4-0.6": 15,
+        "0.6-0.8": 19
+      },
+      "failure_modes": {
+        "subset": 3,
+        "superset": 2,
+        "missing_passages": 42,
+        "other_location": 3,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 69,
+        "median_tokens_fit": 146,
+        "single_passage_rate_fit": 0.34782608695652173
+      }
+    },
+    "Non-Transferable License": {
+      "gold_present_count": 102,
+      "gold_present_share": 0.2677,
+      "gold_passages_mean": 2.18,
+      "gold_passages_median": 1.0,
+      "gold_passages_max": 12,
+      "gold_single_passage_share": 0.5294,
+      "gold_median_tokens": 78.5,
+      "pred_total": 34,
+      "pred_correct": 9,
+      "pred_wrong": 20,
+      "pred_hallucinated": 5,
+      "pred_abstained_when_gold_present": 8,
+      "precision": 0.2647,
+      "f1_hist": {
+        "0.0-0.2": 11,
+        "0.2-0.4": 5,
+        "0.4-0.6": 3,
+        "0.6-0.8": 1
+      },
+      "failure_modes": {
+        "subset": 4,
+        "superset": 1,
+        "missing_passages": 14,
+        "other_location": 0,
+        "paraphrase": 1
+      },
+      "fit_stats": {
+        "n_fit_present": 35,
+        "median_tokens_fit": 71,
+        "single_passage_rate_fit": 0.4857142857142857
+      }
+    },
+    "Affiliate License-Licensor": {
+      "gold_present_count": 20,
+      "gold_present_share": 0.0525,
+      "gold_passages_mean": 2.35,
+      "gold_passages_median": 2.0,
+      "gold_passages_max": 9,
+      "gold_single_passage_share": 0.4,
+      "gold_median_tokens": 146.5,
+      "pred_total": 6,
+      "pred_correct": 1,
+      "pred_wrong": 2,
+      "pred_hallucinated": 3,
+      "pred_abstained_when_gold_present": 5,
+      "precision": 0.1667,
+      "f1_hist": {
+        "0.0-0.2": 1,
+        "0.2-0.4": 1,
+        "0.4-0.6": 0,
+        "0.6-0.8": 0
+      },
+      "failure_modes": {
+        "subset": 1,
+        "superset": 0,
+        "missing_passages": 1,
+        "other_location": 0,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 8,
+        "median_tokens_fit": 187.5,
+        "single_passage_rate_fit": 0.375
+      }
+    },
+    "Affiliate License-Licensee": {
+      "gold_present_count": 47,
+      "gold_present_share": 0.1234,
+      "gold_passages_mean": 1.85,
+      "gold_passages_median": 1,
+      "gold_passages_max": 10,
+      "gold_single_passage_share": 0.5532,
+      "gold_median_tokens": 86,
+      "pred_total": 16,
+      "pred_correct": 4,
+      "pred_wrong": 11,
+      "pred_hallucinated": 1,
+      "pred_abstained_when_gold_present": 5,
+      "precision": 0.25,
+      "f1_hist": {
+        "0.0-0.2": 4,
+        "0.2-0.4": 1,
+        "0.4-0.6": 3,
+        "0.6-0.8": 3
+      },
+      "failure_modes": {
+        "subset": 3,
+        "superset": 0,
+        "missing_passages": 5,
+        "other_location": 3,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 16,
+        "median_tokens_fit": 96.0,
+        "single_passage_rate_fit": 0.5
+      }
+    },
+    "Unlimited/All-You-Can-Eat-License": {
+      "gold_present_count": 14,
+      "gold_present_share": 0.0367,
+      "gold_passages_mean": 1.86,
+      "gold_passages_median": 1.0,
+      "gold_passages_max": 5,
+      "gold_single_passage_share": 0.6429,
+      "gold_median_tokens": 80.5,
+      "pred_total": 2,
+      "pred_correct": 0,
+      "pred_wrong": 2,
+      "pred_hallucinated": 0,
+      "pred_abstained_when_gold_present": 1,
+      "precision": 0.0,
+      "f1_hist": {
+        "0.0-0.2": 1,
+        "0.2-0.4": 0,
+        "0.4-0.6": 0,
+        "0.6-0.8": 1
+      },
+      "failure_modes": {
+        "subset": 1,
+        "superset": 0,
+        "missing_passages": 0,
+        "other_location": 1,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 5,
+        "median_tokens_fit": 130,
+        "single_passage_rate_fit": 0.6
+      }
+    },
+    "Irrevocable Or Perpetual License": {
+      "gold_present_count": 55,
+      "gold_present_share": 0.1444,
+      "gold_passages_mean": 2.24,
+      "gold_passages_median": 2,
+      "gold_passages_max": 10,
+      "gold_single_passage_share": 0.4727,
+      "gold_median_tokens": 108,
+      "pred_total": 10,
+      "pred_correct": 2,
+      "pred_wrong": 8,
+      "pred_hallucinated": 0,
+      "pred_abstained_when_gold_present": 8,
+      "precision": 0.2,
+      "f1_hist": {
+        "0.0-0.2": 4,
+        "0.2-0.4": 1,
+        "0.4-0.6": 2,
+        "0.6-0.8": 1
+      },
+      "failure_modes": {
+        "subset": 1,
+        "superset": 0,
+        "missing_passages": 6,
+        "other_location": 1,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 17,
+        "median_tokens_fit": 92,
+        "single_passage_rate_fit": 0.5882352941176471
+      }
+    },
+    "Source Code Escrow": {
+      "gold_present_count": 10,
+      "gold_present_share": 0.0262,
+      "gold_passages_mean": 5.7,
+      "gold_passages_median": 5.0,
+      "gold_passages_max": 11,
+      "gold_single_passage_share": 0.1,
+      "gold_median_tokens": 332.0,
+      "pred_total": 3,
+      "pred_correct": 0,
+      "pred_wrong": 3,
+      "pred_hallucinated": 0,
+      "pred_abstained_when_gold_present": 2,
+      "precision": 0.0,
+      "f1_hist": {
+        "0.0-0.2": 0,
+        "0.2-0.4": 2,
+        "0.4-0.6": 0,
+        "0.6-0.8": 1
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 0,
+        "missing_passages": 2,
+        "other_location": 0,
+        "paraphrase": 1
+      },
+      "fit_stats": {
+        "n_fit_present": 3,
+        "median_tokens_fit": 420,
+        "single_passage_rate_fit": 0.3333333333333333
+      }
+    },
+    "Post-Termination Services": {
+      "gold_present_count": 135,
+      "gold_present_share": 0.3543,
+      "gold_passages_mean": 2.56,
+      "gold_passages_median": 2,
+      "gold_passages_max": 23,
+      "gold_single_passage_share": 0.4963,
+      "gold_median_tokens": 106,
+      "pred_total": 27,
+      "pred_correct": 12,
+      "pred_wrong": 7,
+      "pred_hallucinated": 8,
+      "pred_abstained_when_gold_present": 32,
+      "precision": 0.4444,
+      "f1_hist": {
+        "0.0-0.2": 3,
+        "0.2-0.4": 1,
+        "0.4-0.6": 2,
+        "0.6-0.8": 1
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 0,
+        "missing_passages": 4,
+        "other_location": 3,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 41,
+        "median_tokens_fit": 129,
+        "single_passage_rate_fit": 0.43902439024390244
+      }
+    },
+    "Audit Rights": {
+      "gold_present_count": 166,
+      "gold_present_share": 0.4357,
+      "gold_passages_mean": 3.17,
+      "gold_passages_median": 2.0,
+      "gold_passages_max": 19,
+      "gold_single_passage_share": 0.3373,
+      "gold_median_tokens": 96.0,
+      "pred_total": 55,
+      "pred_correct": 20,
+      "pred_wrong": 31,
+      "pred_hallucinated": 4,
+      "pred_abstained_when_gold_present": 12,
+      "precision": 0.3636,
+      "f1_hist": {
+        "0.0-0.2": 5,
+        "0.2-0.4": 8,
+        "0.4-0.6": 6,
+        "0.6-0.8": 12
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 4,
+        "missing_passages": 19,
+        "other_location": 5,
+        "paraphrase": 3
+      },
+      "fit_stats": {
+        "n_fit_present": 51,
+        "median_tokens_fit": 136,
+        "single_passage_rate_fit": 0.27450980392156865
+      }
+    },
+    "Uncapped Liability": {
+      "gold_present_count": 86,
+      "gold_present_share": 0.2257,
+      "gold_passages_mean": 1.5,
+      "gold_passages_median": 1.0,
+      "gold_passages_max": 5,
+      "gold_single_passage_share": 0.686,
+      "gold_median_tokens": 82.5,
+      "pred_total": 19,
+      "pred_correct": 6,
+      "pred_wrong": 10,
+      "pred_hallucinated": 3,
+      "pred_abstained_when_gold_present": 15,
+      "precision": 0.3158,
+      "f1_hist": {
+        "0.0-0.2": 1,
+        "0.2-0.4": 3,
+        "0.4-0.6": 4,
+        "0.6-0.8": 2
+      },
+      "failure_modes": {
+        "subset": 5,
+        "superset": 0,
+        "missing_passages": 4,
+        "other_location": 0,
+        "paraphrase": 1
+      },
+      "fit_stats": {
+        "n_fit_present": 26,
+        "median_tokens_fit": 77.0,
+        "single_passage_rate_fit": 0.7692307692307693
+      }
+    },
+    "Cap On Liability": {
+      "gold_present_count": 206,
+      "gold_present_share": 0.5407,
+      "gold_passages_mean": 2.48,
+      "gold_passages_median": 2.0,
+      "gold_passages_max": 16,
+      "gold_single_passage_share": 0.4175,
+      "gold_median_tokens": 99.0,
+      "pred_total": 42,
+      "pred_correct": 8,
+      "pred_wrong": 34,
+      "pred_hallucinated": 0,
+      "pred_abstained_when_gold_present": 32,
+      "precision": 0.1905,
+      "f1_hist": {
+        "0.0-0.2": 2,
+        "0.2-0.4": 11,
+        "0.4-0.6": 12,
+        "0.6-0.8": 9
+      },
+      "failure_modes": {
+        "subset": 4,
+        "superset": 0,
+        "missing_passages": 27,
+        "other_location": 2,
+        "paraphrase": 1
+      },
+      "fit_stats": {
+        "n_fit_present": 70,
+        "median_tokens_fit": 94.0,
+        "single_passage_rate_fit": 0.4857142857142857
+      }
+    },
+    "Liquidated Damages": {
+      "gold_present_count": 43,
+      "gold_present_share": 0.1129,
+      "gold_passages_mean": 1.98,
+      "gold_passages_median": 2,
+      "gold_passages_max": 10,
+      "gold_single_passage_share": 0.4884,
+      "gold_median_tokens": 94,
+      "pred_total": 7,
+      "pred_correct": 1,
+      "pred_wrong": 3,
+      "pred_hallucinated": 3,
+      "pred_abstained_when_gold_present": 10,
+      "precision": 0.1429,
+      "f1_hist": {
+        "0.0-0.2": 2,
+        "0.2-0.4": 0,
+        "0.4-0.6": 0,
+        "0.6-0.8": 1
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 0,
+        "missing_passages": 2,
+        "other_location": 1,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 13,
+        "median_tokens_fit": 78,
+        "single_passage_rate_fit": 0.6923076923076923
+      }
+    },
+    "Warranty Duration": {
+      "gold_present_count": 56,
+      "gold_present_share": 0.147,
+      "gold_passages_mean": 2.59,
+      "gold_passages_median": 2.0,
+      "gold_passages_max": 10,
+      "gold_single_passage_share": 0.4643,
+      "gold_median_tokens": 78.0,
+      "pred_total": 24,
+      "pred_correct": 1,
+      "pred_wrong": 18,
+      "pred_hallucinated": 5,
+      "pred_abstained_when_gold_present": 9,
+      "precision": 0.0417,
+      "f1_hist": {
+        "0.0-0.2": 11,
+        "0.2-0.4": 4,
+        "0.4-0.6": 3,
+        "0.6-0.8": 0
+      },
+      "failure_modes": {
+        "subset": 5,
+        "superset": 0,
+        "missing_passages": 12,
+        "other_location": 1,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 18,
+        "median_tokens_fit": 74.5,
+        "single_passage_rate_fit": 0.4444444444444444
+      }
+    },
+    "Insurance": {
+      "gold_present_count": 121,
+      "gold_present_share": 0.3176,
+      "gold_passages_mean": 3.45,
+      "gold_passages_median": 2,
+      "gold_passages_max": 17,
+      "gold_single_passage_share": 0.2975,
+      "gold_median_tokens": 104,
+      "pred_total": 39,
+      "pred_correct": 25,
+      "pred_wrong": 10,
+      "pred_hallucinated": 4,
+      "pred_abstained_when_gold_present": 15,
+      "precision": 0.641,
+      "f1_hist": {
+        "0.0-0.2": 3,
+        "0.2-0.4": 2,
+        "0.4-0.6": 5,
+        "0.6-0.8": 0
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 0,
+        "missing_passages": 5,
+        "other_location": 2,
+        "paraphrase": 3
+      },
+      "fit_stats": {
+        "n_fit_present": 43,
+        "median_tokens_fit": 111,
+        "single_passage_rate_fit": 0.27906976744186046
+      }
+    },
+    "Covenant Not To Sue": {
+      "gold_present_count": 73,
+      "gold_present_share": 0.1916,
+      "gold_passages_mean": 1.63,
+      "gold_passages_median": 1,
+      "gold_passages_max": 5,
+      "gold_single_passage_share": 0.6164,
+      "gold_median_tokens": 69,
+      "pred_total": 11,
+      "pred_correct": 8,
+      "pred_wrong": 2,
+      "pred_hallucinated": 1,
+      "pred_abstained_when_gold_present": 19,
+      "precision": 0.7273,
+      "f1_hist": {
+        "0.0-0.2": 0,
+        "0.2-0.4": 0,
+        "0.4-0.6": 1,
+        "0.6-0.8": 1
+      },
+      "failure_modes": {
+        "subset": 1,
+        "superset": 0,
+        "missing_passages": 1,
+        "other_location": 0,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 22,
+        "median_tokens_fit": 57.0,
+        "single_passage_rate_fit": 0.6818181818181818
+      }
+    },
+    "Third Party Beneficiary": {
+      "gold_present_count": 26,
+      "gold_present_share": 0.0682,
+      "gold_passages_mean": 1.23,
+      "gold_passages_median": 1.0,
+      "gold_passages_max": 4,
+      "gold_single_passage_share": 0.8846,
+      "gold_median_tokens": 37.0,
+      "pred_total": 36,
+      "pred_correct": 3,
+      "pred_wrong": 2,
+      "pred_hallucinated": 31,
+      "pred_abstained_when_gold_present": 2,
+      "precision": 0.0833,
+      "f1_hist": {
+        "0.0-0.2": 0,
+        "0.2-0.4": 1,
+        "0.4-0.6": 1,
+        "0.6-0.8": 0
+      },
+      "failure_modes": {
+        "subset": 0,
+        "superset": 1,
+        "missing_passages": 0,
+        "other_location": 1,
+        "paraphrase": 0
+      },
+      "fit_stats": {
+        "n_fit_present": 8,
+        "median_tokens_fit": 33.5,
+        "single_passage_rate_fit": 0.875
+      }
+    }
+  },
+  "candidates": [
+    {
+      "category": "Agreement Date",
+      "precision": 0.9099,
+      "pred_correct": 101,
+      "pred_wrong": 10,
+      "pred_hallucinated": 0,
+      "single_passage_share": 0.9858,
+      "median_tokens": 3,
+      "primary_issue": "other_location (5/10)"
+    },
+    {
+      "category": "Document Name",
+      "precision": 0.8919,
+      "pred_correct": 132,
+      "pred_wrong": 16,
+      "pred_hallucinated": 0,
+      "single_passage_share": 0.979,
+      "median_tokens": 3,
+      "primary_issue": "superset (5/16)"
+    },
+    {
+      "category": "Covenant Not To Sue",
+      "precision": 0.7273,
+      "pred_correct": 8,
+      "pred_wrong": 2,
+      "pred_hallucinated": 1,
+      "single_passage_share": 0.6164,
+      "median_tokens": 69,
+      "primary_issue": "subset (1/2)"
+    },
+    {
+      "category": "Insurance",
+      "precision": 0.641,
+      "pred_correct": 25,
+      "pred_wrong": 10,
+      "pred_hallucinated": 4,
+      "single_passage_share": 0.2975,
+      "median_tokens": 104,
+      "primary_issue": "missing_passages (5/10)"
+    },
+    {
+      "category": "Effective Date",
+      "precision": 0.625,
+      "pred_correct": 70,
+      "pred_wrong": 33,
+      "pred_hallucinated": 9,
+      "single_passage_share": 0.8729,
+      "median_tokens": 5,
+      "primary_issue": "subset (15/33)"
+    },
+    {
+      "category": "No-Solicit Of Employees",
+      "precision": 0.5833,
+      "pred_correct": 7,
+      "pred_wrong": 4,
+      "pred_hallucinated": 1,
+      "single_passage_share": 0.6341,
+      "median_tokens": 74,
+      "primary_issue": "superset (2/4)"
+    },
+    {
+      "category": "Termination For Convenience",
+      "precision": 0.5769,
+      "pred_correct": 30,
+      "pred_wrong": 12,
+      "pred_hallucinated": 10,
+      "single_passage_share": 0.7361,
+      "median_tokens": 34.5,
+      "primary_issue": "missing_passages (7/12)"
+    },
+    {
+      "category": "Anti-Assignment",
+      "precision": 0.5625,
+      "pred_correct": 45,
+      "pred_wrong": 33,
+      "pred_hallucinated": 2,
+      "single_passage_share": 0.5842,
+      "median_tokens": 60,
+      "primary_issue": "missing_passages (17/33)"
+    },
+    {
+      "category": "Post-Termination Services",
+      "precision": 0.4444,
+      "pred_correct": 12,
+      "pred_wrong": 7,
+      "pred_hallucinated": 8,
+      "single_passage_share": 0.4963,
+      "median_tokens": 106,
+      "primary_issue": "hallucination (8)"
+    },
+    {
+      "category": "Joint Ip Ownership",
+      "precision": 0.4286,
+      "pred_correct": 3,
+      "pred_wrong": 2,
+      "pred_hallucinated": 2,
+      "single_passage_share": 0.5278,
+      "median_tokens": 77.0,
+      "primary_issue": "missing_passages (2/2)"
+    },
+    {
+      "category": "Non-Compete",
+      "precision": 0.3667,
+      "pred_correct": 11,
+      "pred_wrong": 9,
+      "pred_hallucinated": 10,
+      "single_passage_share": 0.4945,
+      "median_tokens": 85,
+      "primary_issue": "hallucination (10)"
+    },
+    {
+      "category": "Audit Rights",
+      "precision": 0.3636,
+      "pred_correct": 20,
+      "pred_wrong": 31,
+      "pred_hallucinated": 4,
+      "single_passage_share": 0.3373,
+      "median_tokens": 96.0,
+      "primary_issue": "missing_passages (19/31)"
+    },
+    {
+      "category": "Change Of Control",
+      "precision": 0.3636,
+      "pred_correct": 12,
+      "pred_wrong": 13,
+      "pred_hallucinated": 8,
+      "single_passage_share": 0.4186,
+      "median_tokens": 92.5,
+      "primary_issue": "missing_passages (6/13)"
+    },
+    {
+      "category": "Most Favored Nation",
+      "precision": 0.3571,
+      "pred_correct": 5,
+      "pred_wrong": 3,
+      "pred_hallucinated": 6,
+      "single_passage_share": 0.7143,
+      "median_tokens": 101,
+      "primary_issue": "hallucination (6)"
+    },
+    {
+      "category": "Non-Disparagement",
+      "precision": 0.3333,
+      "pred_correct": 3,
+      "pred_wrong": 3,
+      "pred_hallucinated": 3,
+      "single_passage_share": 0.5,
+      "median_tokens": 69.5,
+      "primary_issue": "missing_passages (3/3)"
+    },
+    {
+      "category": "Uncapped Liability",
+      "precision": 0.3158,
+      "pred_correct": 6,
+      "pred_wrong": 10,
+      "pred_hallucinated": 3,
+      "single_passage_share": 0.686,
+      "median_tokens": 82.5,
+      "primary_issue": "subset (5/10)"
+    },
+    {
+      "category": "License Grant",
+      "precision": 0.2949,
+      "pred_correct": 23,
+      "pred_wrong": 50,
+      "pred_hallucinated": 5,
+      "single_passage_share": 0.3831,
+      "median_tokens": 107,
+      "primary_issue": "missing_passages (42/50)"
+    },
+    {
+      "category": "Non-Transferable License",
+      "precision": 0.2647,
+      "pred_correct": 9,
+      "pred_wrong": 20,
+      "pred_hallucinated": 5,
+      "single_passage_share": 0.5294,
+      "median_tokens": 78.5,
+      "primary_issue": "missing_passages (14/20)"
+    },
+    {
+      "category": "Affiliate License-Licensee",
+      "precision": 0.25,
+      "pred_correct": 4,
+      "pred_wrong": 11,
+      "pred_hallucinated": 1,
+      "single_passage_share": 0.5532,
+      "median_tokens": 86,
+      "primary_issue": "missing_passages (5/11)"
+    },
+    {
+      "category": "No-Solicit Of Customers",
+      "precision": 0.25,
+      "pred_correct": 2,
+      "pred_wrong": 3,
+      "pred_hallucinated": 3,
+      "single_passage_share": 0.4348,
+      "median_tokens": 69,
+      "primary_issue": "missing_passages (2/3)"
+    },
+    {
+      "category": "Competitive Restriction Exception",
+      "precision": 0.2333,
+      "pred_correct": 7,
+      "pred_wrong": 9,
+      "pred_hallucinated": 14,
+      "single_passage_share": 0.614,
+      "median_tokens": 78,
+      "primary_issue": "hallucination (14)"
+    },
+    {
+      "category": "Exclusivity",
+      "precision": 0.2121,
+      "pred_correct": 14,
+      "pred_wrong": 31,
+      "pred_hallucinated": 21,
+      "single_passage_share": 0.4403,
+      "median_tokens": 88.0,
+      "primary_issue": "missing_passages (21/31)"
+    },
+    {
+      "category": "Rofr/Rofo/Rofn",
+      "precision": 0.2,
+      "pred_correct": 3,
+      "pred_wrong": 11,
+      "pred_hallucinated": 1,
+      "single_passage_share": 0.2794,
+      "median_tokens": 136.5,
+      "primary_issue": "missing_passages (9/11)"
+    },
+    {
+      "category": "Irrevocable Or Perpetual License",
+      "precision": 0.2,
+      "pred_correct": 2,
+      "pred_wrong": 8,
+      "pred_hallucinated": 0,
+      "single_passage_share": 0.4727,
+      "median_tokens": 108,
+      "primary_issue": "missing_passages (6/8)"
+    },
+    {
+      "category": "Revenue/Profit Sharing",
+      "precision": 0.1951,
+      "pred_correct": 8,
+      "pred_wrong": 21,
+      "pred_hallucinated": 12,
+      "single_passage_share": 0.4077,
+      "median_tokens": 98.0,
+      "primary_issue": "missing_passages (12/21)"
+    },
+    {
+      "category": "Cap On Liability",
+      "precision": 0.1905,
+      "pred_correct": 8,
+      "pred_wrong": 34,
+      "pred_hallucinated": 0,
+      "single_passage_share": 0.4175,
+      "median_tokens": 99.0,
+      "primary_issue": "missing_passages (27/34)"
+    },
+    {
+      "category": "Ip Ownership Assignment",
+      "precision": 0.1765,
+      "pred_correct": 9,
+      "pred_wrong": 18,
+      "pred_hallucinated": 24,
+      "single_passage_share": 0.3295,
+      "median_tokens": 125.5,
+      "primary_issue": "hallucination (24)"
+    },
+    {
+      "category": "Affiliate License-Licensor",
+      "precision": 0.1667,
+      "pred_correct": 1,
+      "pred_wrong": 2,
+      "pred_hallucinated": 3,
+      "single_passage_share": 0.4,
+      "median_tokens": 146.5,
+      "primary_issue": "hallucination (3)"
+    },
+    {
+      "category": "Minimum Commitment",
+      "precision": 0.1613,
+      "pred_correct": 5,
+      "pred_wrong": 18,
+      "pred_hallucinated": 8,
+      "single_passage_share": 0.378,
+      "median_tokens": 92,
+      "primary_issue": "missing_passages (9/18)"
+    },
+    {
+      "category": "Liquidated Damages",
+      "precision": 0.1429,
+      "pred_correct": 1,
+      "pred_wrong": 3,
+      "pred_hallucinated": 3,
+      "single_passage_share": 0.4884,
+      "median_tokens": 94,
+      "primary_issue": "missing_passages (2/3)"
+    },
+    {
+      "category": "Expiration Date",
+      "precision": 0.0938,
+      "pred_correct": 3,
+      "pred_wrong": 26,
+      "pred_hallucinated": 3,
+      "single_passage_share": 0.8933,
+      "median_tokens": 34.0,
+      "primary_issue": "subset (26/26)"
+    },
+    {
+      "category": "Third Party Beneficiary",
+      "precision": 0.0833,
+      "pred_correct": 3,
+      "pred_wrong": 2,
+      "pred_hallucinated": 31,
+      "single_passage_share": 0.8846,
+      "median_tokens": 37.0,
+      "primary_issue": "hallucination (31)"
+    },
+    {
+      "category": "Warranty Duration",
+      "precision": 0.0417,
+      "pred_correct": 1,
+      "pred_wrong": 18,
+      "pred_hallucinated": 5,
+      "single_passage_share": 0.4643,
+      "median_tokens": 78.0,
+      "primary_issue": "missing_passages (12/18)"
+    },
+    {
+      "category": "Parties",
+      "precision": 0.027,
+      "pred_correct": 4,
+      "pred_wrong": 144,
+      "pred_hallucinated": 0,
+      "single_passage_share": 0.0026,
+      "median_tokens": 15,
+      "primary_issue": "missing_passages (119/144)"
+    },
+    {
+      "category": "Governing Law",
+      "precision": 0.0099,
+      "pred_correct": 1,
+      "pred_wrong": 98,
+      "pred_hallucinated": 2,
+      "single_passage_share": 0.9479,
+      "median_tokens": 30.0,
+      "primary_issue": "subset (92/98)"
+    },
+    {
+      "category": "Notice Period To Terminate Renewal",
+      "precision": 0.0,
+      "pred_correct": 0,
+      "pred_wrong": 25,
+      "pred_hallucinated": 1,
+      "single_passage_share": 0.8667,
+      "median_tokens": 54,
+      "primary_issue": "subset (23/25)"
+    },
+    {
+      "category": "Price Restrictions",
+      "precision": 0.0,
+      "pred_correct": 0,
+      "pred_wrong": 3,
+      "pred_hallucinated": 30,
+      "single_passage_share": 0.6,
+      "median_tokens": 56.5,
+      "primary_issue": "hallucination (30)"
+    },
+    {
+      "category": "Renewal Term",
+      "precision": 0.0,
+      "pred_correct": 0,
+      "pred_wrong": 40,
+      "pred_hallucinated": 6,
+      "single_passage_share": 0.848,
+      "median_tokens": 51,
+      "primary_issue": "subset (35/40)"
+    },
+    {
+      "category": "Source Code Escrow",
+      "precision": 0.0,
+      "pred_correct": 0,
+      "pred_wrong": 3,
+      "pred_hallucinated": 0,
+      "single_passage_share": 0.1,
+      "median_tokens": 332.0,
+      "primary_issue": "missing_passages (2/3)"
+    },
+    {
+      "category": "Unlimited/All-You-Can-Eat-License",
+      "precision": 0.0,
+      "pred_correct": 0,
+      "pred_wrong": 2,
+      "pred_hallucinated": 0,
+      "single_passage_share": 0.6429,
+      "median_tokens": 80.5,
+      "primary_issue": "subset (1/2)"
+    },
+    {
+      "category": "Volume Restriction",
+      "precision": 0.0,
+      "pred_correct": 0,
+      "pred_wrong": 2,
+      "pred_hallucinated": 7,
+      "single_passage_share": 0.5323,
+      "median_tokens": 55.5,
+      "primary_issue": "hallucination (7)"
+    }
+  ]
+}

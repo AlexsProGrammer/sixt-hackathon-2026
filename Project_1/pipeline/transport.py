@@ -49,17 +49,42 @@ class ParseError(Exception):
     pass
 
 
+def _env_float(name: str, default: float) -> float:
+    raw = os.environ.get(name, "").strip()
+    return float(raw) if raw else default
+
+
+def _env_int(name: str, default: int) -> int:
+    raw = os.environ.get(name, "").strip()
+    return int(raw) if raw else default
+
+
 class RunState:
     """Counters and the shared stop/wait state for one run. Thread-safe."""
 
-    def __init__(self, wait_budget: float = WAIT_BUDGET_S):
+    def __init__(self, wait_budget: float | None = None, *,
+                 min_interval: float | None = None, max_retries: int | None = None):
         self._lock = threading.Lock()
         self.stop = threading.Event()
-        self.wait_budget = wait_budget
+        self.wait_budget = _env_float("LLM_WAIT_BUDGET_S", WAIT_BUDGET_S) if wait_budget is None else wait_budget
+        self.min_interval = _env_float("LLM_MIN_INTERVAL_S", 0.0) if min_interval is None else min_interval
+        self.max_retries = _env_int("LLM_MAX_RETRIES", MAX_RETRIES) if max_retries is None else max_retries
         self.waited = 0.0
         self.requests = 0
         self.cache_hits = 0
         self.warnings: list[str] = []
+        self._next_request_at = 0.0
+
+    def pace(self, sleep=time.sleep) -> None:
+        """Enforce LLM_MIN_INTERVAL_S between outbound requests across threads."""
+        if self.min_interval <= 0:
+            return
+        with self._lock:
+            now = time.monotonic()
+            delay = self._next_request_at - now
+            self._next_request_at = max(now, self._next_request_at) + self.min_interval
+        if delay > 0:
+            sleep(delay)
 
     def bump(self, name: str, n: int = 1) -> None:
         with self._lock:
@@ -178,6 +203,7 @@ def call_with_retry(cfg: dict, messages: list[dict], temperature: float, state: 
     while True:
         if state.stop.is_set():
             raise TransportError("stopped", "run stopped after rate limit; request not sent")
+        state.pace(sleep=sleep)
         state.bump("requests")
         try:
             return post_chat(cfg, messages, temperature, **extra)
@@ -186,13 +212,14 @@ def call_with_retry(cfg: dict, messages: list[dict], temperature: float, state: 
                 state.warn(f"{model or cfg.get('LLM_MODEL')}: {e}"[:260])
             if not e.retryable:
                 raise
-            if e.status == 429 and attempt >= MAX_RETRIES:
+            max_retries = getattr(state, "max_retries", MAX_RETRIES)
+            if e.status == 429 and attempt >= max_retries:
                 state.stop.set()
                 raise TransportError("rate_limited", "HTTP 429 after retry; run stopped", status=429) from None
-            if attempt >= MAX_RETRIES:
+            if attempt >= max_retries:
                 raise
             wait = e.retry_after if e.retry_after is not None else 2.0 * (2 ** attempt)
-            if e.status == 429 and wait > WAIT_BUDGET_S:
+            if e.status == 429 and wait > state.wait_budget:
                 state.stop.set()
                 raise TransportError("rate_limited", f"HTTP 429, Retry-After {wait:.0f}s exceeds budget; run stopped",
                                      status=429) from None
