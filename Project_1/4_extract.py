@@ -39,8 +39,9 @@ HERE = Path(__file__).parent
 # EXTRACT_DATA_DIR overrides the data folder (used by the tests with synthetic data). Normal runs use data/.
 DATA = Path(os.environ["EXTRACT_DATA_DIR"]) if os.environ.get("EXTRACT_DATA_DIR") else HERE / "data"
 LLM_VARS = ("LLM_BASE_URL", "LLM_API_KEY", "LLM_MODEL")
-CONTRACT_VERSION = 1          # run manifest and decision file
-UQ_METHODS = ("k1_grounded", "k_agreement_only", "k_agreement_conf", "k_entropy")
+CONTRACT_VERSION = 1          # run manifest and decision file v1
+DECISION_CONTRACT_VERSIONS = (1, 2)
+UQ_METHODS = ("k1_grounded", "k_agreement_only", "k_agreement_conf", "k_entropy", "selector")
 SAMPLING_MODES = ("mixed", "identical")
 DEFAULTS = {"workers": 1, "samples": 1, "temperature": 0.7, "chunk_chars": 45000,
             "overlap_chars": 3000, "batch_size": 10, "uq_method": None, "sampling": "mixed"}
@@ -167,7 +168,7 @@ def offline_extract(rec: dict) -> dict:
 class Ctx:
     """Everything one run needs. Built once in main()."""
 
-    def __init__(self, cfg, cache, state, pipeline, on_error, eb=None, cuad=None):
+    def __init__(self, cfg, cache, state, pipeline, on_error, eb=None, cuad=None, selector=None):
         self.cfg = cfg
         self.cache = cache
         self.state = state
@@ -175,6 +176,7 @@ class Ctx:
         self.on_error = on_error
         self.eb = eb          # None = text pipeline only; else the resolved ExtractBench vision config (T06)
         self.cuad = cuad      # None = text pipeline only; else the resolved CUAD long-context config (T07)
+        self.selector = selector  # Loaded selector.json for method='selector' (T10)
 
 
 def build_messages(job: dict) -> list[dict]:
@@ -234,7 +236,17 @@ def extract_llm(rec: dict, ctx: Ctx) -> dict:
         agg = aggregate_views(view_list, schema, {"text": text, "ocr": None})
     else:
         agg = aggregate_v2(samples, schema, text, expected_k=p["samples"])
-    fields = make_prediction(agg, schema, method=p["uq_method"])
+    if p["uq_method"] == "selector":
+        from evaluation.docs import family_of
+        fields = make_prediction(
+            agg,
+            schema,
+            method="selector",
+            selector=ctx.selector,
+            record_meta={"source": rec.get("source_dataset"), "family": family_of(rec)},
+        )
+    else:
+        fields = make_prediction(agg, schema, method=p["uq_method"])
     failures = sorted({r["error"] for r in results if not r["ok"]})
     diag = dict(agg["diagnostics"])
     diag.update({"complete": all(s["complete"] for s in samples), "uq_method": p["uq_method"],
@@ -325,14 +337,27 @@ def check_existing(out: Path, diag: Path, manifest: Path, samples: Path, pipelin
 
 # ---------------------------------------------------------------- decision file
 
+def _resolve_selector_path(raw_path: str, decision_path: str) -> Path:
+    p = Path(raw_path)
+    if p.is_absolute():
+        return p
+    cand_rel = Path(decision_path).resolve().parent / p
+    if cand_rel.exists():
+        return cand_rel
+    cand_here = HERE / p
+    if cand_here.exists():
+        return cand_here
+    return p
+
+
 def load_decision(path: str) -> dict:
-    """Strict: version, boolean abstain_all, finite threshold in [0, 1], complete pipeline block for an active
-    decision, and pipeline_sha256 (when present) must match the pipeline block. No silent defaults."""
+    """Strict: version (1 or 2), boolean abstain_all, finite threshold in [0, 1], complete pipeline block for an
+    active decision, pipeline_sha256 (when present) and selector_sha256 (v2) must match. No silent defaults."""
     try:
         dec = json.loads(Path(path).read_text(encoding="utf-8"))
     except (OSError, ValueError) as e:
         raise SystemExit(f"ERROR: cannot read decision file {path}: {type(e).__name__}")
-    if not isinstance(dec, dict) or dec.get("contract_version") != CONTRACT_VERSION:
+    if not isinstance(dec, dict) or dec.get("contract_version") not in DECISION_CONTRACT_VERSIONS:
         raise SystemExit(f"ERROR: decision file {path} has an unknown contract_version.")
     if not isinstance(dec.get("abstain_all"), bool):
         raise SystemExit(f"ERROR: decision file {path} lacks a boolean abstain_all.")
@@ -349,6 +374,25 @@ def load_decision(path: str) -> dict:
             raise SystemExit(f"ERROR: decision file pipeline block lacks: {', '.join(missing)}.")
         if "pipeline_sha256" in dec and dec["pipeline_sha256"] != sha256_obj(pipe):
             raise SystemExit("ERROR: decision file pipeline_sha256 does not match its pipeline block.")
+        if dec.get("contract_version") == 2:
+            sel_raw = dec.get("selector_path")
+            sel_sha = dec.get("selector_sha256")
+            if not isinstance(sel_raw, str) or not sel_raw or not isinstance(sel_sha, str) or not sel_sha:
+                raise SystemExit(f"ERROR: decision file v2 {path} lacks selector_path or selector_sha256.")
+            sel_file = _resolve_selector_path(sel_raw, path)
+            try:
+                sel_bytes = sel_file.read_bytes()
+            except OSError as e:
+                raise SystemExit(f"ERROR: cannot read selector file {sel_file}: {type(e).__name__}")
+            if sha256_bytes(sel_bytes) != sel_sha:
+                raise SystemExit("ERROR: decision file selector_sha256 does not match the selector file.")
+            try:
+                sel_obj = json.loads(sel_bytes.decode("utf-8"))
+            except ValueError as e:
+                raise SystemExit(f"ERROR: selector file {sel_file} is not valid JSON: {type(e).__name__}")
+            if not isinstance(sel_obj, dict) or sel_obj.get("selector_version") != 1:
+                raise SystemExit(f"ERROR: selector file {sel_file} has an unknown selector_version.")
+            dec["_selector"] = sel_obj
     return dec
 
 
@@ -498,8 +542,10 @@ def main(argv=None) -> int:
         k = pipeline_values["samples"]
         if pipeline_values["uq_method"] == "k1_grounded" and k != 1:
             raise SystemExit("ERROR: --uq-method k1_grounded needs --samples 1.")
-        if pipeline_values["uq_method"] != "k1_grounded" and k < 2:
+        if pipeline_values["uq_method"] not in ("k1_grounded", "selector") and k < 2:
             raise SystemExit(f"ERROR: --uq-method {pipeline_values['uq_method']} needs --samples 2 or more.")
+        if pipeline_values["uq_method"] == "selector" and not (dec and dec.get("_selector")):
+            raise SystemExit("ERROR: --uq-method selector needs a v2 --decision file with a selector.")
     pipeline = {**pipeline_values, "model": cfg["LLM_MODEL"] if cfg else None,
                 "prompt_version": PROMPT_VERSION if mode == "llm" else None}
     agg_mode = a.aggregator or (dec["pipeline"].get("aggregator") if dec is not None and not dec["abstain_all"] else None)
@@ -554,7 +600,8 @@ def main(argv=None) -> int:
 
     state = RunState()
     cache = ReplyCache(None if a.no_cache else Path(a.cache_dir), state)
-    ctx = Ctx(cfg, cache, state, pipeline, a.on_error, eb_cfg, cuad_cfg)
+    ctx = Ctx(cfg, cache, state, pipeline, a.on_error, eb_cfg, cuad_cfg,
+              selector=dec.get("_selector") if dec else None)
     if mode == "llm" and any(r["source_dataset"] == "cuad" for r in recs):
         load_cuad()  # once, before any worker pool starts
 
