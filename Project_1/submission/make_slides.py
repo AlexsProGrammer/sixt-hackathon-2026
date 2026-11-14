@@ -16,10 +16,10 @@ from matplotlib.patches import FancyArrowPatch, FancyBboxPatch  # noqa: E402
 OUT = Path(__file__).resolve().parent / "slides.pdf"
 
 # ---------------------------------------------------------------- measured numbers (sources in comments)
-# analyse_fields.py results/llm_dev.jsonl  (307 dev docs, ExtractBench answers, "source / confidence" table)
+# tools/analyse_fields.py results/llm_dev.jsonl  (307 dev docs, ExtractBench answers, "source / confidence" table)
 CONF_VS_TRUTH = [("model says\n0.95", 0.702), ("model says\n0.99", 0.957), ("model says\n1.00", 0.890)]
-# 5_score.py on the stored runs (README / SUBMISSION results table) and the leave-one-group-out
-# whitelist simulation of analyse_fields.py (min_n=3, grounded): 378 booked, 0 wrong
+# 5_score.py on the stored runs (SUBMISSION results table) and the leave-one-group-out
+# whitelist simulation of tools/analyse_fields.py (min_n=3, grounded): 378 booked, 0 wrong
 NET = [("Most common\nvalue", -177.8), ("Model\nconfidence", -30.9), ("Same model\n3x (probly)", -1.2),
        ("Human does\neverything", 0.0), ("Proven field\ncells", +3.0)]
 SELECTOR_BOOKED, SELECTOR_WRONG = 378, 0
@@ -175,28 +175,27 @@ def s4():
     cx = fig.add_axes([0.62, 0.16, 0.34, 0.54])
     names = [n for n, _ in NET]
     vals = [v for _, v in NET]
-    clipped = [max(v, -12) for v in vals]
     colors = [RED if v < 0 else (MUTED if v == 0 else GREEN) for v in vals]
     ys = list(range(len(NET)))[::-1]
-    cx.barh(ys, clipped, color=colors, height=0.62)
+    cx.set_xscale("symlog", linthresh=4.0, linscale=1.2)
+    cx.barh(ys, vals, color=colors, height=0.62)
     cx.axvline(0, color=INK, lw=1.5)
-    for y, v, c in zip(ys, vals, clipped):
+    for y, v in zip(ys, vals):
         txt = f"{v:+.1f} %" if v else "0 %"
-        if v < -3:      # long red bar: label inside, at its left end
-            cx.text(c + 0.3, y, txt, va="center", ha="left", fontsize=14, weight="bold", color="white")
+        if v < -5:      # long red bar: label inside, at its left end
+            cx.text(v * 0.85, y, txt, va="center", ha="left", fontsize=14, weight="bold", color="white")
         elif v < 0:
-            cx.text(c - 0.3, y, txt, va="center", ha="right", fontsize=14, weight="bold", color=INK)
+            cx.text(v - 0.35, y, txt, va="center", ha="right", fontsize=14, weight="bold", color=INK)
         else:
-            cx.text(c + 0.3, y, txt, va="center", ha="left", fontsize=14, weight="bold", color=INK)
+            cx.text(v + 0.35, y, txt, va="center", ha="left", fontsize=14, weight="bold", color=INK)
     cx.set_yticks(ys, names, fontsize=12.5)
-    cx.set_xlim(-12.5, 6.5)
+    cx.set_xlim(-220, 14)
     cx.set_xticks([])
+    cx.tick_params(which="both", length=0)
     for s in ("top", "right", "bottom", "left"):
         cx.spines[s].set_visible(False)
-    cx.tick_params(length=0)
-    cx.text(-12.3, -0.95, "bars clipped at −12 %", fontsize=10, color=MUTED)
-    ax.text(8.6, 0.95, f"{SELECTOR_BOOKED} fields booked, {SELECTOR_WRONG} wrong (simulated on stored answers, "
-                       "text-only pipeline)", fontsize=11.5, color=MUTED)
+    ax.text(W - 0.8, 0.90, f"{SELECTOR_BOOKED} fields booked, {SELECTOR_WRONG} wrong (simulated, "
+                           "text-only · symlog x-axis)", fontsize=10.5, color=MUTED, ha="right")
     return fig
 
 
@@ -216,8 +215,8 @@ def s5():
             arrow(ax, x + 4.45, 4.7, x + 4.95, 4.7, color=INK)
     ax.text(W / 2, 2.15, "Measured, reversible, and safe from day one: the system never books what it cannot "
                          "prove.", fontsize=17, color=INK, ha="center", weight="bold")
-    ax.text(W / 2, 1.35, "Next: frozen audit of the selector  ·  vision + 2-model views  ·  contract clauses  ·  "
-                         "review dashboard", fontsize=13, color=MUTED, ha="center")
+    ax.text(W / 2, 1.35, "Built: router · vision + 2-model views · contract pipeline · selector · review dashboard"
+                         "  |  Next: frozen audit", fontsize=12.5, color=MUTED, ha="center")
     return fig
 
 

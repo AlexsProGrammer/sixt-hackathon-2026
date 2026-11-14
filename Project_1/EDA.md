@@ -57,6 +57,20 @@ Analysis performed strictly on `data/unified/dev.jsonl` (540 documents, 22,115 f
 - **66 of 159 ExtractBench documents (about 41%) have no text layer, 7 are corrupted.** A text-only pipeline can only abstain on them. They are a fixed coverage loss until OCR or a vision model is added.
 - **109 of 381 CUAD contracts (about 29%) exceed 60,000 characters.** The starter truncates them. Our pipeline reads the full text in overlapping chunks.
 
+### Router & CUAD Error Breakdown (T05 / T07)
+
+Measured on `data/unified/dev.jsonl` (540 docs) with `pipeline/router.py` (`pipeline/router_config.json`: `tau_q = 0.74`, `w_odd = 2.0`, damaged families `Schedule K-1` 1065/1120S):
+
+| Route | Dev Docs | Share |
+| --- | ---: | ---: |
+| `cuad` | 381 | 70.6% |
+| `pdf_no_text` | 64 | 11.9% |
+| `pdf_text_good` | 48 | 8.9% |
+| `pdf_text_damaged` | 47 | 8.7% |
+
+CUAD error breakdown (`results/cuad_analysis.json`, 148 predicted dev CUAD docs, 598 correct / 800 wrong / 256 hallucinated):
+- Failure modes among the 800 wrong spans: `missing_passages` (405), `subset` (243), `other_location` (75), `paraphrase` (49), `superset` (28).
+
 ## 5. Reproduce
 
 ```
