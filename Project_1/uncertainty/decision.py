@@ -22,18 +22,19 @@ MULTI_SAMPLE_METHODS = ("k_agreement_only", "k_agreement_conf", "k_entropy")
 
 
 def score_for(method: str, features: dict) -> float:
+    k_expected = features.get("k_expected", features.get("n_views"))
     if method == "k1_grounded":
-        if features["k_expected"] != 1:
+        if k_expected != 1:
             raise ValueError("k1_grounded needs K=1")
         return float(features["model_conf_min"])
-    if method in MULTI_SAMPLE_METHODS and features["k_expected"] < 2:
+    if method in MULTI_SAMPLE_METHODS and (k_expected is None or k_expected < 2):
         raise ValueError(f"{method} needs K>1")
     if method == "k_agreement_only":
         return float(features["agreement"])
     if method == "k_agreement_conf":
         return min(float(features["agreement"]), float(features["model_conf_min"]))
     if method == "k_entropy":
-        if features["k_expected"] < 2:
+        if k_expected is None or k_expected < 2:
             raise ValueError("k_entropy needs K>1")
         return 1.0 - float(features["entropy_norm"])
     raise ValueError(f"unknown method: {method}")
@@ -47,8 +48,8 @@ def make_prediction(aggregation: dict, schema: dict, *, method: str, calibration
         if calibration is None:
             raise ContractError("method 'calibrated' needs a trained calibration artefact; none was provided")
         raise ContractError("calibrated predictions are not implemented in this codebase")
-    if aggregation.get("contract_version") != 2:
-        raise ContractError("make_prediction needs an aggregation of contract version 2")
+    if aggregation.get("contract_version") not in (2, 3):
+        raise ContractError("make_prediction needs an aggregation of contract version 2 or 3")
     props = schema.get("properties", {})
     out = {}
     for name in props:

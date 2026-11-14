@@ -190,6 +190,27 @@ def conf_bucket(r: dict) -> str:
     return "n/a" if c is None else f"{min(c, 1.0):.2f}"
 
 
+def multiview_summary(rows: list[dict]) -> dict | None:
+    """Precision for unanimous multi-family agreement vs otherwise per kind, plus shared-error rate (T09)."""
+    mv_rows = [r for r in rows if r.get("families_agreeing") is not None]
+    if not mv_rows:
+        return None
+    preds = [r for r in mv_rows if r["pred_present"]]
+    by_kind = group_table(
+        preds,
+        lambda r: (r["kind"], bool(r.get("unanimous_nonnull") and (r.get("families_agreeing") or 0) >= 2)),
+    )
+    wrong_preds = [r for r in preds if is_error(r)]
+    shared_wrong = sum(1 for r in wrong_preds if (r.get("families_agreeing") or 0) >= 2)
+    return {
+        "n_multiview_fields": len(mv_rows),
+        "by_kind_unanimous_multifamily": by_kind,
+        "wrong_total": len(wrong_preds),
+        "wrong_both_families_agree": shared_wrong,
+        "wrong_both_families_share": (shared_wrong / len(wrong_preds)) if wrong_preds else None,
+    }
+
+
 def build_report(rows: list[dict], *, min_n: int = 3, min_groups: int = 1, evidence: str = "grounded_text",
                  conf: float = 0.0, cell_keys: tuple[str, ...] = CELL) -> dict:
     n_fields = len(rows)
@@ -197,7 +218,7 @@ def build_report(rows: list[dict], *, min_n: int = 3, min_groups: int = 1, evide
     if tuple(cell_keys) != CELL:
         params["cell_keys"] = tuple(cell_keys)
     grid_extra = {"cell_keys": tuple(cell_keys)} if tuple(cell_keys) != CELL else {}
-    return {
+    rep = {
         "n_docs": len({r["doc_id"] for r in rows}), "n_groups": len({r["group"] for r in rows}), "n_fields": n_fields,
         "outcomes": outcome_counts(rows),
         "predictions": stats([r for r in rows if r["pred_present"]]),
@@ -212,6 +233,10 @@ def build_report(rows: list[dict], *, min_n: int = 3, min_groups: int = 1, evide
                            for e in GRID_EVIDENCE for g in GRID_MIN_GROUPS for m in GRID_MIN_N],
         "missed_savings": missed_savings(rows, **params),
     }
+    mv = multiview_summary(rows)
+    if mv is not None:
+        rep["multiview"] = mv
+    return rep
 
 
 # ---------------------------------------------------------------- markdown
@@ -258,6 +283,14 @@ def to_markdown(rep: dict, title: str) -> str:
     lines += _table(rep["by_source_kind_grounded"], "source / kind / grounded_text")
     lines += _table(rep["by_route"], "route")
     lines += _table(rep["by_confidence"], "confidence written to preds (rounded)")
+    if rep.get("multiview"):
+        mv = rep["multiview"]
+        lines.append("\n## Multi-view agreement (T09)")
+        lines.append(
+            f"Wrong/hallucinated predictions where >=2 families agreed: "
+            f"{mv['wrong_both_families_agree']}/{mv['wrong_total']} ({_pct(mv['wrong_both_families_share'])})."
+        )
+        lines += _table(mv["by_kind_unanimous_multifamily"], "kind / (unanimous_nonnull & families_agreeing>=2)")
     lines += _table(rep["by_family_field_grounded"], "family / field (grounded only, n >= 3), safest first")
     return "\n".join(lines) + "\n"
 

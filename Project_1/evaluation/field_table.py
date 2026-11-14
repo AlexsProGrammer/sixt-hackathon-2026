@@ -110,6 +110,8 @@ def doc_rows(rec: dict, preds: dict, scorer, *, diag: dict | None = None, sample
             "components_grounded": ev["components_grounded"] if pred_present else None,
             "kind_policy": ev["kind_policy"],
             "cross_view_agree": (bool(agreement == 1.0) if (n_views or 0) >= 2 and agreement is not None else None),
+            "unanimous_nonnull": pf.get("unanimous_nonnull") if pf else None,
+            "families_agreeing": pf.get("families_agreeing") if pf else None,
             "value_len": len(value if isinstance(value, str) else json.dumps(value, ensure_ascii=False)) if pred_present else 0,
             "text_quality": quality, "text_source": routed["text_source"], "has_text": text is not None,
             "gold_present": bool(r["gold_present"]), "match": bool(r["match"]),

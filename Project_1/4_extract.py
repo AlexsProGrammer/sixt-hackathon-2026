@@ -224,7 +224,16 @@ def extract_llm(rec: dict, ctx: Ctx) -> dict:
                       batch_size=p["batch_size"], samples=p["samples"])
     results = run_jobs(jobs, ctx) if jobs else []
     samples = [merge_sample_v2(results, schema, s, planned_jobs=jobs) for s in range(p["samples"])]
-    agg = aggregate_v2(samples, schema, text, expected_k=p["samples"])
+    if p.get("aggregator") == "multiview":
+        from uncertainty.multiview import aggregate_views
+        view_list = [
+            {"view_id": f"sample-{s['sample_idx']}", "model": ctx.cfg["LLM_MODEL"],
+             "input_kind": "text", "fields": s["fields"], "complete": s["complete"]}
+            for s in samples
+        ]
+        agg = aggregate_views(view_list, schema, {"text": text, "ocr": None})
+    else:
+        agg = aggregate_v2(samples, schema, text, expected_k=p["samples"])
     fields = make_prediction(agg, schema, method=p["uq_method"])
     failures = sorted({r["error"] for r in results if not r["ok"]})
     diag = dict(agg["diagnostics"])
@@ -414,6 +423,7 @@ def main(argv=None) -> int:
     ap.add_argument("--chunk-chars", type=int, default=None, help="default 45000")
     ap.add_argument("--overlap-chars", type=int, default=None, help="default 3000")
     ap.add_argument("--batch-size", type=int, default=None, help="fields per request, default 10")
+    ap.add_argument("--aggregator", choices=["v2", "multiview"], default=None, help="default v2")
     ap.add_argument("--on-error", choices=["fail", "abstain"], default="fail",
                     help="fail: documents with failed jobs are not written, exit 1. abstain: write null/0 for the "
                          "affected fields plus diagnosis; complete fields are kept.")
@@ -492,6 +502,9 @@ def main(argv=None) -> int:
             raise SystemExit(f"ERROR: --uq-method {pipeline_values['uq_method']} needs --samples 2 or more.")
     pipeline = {**pipeline_values, "model": cfg["LLM_MODEL"] if cfg else None,
                 "prompt_version": PROMPT_VERSION if mode == "llm" else None}
+    agg_mode = a.aggregator or (dec["pipeline"].get("aggregator") if dec is not None and not dec["abstain_all"] else None)
+    if agg_mode is not None:
+        pipeline["aggregator"] = agg_mode
     eb_cfg = None
     dec_eb = dec["pipeline"].get("eb") if dec is not None and not dec["abstain_all"] else None
     if mode == "llm" and (a.eb_views or dec_eb):

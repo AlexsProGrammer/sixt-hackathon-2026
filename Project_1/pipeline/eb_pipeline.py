@@ -54,11 +54,12 @@ ROUTE_VIEWS = {
 VISION_ROUTES = tuple(ROUTE_VIEWS)
 FALLBACK_ERRORS = ("http:400", "http:413")     # request rejected: usually a size limit -> next attempt
 DEFAULT_EB = {
-    "views": ["A-pdf"],        # until T09 consumes several views only view A feeds the prediction ("full" = the table)
+    "views": ["A-pdf"],        # "full" = the per-route table
     "model_a": None, "model_b": None,
     "batch_size": EB_BATCH_SIZE, "dpi": 150, "lower_dpi": 100, "max_pages": 10,
     "max_pdf_bytes": 15 * 1024 * 1024, "temperature": 0.0, "workers": 1,
     "text_chunk_chars": 45000, "text_overlap_chars": 3000, "text_batch_size": 10,
+    "cascade": False, "candidate_cells": None, "aggregator": None, "uq_method": None, "view_priority": None,
 }
 KIND_OF_ATTEMPT = {"pdf_file": "pdf", "pdf_image_url": "pdf", "png": "png"}
 
@@ -301,11 +302,20 @@ def run_views(rec: dict, routed: dict | str, ctx, *, data_dir: Path | None = Non
         except Exception as e:  # a bug in one view must not kill the document
             return _failed_view(view_id, model, rec["schema"], f"internal:{type(e).__name__}")
 
-    workers = max(1, min(int(eb.get("workers") or 1), len(view_ids)))
-    if workers == 1:
-        return [run_one(v) for v in view_ids]
-    with ThreadPoolExecutor(max_workers=workers) as pool:
-        return list(pool.map(run_one, view_ids))
+    def _run_batch(ids: list[str]) -> list[dict]:
+        workers = max(1, min(int(eb.get("workers") or 1), len(ids)))
+        if workers == 1:
+            return [run_one(v) for v in ids]
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            return list(pool.map(run_one, ids))
+
+    if eb.get("cascade") and len(view_ids) > 1:
+        from uncertainty.multiview import should_run_secondary_views
+        primary = run_one(view_ids[0])
+        if not should_run_secondary_views(primary, rec, eb.get("candidate_cells")):
+            return [primary]
+        return [primary, *_run_batch(view_ids[1:])]
+    return _run_batch(view_ids)
 
 
 # ---------------------------------------------------------------- document result (4_extract.py contract)
@@ -319,9 +329,10 @@ def view_samples(views: list[dict]) -> list[dict]:
 
 
 def extract_document(rec: dict, routed: dict, ctx, *, data_dir: Path | None = None) -> dict:
-    """Route -> views -> temporary single-view aggregation -> k1_grounded prediction.
+    """Route -> views -> multiview (or single-view) aggregation -> decision.make_prediction.
     Returns {"fields", "diagnostics", "job_failures", "samples"}."""
     from uncertainty.decision import make_prediction
+    from uncertainty.multiview import aggregate_views
     from uncertainty.single_view import aggregate_single_view
 
     schema = rec["schema"]
@@ -331,13 +342,22 @@ def extract_document(rec: dict, routed: dict, ctx, *, data_dir: Path | None = No
     views = run_views(rec, routed, ctx, data_dir=data_dir)
     if not views:
         raise ValueError(f"no eb view applies to route {routed['route']} with views {eb['views']}")
-    primary = views[0]
-    agg = aggregate_single_view(primary, schema, routed.get("text"), route=routed["route"])
-    fields = make_prediction(agg, schema, method="k1_grounded")
+    use_multiview = len(views) > 1 or eb.get("aggregator") == "multiview"
+    if use_multiview:
+        sources = {"text": routed.get("text"), "ocr": routed.get("ocr")}
+        agg = aggregate_views(views, schema, sources, view_priority=eb.get("view_priority"))
+        method = eb.get("uq_method") or ("k_agreement_conf" if len(views) > 1 else "k1_grounded")
+        uq_called = True
+    else:
+        agg = aggregate_single_view(views[0], schema, routed.get("text"), route=routed["route"])
+        method = eb.get("uq_method") or "k1_grounded"
+        uq_called = False
+    fields = make_prediction(agg, schema, method=method)
     failures = sorted({e for v in views for e in v["errors"]})
     diag = dict(agg["diagnostics"])
-    diag.update({"complete": all(v["complete"] for v in views), "uq_method": "k1_grounded", "uq_called": False,
-                 "pipeline": "eb-vision", "prompt_version": EB_PROMPT_VERSION, "job_failures": failures,
+    diag.update({"complete": all(v["complete"] for v in views), "uq_method": method, "uq_called": uq_called,
+                 "cascade": bool(eb.get("cascade")), "pipeline": "eb-vision", "prompt_version": EB_PROMPT_VERSION,
+                 "job_failures": failures,
                  "views": [{k: v.get(k) for k in ("view_id", "model", "input_kind", "complete", "errors", "n_requests",
                                                   "request_bytes", "n_pages", "attempts")} for v in views],
                  **route_info})

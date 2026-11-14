@@ -38,6 +38,11 @@ DEFAULT_CUAD = {
     "overlap_chars": 5_000,
     "temperature": 0.0,
     "workers": 1,
+    "cascade": False,
+    "candidate_cells": None,
+    "aggregator": None,
+    "uq_method": None,
+    "view_priority": None,
 }
 
 CUAD_RULES = """Rules:
@@ -275,11 +280,20 @@ def run_views(rec: dict, routed: dict | str, ctx) -> list[dict]:
         except Exception as e:
             return _failed_view(view_id, model, rec["schema"], f"internal:{type(e).__name__}")
 
-    workers = max(1, min(int(cuad_cfg.get("workers") or 1), len(view_ids)))
-    if workers == 1:
-        return [run_one(v) for v in view_ids]
-    with ThreadPoolExecutor(max_workers=workers) as pool:
-        return list(pool.map(run_one, view_ids))
+    def _run_batch(ids: list[str]) -> list[dict]:
+        workers = max(1, min(int(cuad_cfg.get("workers") or 1), len(ids)))
+        if workers == 1:
+            return [run_one(v) for v in ids]
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            return list(pool.map(run_one, ids))
+
+    if cuad_cfg.get("cascade") and len(view_ids) > 1:
+        from uncertainty.multiview import should_run_secondary_views
+        primary = run_one(view_ids[0])
+        if not should_run_secondary_views(primary, rec, cuad_cfg.get("candidate_cells")):
+            return [primary]
+        return [primary, *_run_batch(view_ids[1:])]
+    return _run_batch(view_ids)
 
 
 def view_samples(views: list[dict]) -> list[dict]:
@@ -292,25 +306,36 @@ def view_samples(views: list[dict]) -> list[dict]:
 
 
 def extract_document(rec: dict, routed: dict, ctx) -> dict:
-    """CUAD route -> views -> temporary single-view aggregation -> k1_grounded prediction."""
+    """CUAD route -> views -> multiview (or single-view) aggregation -> decision.make_prediction."""
     from uncertainty.decision import make_prediction
+    from uncertainty.multiview import aggregate_views
     from uncertainty.single_view import aggregate_single_view
 
     schema = rec["schema"]
     route_info = {"route": routed["route"], "text_source": routed.get("text_source"),
                   "quality": routed.get("quality"), "quality_features": routed.get("quality_features")}
+    cuad_cfg = _cuad_of(ctx)
     views = run_views(rec, routed, ctx)
     if not views:
         raise ValueError("no cuad views configured")
-    primary = views[0]
-    agg = aggregate_single_view(primary, schema, routed.get("text"), route=routed["route"])
-    fields = make_prediction(agg, schema, method="k1_grounded")
+    use_multiview = len(views) > 1 or cuad_cfg.get("aggregator") == "multiview"
+    if use_multiview:
+        sources = {"text": routed.get("text"), "ocr": routed.get("ocr")}
+        agg = aggregate_views(views, schema, sources, view_priority=cuad_cfg.get("view_priority"))
+        method = cuad_cfg.get("uq_method") or ("k_agreement_conf" if len(views) > 1 else "k1_grounded")
+        uq_called = True
+    else:
+        agg = aggregate_single_view(views[0], schema, routed.get("text"), route=routed["route"])
+        method = cuad_cfg.get("uq_method") or "k1_grounded"
+        uq_called = False
+    fields = make_prediction(agg, schema, method=method)
     failures = sorted({e for v in views for e in v["errors"]})
     diag = dict(agg["diagnostics"])
     diag.update({
         "complete": all(v["complete"] for v in views),
-        "uq_method": "k1_grounded",
-        "uq_called": False,
+        "uq_method": method,
+        "uq_called": uq_called,
+        "cascade": bool(cuad_cfg.get("cascade")),
         "pipeline": "cuad-long-context",
         "prompt_version": CUAD_PROMPT_VERSION,
         "job_failures": failures,
