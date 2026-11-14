@@ -285,7 +285,7 @@ class RunDirCliTests(unittest.TestCase):
 
 class CompareResultsTests(unittest.TestCase):
     def test_compare_reads_the_index(self):
-        spec = importlib.util.spec_from_file_location("compare_results", ROOT / "compare_results.py")
+        spec = importlib.util.spec_from_file_location("compare_results", ROOT / "tools" / "compare_results.py")
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
         tmp = Path(tempfile.mkdtemp())

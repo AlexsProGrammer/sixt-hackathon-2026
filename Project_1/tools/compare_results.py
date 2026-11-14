@@ -11,7 +11,7 @@ import json
 import sys
 from pathlib import Path
 
-HERE = Path(__file__).parent
+HERE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HERE))
 from evaluation import registry  # noqa: E402
 DEV_GOLD = HERE / "data/unified/dev.jsonl"

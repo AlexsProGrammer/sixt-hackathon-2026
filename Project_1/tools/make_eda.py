@@ -5,8 +5,10 @@ import importlib.util
 import json
 from pathlib import Path
 
+HERE = Path(__file__).resolve().parent.parent
+
 _spec = importlib.util.spec_from_file_location(
-    "extract_example", Path(__file__).parent / "4_extract_example.py"
+    "extract_example", HERE / "4_extract_example.py"
 )
 _mod = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_mod)
@@ -14,7 +16,6 @@ _spec.loader.exec_module(_mod)
 doc_text = _mod.doc_text
 MAX_CHARS = _mod.MAX_CHARS
 
-HERE = Path(__file__).parent
 DEV = HERE / "data/unified/dev.jsonl"
 TEST = HERE / "data/unified/test_public.jsonl"
 OUT = HERE / "EDA.md"
