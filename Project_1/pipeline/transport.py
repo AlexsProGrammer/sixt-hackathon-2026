@@ -77,6 +77,7 @@ class RunState:
         self.requests_by_model: dict[str, int] = {}
         self.cache_hits_by_model: dict[str, int] = {}
         self.warnings: list[str] = []
+        self.bad_models: dict[str, str] = {}
         self._next_request_at = 0.0
 
     def pace(self, sleep=time.sleep) -> None:
@@ -112,6 +113,18 @@ class RunState:
                 return False
             self.waited += seconds
             return True
+
+    def mark_bad_model(self, model: str | None, reason: str) -> None:
+        if not model:
+            return
+        with self._lock:
+            self.bad_models.setdefault(model, reason)
+
+    def bad_model_reason(self, model: str | None) -> str | None:
+        if not model:
+            return None
+        with self._lock:
+            return self.bad_models.get(model)
 
 
 def parse_retry_after(value: str | None, now: datetime | None = None) -> float | None:
@@ -236,21 +249,27 @@ def call_with_retry(cfg: dict, messages: list[dict], temperature: float, state: 
     """post_chat with bounded retries. A 429 that cannot be retried stops the whole run.
     An HTTP 400 is added to state.warnings (model, redacted body excerpt) to debug capabilities."""
     attempt = 0
+    effective_model = model or cfg.get("LLM_MODEL")
     extra = {} if model is None else {"model": model}
     if timeout is not None:
         extra["timeout"] = timeout
     while True:
         if state.stop.is_set():
             raise TransportError("stopped", "run stopped after rate limit; request not sent")
+        if bad_reason := state.bad_model_reason(effective_model):
+            raise TransportError("bad_model", f"{effective_model}: skipped after permanent error ({bad_reason})",
+                                 status=400)
         state.pace(sleep=sleep)
         state.bump("requests")
-        state.bump_model("requests", model or cfg.get("LLM_MODEL"))
+        state.bump_model("requests", effective_model)
         try:
             return post_chat(cfg, messages, temperature, **extra)
         except TransportError as e:
             if e.status in (400, 429):
-                state.warn(f"{model or cfg.get('LLM_MODEL')}: {e}"[:260])
+                state.warn(f"{effective_model}: {e}"[:260])
             if not e.retryable:
+                if e.status in (401, 403) or (e.status == 400 and "not a valid model" in str(e).lower()):
+                    state.mark_bad_model(effective_model, str(e)[:120])
                 raise
             max_retries = getattr(state, "max_retries", MAX_RETRIES)
             if e.status == 429 and attempt >= max_retries:

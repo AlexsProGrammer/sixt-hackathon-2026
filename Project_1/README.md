@@ -78,7 +78,7 @@ Project_1/
 ├── pipeline/                   Document router, text quality gate, prompts, HTTP transport + reply cache, chunk merge
 ├── uncertainty/                Schema check, grounding, evidence rules, probly UQ aggregation, decision & policy
 ├── evaluation/                 Frozen dev splits, batch runner, run registry, reports, ablation, threshold/selector tuning
-├── tools/                      CLI utilities: compare_results, make_eda, analyse_fields, cuad_analysis, probe_models, cache tools
+├── tools/                      CLI utilities: compare_results, make_eda, analyse_fields, cuad_analysis, probe_models, test_model, cache tools
 ├── dashboard/                  Streamlit review & analytics dashboard
 ├── submission/                 Frozen decision.json, make_slides.py, slides.pdf
 ├── docs/                       Task brief, architecture, data/scoring guide, probly guide, CUAD & dashboard docs
@@ -300,6 +300,7 @@ What it does:
 | `.venv/bin/python tools/analyse_fields.py results/llm_dev.jsonl` | Per-field error analysis + leave-one-group-out (LOGO) whitelist simulation on `dev.jsonl` (no API calls). |
 | `.venv/bin/python tools/cuad_analysis.py --gold data/unified/dev.jsonl --pred results/llm_dev.jsonl --out-md docs/cuad_analysis.md --out-json results/cuad_analysis.json` | Detailed CUAD contract error breakdown (paraphrase vs. subset vs. superset vs. other location). |
 | `.venv/bin/python tools/probe_models.py --pdf data/raw/extractbench/docs/short/07021-2016-p0014.pdf --models vertex_ai/gemini-3.7-flash vertex_ai/claude-sonnet-5.5 --write` | Probes which input formats (`pdf_file`, `pdf_image_url`, `png`, `text`) each model accepts; writes `results/model_probe.json` and updates `models.json`. |
+| `.venv/bin/python tools/test_model.py --role all` | Tests configured `.env` roles (`default`, `a`, `b`, `c`, `ocr`, or `all`) for valid model ID, connectivity, and JSON extraction; `--list-free` discovers and tests all free models on `LLM_BASE_URL` (add `--no-probe` to only list IDs). |
 | `.venv/bin/python tools/tune_quality.py --data data/splits/fit.jsonl --write` | Offline tuning of the text-layer quality gate (`pipeline/router_config.json`). |
 | `.venv/bin/python tools/cache_stats.py` | Shows cached reply counts and disk usage per model / prompt version (supports `--purge <model> --yes`). |
 | `.venv/bin/python tools/migrate_cache.py --dry-run` | Migrates legacy flat cache files to `cache/replies/<model_slug>/<prompt_version>/`. |

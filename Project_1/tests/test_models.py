@@ -252,6 +252,33 @@ class TransportTests(unittest.TestCase):
         self.assertNotIn("response_format", seen_bodies[1])
         self.assertNotIn("response_format", seen_bodies[2])
 
+    def test_invalid_model_id_fast_fails_without_pacing(self):
+        import io, urllib.error
+        state = transport.RunState(min_interval=60.0)
+        sleeps: list[float] = []
+        calls = 0
+
+        def fake_urlopen(req, timeout=300):
+            nonlocal calls
+            calls += 1
+            raise urllib.error.HTTPError(
+                "u", 400, "Bad", {},
+                io.BytesIO(b'{"error":{"message":"bad/model:free is not a valid model ID","code":400}}'),
+            )
+
+        with mock.patch.object(transport.urllib.request, "urlopen", side_effect=fake_urlopen):
+            with self.assertRaises(transport.TransportError) as cm1:
+                transport.call_with_retry(self.cfg, [{"role": "user", "content": "q"}], 0.0, state,
+                                          sleep=sleeps.append, model="bad/model:free")
+            with self.assertRaises(transport.TransportError) as cm2:
+                transport.call_with_retry(self.cfg, [{"role": "user", "content": "q"}], 0.0, state,
+                                          sleep=sleeps.append, model="bad/model:free")
+
+        self.assertEqual(cm1.exception.status, 400)
+        self.assertEqual(cm2.exception.kind, "bad_model")
+        self.assertEqual(calls, 1)  # second call skipped before pacing or HTTP
+        self.assertEqual(sleeps, [])
+
 
 @unittest.skipUnless(shutil.which("pdftoppm"), "pdftoppm not installed")
 class RenderTests(unittest.TestCase):
