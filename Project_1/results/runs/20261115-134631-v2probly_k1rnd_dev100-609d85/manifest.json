@@ -1,0 +1,114 @@
+{
+  "contract_version": 1,
+  "field_contract_version": 2,
+  "run_id": "03bf95d50d0d",
+  "mode": "llm",
+  "pipeline": {
+    "workers": 4,
+    "samples": 1,
+    "temperature": 0.7,
+    "chunk_chars": 45000,
+    "overlap_chars": 3000,
+    "batch_size": 10,
+    "uq_method": "k1_grounded",
+    "sampling": "mixed",
+    "model": "baidu/ernie-5.5-flash-preview:free",
+    "prompt_version": "v4"
+  },
+  "uq": {
+    "method": "k1_grounded",
+    "expected_k": 1,
+    "probly_version": "0.9.1"
+  },
+  "fingerprint": {
+    "input_sha256": "f5cb419acc3020338c661fb225d9219e048792e8846867565d06ee2a7d1d44a0",
+    "pipeline_sha256": "bfea34f84bbf067618b8259fb81df01c773fbaae056161071df1a483637cda74",
+    "endpoint_host": "openrouter.ai",
+    "code_sha256": "3b4d4e906fdba372be40537083481f08e3e92c30b5f6a4823f57e450701b604e",
+    "prompt_version": "v4",
+    "fingerprint_sha256": "726c6ae90856ed4260f53898508765add987e0bbb7535c048c9932f4501b8c39"
+  },
+  "segments": [
+    {
+      "run_id": "f490b75dcb0e",
+      "n_requested": 100,
+      "requests": 339,
+      "resumed_from_disk": 0
+    },
+    {
+      "run_id": "03bf95d50d0d",
+      "n_requested": 100,
+      "requests": 288,
+      "resumed_from_disk": 65
+    }
+  ],
+  "n_requested": 100,
+  "n_written": 89,
+  "n_skipped_resumed": 65,
+  "n_failed": 11,
+  "failed_doc_ids": [
+    "cuad:MANUFACTURERSSERVICESLTD_06_05_2000-EX-10.14-OUTSOURCING AGREEMENT",
+    "cuad:ZtoExpressCaymanInc_20160930_F-1_EX-10.10_9752871_EX-10.10_Transportation Agreement",
+    "cuad:LOOKSMARTLTD_07_20_2012-EX-99.(D)(I)-SPONSORSHIP AGREEMENT",
+    "cuad:PcquoteComInc_19990721_S-1A_EX-10.11_6377149_EX-10.11_Co-Branding Agreement2",
+    "cuad:DRKOOPCOMINC_04_21_1999-EX-10.28-SPONSORSHIP AGREEMENT",
+    "cuad:GluMobileInc_20070319_S-1A_EX-10.09_436630_EX-10.09_Content License Agreement4",
+    "cuad:ZONDWINDSYSTEMPARTNERSLTDSERIES85-B_04_03_2006-EX-10-MANAGEMENT AND MAINTENANCE AGREEMENT",
+    "cuad:ParatekPharmaceuticalsInc_20170505_10-KA_EX-10.29_10323872_EX-10.29_Outsourcing Agreement",
+    "cuad:TubeMediaCorp_20060310_8-K_EX-10.1_513921_EX-10.1_Affiliate Agreement",
+    "cuad:BLUEROCKRESIDENTIALGROWTHREIT,INC_06_01_2016-EX-1.1-AGENCY AGREEMENT",
+    "cuad:KINGPHARMACEUTICALSINC_08_09_2006-EX-10.1-PROMOTION AGREEMENT"
+  ],
+  "n_abstained_after_errors": 0,
+  "abstained_after_error_doc_ids": [],
+  "run_complete": false,
+  "requests": 288,
+  "cache_hits": 2,
+  "requests_by_model": {
+    "baidu/ernie-5.5-flash-preview:free": 288
+  },
+  "cache_hits_by_model": {
+    "baidu/ernie-5.5-flash-preview:free": 2
+  },
+  "routes_used": {
+    "cuad": 24
+  },
+  "text_sources": {
+    "cuad": 24
+  },
+  "models_used": [
+    "baidu/ernie-5.5-flash-preview:free"
+  ],
+  "input_kinds": [
+    "text"
+  ],
+  "prompt_versions": [
+    "v4"
+  ],
+  "selector_sha256": null,
+  "elapsed_seconds": 1857.47,
+  "stopped_429": true,
+  "on_error": "fail",
+  "warnings": [
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key ",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"baidu/ernie-5.5-flash-preview:free is temporarily rate-limited upstream. Please retry shortly, or add your own provider key "
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "run_id": "20261115-134631-v2probly_k1rnd_dev100-609d85",
+  "name": "v2probly_k1rnd_dev100",
+  "split": "dev",
+  "created_at": "2026-11-15T13:46:31",
+  "tags": [
+    "batch",
+    "v2"
+  ],
+  "git": {
+    "commit": "de81e9b786f8dc2d98e1e4050e01b9fa1d49b0fe",
+    "dirty": false
+  },
+  "status": "incomplete",
+  "selection": {
+    "kind": "input",
+    "input": "data/unified/dev.jsonl",
+    "random": 100,
+    "seed": 13,
+    "n_available": 540,
+    "n_docs": 100,
+    "ids_sha256": "3595313bc24e7bc2dfd30ea0da72df80849adf5341cfe6a9ed80b4a580116d49"
+  },
+  "input": {
+    "n_docs": 100,
+    "kind": "copy",
+    "input_sha256": "e0930933f8cb209ecd1c846d0af0a515f0dd1e925c0e97cabb9fbe3a3faa98d6",
+    "input_ref": "results/runs/20261115-134631-v2probly_k1rnd_dev100-609d85/selection.jsonl",
+    "n_gold": 100
+  },
+  "mode": "llm",
+  "models": [
+    "baidu/ernie-5.5-flash-preview:free"
+  ],
+  "n_requested": 100,
+  "finished_at": "2026-11-15T15:05:26",
+  "n_written": 89,
+  "summary": {
+    "threshold": 0.99,
+    "n_docs": 89,
+    "n_fields": 3688,
+    "accepted": 77,
+    "correct": 76,
+    "wrong": 1,
+    "hallucinated": 0,
+    "precision": 0.987012987012987,
+    "coverage": 0.048549810844892814,
+    "net_saving_pct_e20": 0.015455531453362256,
+    "net_saving_pct_e100": -0.006236442516268981,
+    "net_saving_pct_e500": -0.11469631236442517,
+    "best_threshold_e100": null,
+    "best_threshold_net_e100": 0.0,
+    "by_source": {
+      "cuad": {
+        "n_fields": 2460,
+        "accepted": 8,
+        "correct": 7,
+        "wrong": 1,
+        "hallucinated": 0,
+        "precision": 0.875,
+        "coverage": 0.010376134889753566,
+        "net_saving_pct_e100": -0.03739837398373984
+      },
+      "extractbench": {
+        "n_fields": 1228,
+        "accepted": 69,
+        "correct": 69,
+        "wrong": 0,
+        "hallucinated": 0,
+        "precision": 1.0,
+        "coverage": 0.08466257668711656,
+        "net_saving_pct_e100": 0.05618892508143322
+      }
+    },
+    "scored_at": "2026-11-15T16:28:58"
+  },
+  "fields_contract_version": 1,
+  "n_field_rows": 2704
+}

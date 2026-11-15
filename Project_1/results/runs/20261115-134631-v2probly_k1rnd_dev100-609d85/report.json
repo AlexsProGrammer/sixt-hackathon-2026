@@ -1,0 +1,1008 @@
+{
+  "n_docs": 65,
+  "n_groups": 59,
+  "n_fields": 2704,
+  "outcomes": {
+    "correct": 335,
+    "wrong": 206,
+    "hallucinated": 91,
+    "missed": 732,
+    "true_null": 1340
+  },
+  "predictions": {
+    "n": 632,
+    "correct": 335,
+    "wrong": 206,
+    "hallucinated": 91,
+    "precision": 0.5300632911392406,
+    "wilson95_err_upper": 0.5089128219095561
+  },
+  "by_source_kind_grounded": [
+    {
+      "key": "extractbench / number / True",
+      "n": 12,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 1,
+      "precision": 0.9166666666666666,
+      "wilson95_err_upper": 0.35388592179859524
+    },
+    {
+      "key": "extractbench / string / True",
+      "n": 139,
+      "correct": 137,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.9856115107913669,
+      "wilson95_err_upper": 0.050942503232611104
+    },
+    {
+      "key": "extractbench / json / True",
+      "n": 14,
+      "correct": 9,
+      "wrong": 5,
+      "hallucinated": 0,
+      "precision": 0.6428571428571429,
+      "wilson95_err_upper": 0.6123599531785959
+    },
+    {
+      "key": "cuad / span / True",
+      "n": 467,
+      "correct": 178,
+      "wrong": 199,
+      "hallucinated": 90,
+      "precision": 0.3811563169164882,
+      "wilson95_err_upper": 0.6617540509159694
+    }
+  ],
+  "by_confidence": [
+    {
+      "key": "0.99",
+      "n": 72,
+      "correct": 72,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.05065293981139638
+    },
+    {
+      "key": "0.96",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "0.92",
+      "n": 4,
+      "correct": 3,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.75,
+      "wilson95_err_upper": 0.6993639475573634
+    },
+    {
+      "key": "0.93",
+      "n": 3,
+      "correct": 2,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.6666666666666666,
+      "wilson95_err_upper": 0.7923450448735121
+    },
+    {
+      "key": "0.78",
+      "n": 1,
+      "correct": 0,
+      "wrong": 0,
+      "hallucinated": 1,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.68",
+      "n": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.58",
+      "n": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.25",
+      "n": 1,
+      "correct": 0,
+      "wrong": 0,
+      "hallucinated": 1,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.98",
+      "n": 37,
+      "correct": 35,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.9459459459459459,
+      "wilson95_err_upper": 0.17704965063539913
+    },
+    {
+      "key": "0.82",
+      "n": 4,
+      "correct": 2,
+      "wrong": 1,
+      "hallucinated": 1,
+      "precision": 0.5,
+      "wilson95_err_upper": 0.8499642911798285
+    },
+    {
+      "key": "0.72",
+      "n": 3,
+      "correct": 1,
+      "wrong": 1,
+      "hallucinated": 1,
+      "precision": 0.3333333333333333,
+      "wilson95_err_upper": 0.9385096847238393
+    },
+    {
+      "key": "0.30",
+      "n": 2,
+      "correct": 0,
+      "wrong": 0,
+      "hallucinated": 2,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.94",
+      "n": 2,
+      "correct": 0,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.35",
+      "n": 2,
+      "correct": 0,
+      "wrong": 0,
+      "hallucinated": 2,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.97",
+      "n": 36,
+      "correct": 33,
+      "wrong": 3,
+      "hallucinated": 0,
+      "precision": 0.9166666666666666,
+      "wilson95_err_upper": 0.21827010276918848
+    },
+    {
+      "key": "0.45",
+      "n": 3,
+      "correct": 0,
+      "wrong": 2,
+      "hallucinated": 1,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.40",
+      "n": 4,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 3,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.88",
+      "n": 8,
+      "correct": 3,
+      "wrong": 3,
+      "hallucinated": 2,
+      "precision": 0.375,
+      "wilson95_err_upper": 0.863158240538479
+    },
+    {
+      "key": "0.65",
+      "n": 5,
+      "correct": 0,
+      "wrong": 3,
+      "hallucinated": 2,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.75",
+      "n": 13,
+      "correct": 7,
+      "wrong": 2,
+      "hallucinated": 4,
+      "precision": 0.5384615384615384,
+      "wilson95_err_upper": 0.7085656756816795
+    },
+    {
+      "key": "0.80",
+      "n": 29,
+      "correct": 14,
+      "wrong": 10,
+      "hallucinated": 5,
+      "precision": 0.4827586206896552,
+      "wilson95_err_upper": 0.6861418066920479
+    },
+    {
+      "key": "0.70",
+      "n": 23,
+      "correct": 8,
+      "wrong": 6,
+      "hallucinated": 9,
+      "precision": 0.34782608695652173,
+      "wilson95_err_upper": 0.8118894536301776
+    },
+    {
+      "key": "0.55",
+      "n": 21,
+      "correct": 3,
+      "wrong": 7,
+      "hallucinated": 11,
+      "precision": 0.14285714285714285,
+      "wilson95_err_upper": 0.950190782017865
+    },
+    {
+      "key": "0.60",
+      "n": 30,
+      "correct": 6,
+      "wrong": 8,
+      "hallucinated": 16,
+      "precision": 0.2,
+      "wilson95_err_upper": 0.9049502189759876
+    },
+    {
+      "key": "0.50",
+      "n": 30,
+      "correct": 5,
+      "wrong": 15,
+      "hallucinated": 10,
+      "precision": 0.16666666666666666,
+      "wilson95_err_upper": 0.9266356575964831
+    },
+    {
+      "key": "0.85",
+      "n": 57,
+      "correct": 15,
+      "wrong": 29,
+      "hallucinated": 13,
+      "precision": 0.2631578947368421,
+      "wilson95_err_upper": 0.8335435757815228
+    },
+    {
+      "key": "0.95",
+      "n": 120,
+      "correct": 75,
+      "wrong": 45,
+      "hallucinated": 0,
+      "precision": 0.625,
+      "wilson95_err_upper": 0.4642321547161292
+    },
+    {
+      "key": "0.90",
+      "n": 117,
+      "correct": 48,
+      "wrong": 62,
+      "hallucinated": 7,
+      "precision": 0.41025641025641024,
+      "wilson95_err_upper": 0.6746385235429598
+    }
+  ],
+  "by_family_field_grounded": [
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / payer_federal_id",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / recipient_name",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / recipient_tax_id",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "cuad / No-Solicit Of Employees",
+      "n": 4,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 1,
+      "precision": 0.75,
+      "wilson95_err_upper": 0.6993639475573634
+    },
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / account_number",
+      "n": 3,
+      "correct": 2,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.6666666666666666,
+      "wilson95_err_upper": 0.7923450448735121
+    },
+    {
+      "key": "cuad / Joint Ip Ownership",
+      "n": 4,
+      "correct": 2,
+      "wrong": 1,
+      "hallucinated": 1,
+      "precision": 0.5,
+      "wilson95_err_upper": 0.8499642911798285
+    },
+    {
+      "key": "cuad / Irrevocable Or Perpetual License",
+      "n": 4,
+      "correct": 2,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.5,
+      "wilson95_err_upper": 0.8499642911798285
+    },
+    {
+      "key": "cuad / No-Solicit Of Customers",
+      "n": 4,
+      "correct": 2,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.5,
+      "wilson95_err_upper": 0.8499642911798285
+    },
+    {
+      "key": "cuad / Liquidated Damages",
+      "n": 3,
+      "correct": 1,
+      "wrong": 1,
+      "hallucinated": 1,
+      "precision": 0.3333333333333333,
+      "wilson95_err_upper": 0.9385096847238393
+    },
+    {
+      "key": "cuad / Non-Disparagement",
+      "n": 3,
+      "correct": 1,
+      "wrong": 1,
+      "hallucinated": 1,
+      "precision": 0.3333333333333333,
+      "wilson95_err_upper": 0.9385096847238393
+    },
+    {
+      "key": "cuad / Covenant Not To Sue",
+      "n": 5,
+      "correct": 2,
+      "wrong": 1,
+      "hallucinated": 2,
+      "precision": 0.4,
+      "wilson95_err_upper": 0.8823817688407467
+    },
+    {
+      "key": "cuad / Affiliate License-Licensor",
+      "n": 3,
+      "correct": 0,
+      "wrong": 0,
+      "hallucinated": 3,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "cuad / Warranty Duration",
+      "n": 3,
+      "correct": 0,
+      "wrong": 3,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "cuad / Rofr/Rofo/Rofn",
+      "n": 6,
+      "correct": 2,
+      "wrong": 3,
+      "hallucinated": 1,
+      "precision": 0.3333333333333333,
+      "wilson95_err_upper": 0.903230667440783
+    },
+    {
+      "key": "cuad / Post-Termination Services",
+      "n": 8,
+      "correct": 3,
+      "wrong": 1,
+      "hallucinated": 4,
+      "precision": 0.375,
+      "wilson95_err_upper": 0.863158240538479
+    },
+    {
+      "key": "cuad / Affiliate License-Licensee",
+      "n": 6,
+      "correct": 1,
+      "wrong": 0,
+      "hallucinated": 5,
+      "precision": 0.16666666666666666,
+      "wilson95_err_upper": 0.9699474141282696
+    },
+    {
+      "key": "cuad / Agreement Date",
+      "n": 33,
+      "correct": 27,
+      "wrong": 5,
+      "hallucinated": 1,
+      "precision": 0.8181818181818182,
+      "wilson95_err_upper": 0.3438856704929522
+    },
+    {
+      "key": "cuad / Termination For Convenience",
+      "n": 19,
+      "correct": 13,
+      "wrong": 1,
+      "hallucinated": 5,
+      "precision": 0.6842105263157895,
+      "wilson95_err_upper": 0.5398998982493537
+    },
+    {
+      "key": "cuad / Insurance",
+      "n": 11,
+      "correct": 5,
+      "wrong": 6,
+      "hallucinated": 0,
+      "precision": 0.45454545454545453,
+      "wilson95_err_upper": 0.7872904245601196
+    },
+    {
+      "key": "cuad / Revenue/Profit Sharing",
+      "n": 8,
+      "correct": 2,
+      "wrong": 5,
+      "hallucinated": 1,
+      "precision": 0.25,
+      "wilson95_err_upper": 0.9285223111419724
+    },
+    {
+      "key": "cuad / Uncapped Liability",
+      "n": 6,
+      "correct": 0,
+      "wrong": 4,
+      "hallucinated": 2,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "cuad / Cap On Liability",
+      "n": 13,
+      "correct": 6,
+      "wrong": 6,
+      "hallucinated": 1,
+      "precision": 0.46153846153846156,
+      "wilson95_err_upper": 0.7679424569851186
+    },
+    {
+      "key": "cuad / Competitive Restriction Exception",
+      "n": 12,
+      "correct": 5,
+      "wrong": 2,
+      "hallucinated": 5,
+      "precision": 0.4166666666666667,
+      "wilson95_err_upper": 0.8067425380947534
+    },
+    {
+      "key": "cuad / Non-Compete",
+      "n": 11,
+      "correct": 4,
+      "wrong": 5,
+      "hallucinated": 2,
+      "precision": 0.36363636363636365,
+      "wilson95_err_upper": 0.8483377638586862
+    },
+    {
+      "key": "cuad / Document Name",
+      "n": 36,
+      "correct": 28,
+      "wrong": 8,
+      "hallucinated": 0,
+      "precision": 0.7777777777777778,
+      "wilson95_err_upper": 0.3808501982785908
+    },
+    {
+      "key": "cuad / License Grant",
+      "n": 16,
+      "correct": 8,
+      "wrong": 5,
+      "hallucinated": 3,
+      "precision": 0.5,
+      "wilson95_err_upper": 0.7200076238864918
+    },
+    {
+      "key": "cuad / Non-Transferable License",
+      "n": 12,
+      "correct": 4,
+      "wrong": 3,
+      "hallucinated": 5,
+      "precision": 0.3333333333333333,
+      "wilson95_err_upper": 0.8618821601026386
+    },
+    {
+      "key": "cuad / Minimum Commitment",
+      "n": 12,
+      "correct": 4,
+      "wrong": 7,
+      "hallucinated": 1,
+      "precision": 0.3333333333333333,
+      "wilson95_err_upper": 0.8618821601026386
+    },
+    {
+      "key": "cuad / Effective Date",
+      "n": 25,
+      "correct": 16,
+      "wrong": 8,
+      "hallucinated": 1,
+      "precision": 0.64,
+      "wilson95_err_upper": 0.5548184539895337
+    },
+    {
+      "key": "cuad / Audit Rights",
+      "n": 13,
+      "correct": 4,
+      "wrong": 9,
+      "hallucinated": 0,
+      "precision": 0.3076923076923077,
+      "wilson95_err_upper": 0.873195028383819
+    },
+    {
+      "key": "cuad / Change Of Control",
+      "n": 12,
+      "correct": 3,
+      "wrong": 3,
+      "hallucinated": 6,
+      "precision": 0.25,
+      "wilson95_err_upper": 0.9110599603710388
+    },
+    {
+      "key": "cuad / Notice Period To Terminate Renewal",
+      "n": 9,
+      "correct": 0,
+      "wrong": 8,
+      "hallucinated": 1,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "cuad / Expiration Date",
+      "n": 9,
+      "correct": 0,
+      "wrong": 9,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "cuad / Anti-Assignment",
+      "n": 23,
+      "correct": 13,
+      "wrong": 10,
+      "hallucinated": 0,
+      "precision": 0.5652173913043478,
+      "wilson95_err_upper": 0.6318895069498304
+    },
+    {
+      "key": "cuad / Volume Restriction",
+      "n": 10,
+      "correct": 0,
+      "wrong": 2,
+      "hallucinated": 8,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "cuad / Ip Ownership Assignment",
+      "n": 14,
+      "correct": 3,
+      "wrong": 4,
+      "hallucinated": 7,
+      "precision": 0.21428571428571427,
+      "wilson95_err_upper": 0.9242875166308363
+    },
+    {
+      "key": "cuad / Renewal Term",
+      "n": 11,
+      "correct": 0,
+      "wrong": 11,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "cuad / Exclusivity",
+      "n": 16,
+      "correct": 3,
+      "wrong": 5,
+      "hallucinated": 8,
+      "precision": 0.1875,
+      "wilson95_err_upper": 0.9340852122641323
+    },
+    {
+      "key": "cuad / Price Restrictions",
+      "n": 13,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 12,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "cuad / Governing Law",
+      "n": 33,
+      "correct": 5,
+      "wrong": 28,
+      "hallucinated": 0,
+      "precision": 0.15151515151515152,
+      "wilson95_err_upper": 0.9334964074203904
+    },
+    {
+      "key": "cuad / Parties",
+      "n": 35,
+      "correct": 6,
+      "wrong": 29,
+      "hallucinated": 0,
+      "precision": 0.17142857142857143,
+      "wilson95_err_upper": 0.9189747005514327
+    }
+  ],
+  "by_route": [
+    {
+      "key": "pdf_text_good",
+      "n": 137,
+      "correct": 135,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.9854014598540146,
+      "wilson95_err_upper": 0.05166419729761036
+    },
+    {
+      "key": "pdf_text_damaged",
+      "n": 28,
+      "correct": 22,
+      "wrong": 5,
+      "hallucinated": 1,
+      "precision": 0.7857142857142857,
+      "wilson95_err_upper": 0.39538947079273873
+    },
+    {
+      "key": "cuad",
+      "n": 467,
+      "correct": 178,
+      "wrong": 199,
+      "hallucinated": 90,
+      "precision": 0.3811563169164882,
+      "wilson95_err_upper": 0.6617540509159694
+    }
+  ],
+  "whitelist_params": {
+    "min_n": 3,
+    "min_groups": 1,
+    "evidence": "grounded_text",
+    "conf": 0.0
+  },
+  "whitelist": {
+    "min_n": 3,
+    "min_groups": 1,
+    "evidence": "grounded_text",
+    "conf": 0.0,
+    "n_fields": 2704,
+    "booked": 1,
+    "wrong": 1,
+    "wilson95_err_upper": 1.0,
+    "families": 1,
+    "groups": 1,
+    "net_e20": -0.0070266272189349116,
+    "net_e100": -0.03661242603550296,
+    "net_e500": -0.1845414201183432
+  },
+  "whitelist_grid": [
+    {
+      "min_n": 3,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 2704,
+      "booked": 1,
+      "wrong": 1,
+      "wilson95_err_upper": 1.0,
+      "families": 1,
+      "groups": 1,
+      "net_e20": -0.0070266272189349116,
+      "net_e100": -0.03661242603550296,
+      "net_e500": -0.1845414201183432
+    },
+    {
+      "min_n": 5,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 2704,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 2704,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 2704,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 3,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 2704,
+      "booked": 1,
+      "wrong": 1,
+      "wilson95_err_upper": 1.0,
+      "families": 1,
+      "groups": 1,
+      "net_e20": -0.0070266272189349116,
+      "net_e100": -0.03661242603550296,
+      "net_e500": -0.1845414201183432
+    },
+    {
+      "min_n": 5,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 2704,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 2704,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 2704,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 3,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 2704,
+      "booked": 1,
+      "wrong": 1,
+      "wilson95_err_upper": 1.0,
+      "families": 1,
+      "groups": 1,
+      "net_e20": -0.0070266272189349116,
+      "net_e100": -0.03661242603550296,
+      "net_e500": -0.1845414201183432
+    },
+    {
+      "min_n": 5,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 2704,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 2704,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 2704,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 3,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 2704,
+      "booked": 1,
+      "wrong": 1,
+      "wilson95_err_upper": 1.0,
+      "families": 1,
+      "groups": 1,
+      "net_e20": -0.0070266272189349116,
+      "net_e100": -0.03661242603550296,
+      "net_e500": -0.1845414201183432
+    },
+    {
+      "min_n": 5,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 2704,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 2704,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 2704,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    }
+  ],
+  "missed_savings": {
+    "params": {
+      "min_n": 3,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "conf": 0.0
+    },
+    "correct_not_booked": 335,
+    "by_reason": {
+      "cell_has_errors": 176,
+      "cell_too_small": 159
+    },
+    "by_family": {
+      "cuad": {
+        "cell_has_errors": 176,
+        "cell_too_small": 2
+      },
+      "RRCH5Extraction": {
+        "cell_too_small": 69
+      },
+      "ClosingDisclosureTRID": {
+        "cell_too_small": 42
+      },
+      "Form 1099-B Proceeds From Broker and Barter E": {
+        "cell_too_small": 13
+      },
+      "UtilityBill": {
+        "cell_too_small": 9
+      },
+      "PurchaseOrder": {
+        "cell_too_small": 6
+      },
+      "stem:sched_i": {
+        "cell_too_small": 5
+      },
+      "stem:13f": {
+        "cell_too_small": 4
+      },
+      "stem:nport": {
+        "cell_too_small": 4
+      },
+      "Schedule K-1 (Form 1120S) Shareholder's Share": {
+        "cell_too_small": 3
+      },
+      "Schedule K-1 (Form 1065) Partner's Share of I": {
+        "cell_too_small": 2
+      }
+    }
+  }
+}

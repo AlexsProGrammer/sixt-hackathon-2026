@@ -937,7 +937,7 @@ def run_file(
             try:
                 res = extract_document(rec, config, ctx)
             except Exception as e:
-                print(f"[{i}] {rec['doc_id']}: FAILED {type(e).__name__}", file=sys.stderr)
+                print(f"[{i + 1}] {rec['doc_id']}: FAILED {type(e).__name__}", file=sys.stderr)
                 if config.mode == "llm" and config.on_error == "abstain":
                     res = {
                         "fields": null_fields(rec["schema"]),
@@ -955,11 +955,11 @@ def run_file(
                 continue
 
             if res["job_failures"] and config.mode == "llm" and config.on_error == "fail":
-                print(f"[{i}] {rec['doc_id']}: FAILED jobs {', '.join(res['job_failures'])} (not written)", file=sys.stderr)
+                print(f"[{i + 1}] {rec['doc_id']}: FAILED jobs {', '.join(res['job_failures'])} (not written)", file=sys.stderr)
                 failed.append(rec["doc_id"])
                 continue
             if res["job_failures"]:
-                print(f"[{i}] {rec['doc_id']}: fields with failed jobs set to null after errors "
+                print(f"[{i + 1}] {rec['doc_id']}: fields with failed jobs set to null after errors "
                       f"{', '.join(res['job_failures'])}", file=sys.stderr)
                 degraded.append(rec["doc_id"])
 
@@ -993,7 +993,7 @@ def run_file(
             fsamp.flush()
             if progress is not None:
                 progress(i + 1, len(recs), rec["doc_id"], res)
-            print(f"[{i}] {rec['doc_id']}", file=sys.stderr)
+            print(f"[{i + 1}] {rec['doc_id']}", file=sys.stderr)
 
     n_written = len(read_jsonl(out)) if out.exists() else 0
     n_requested_total = len(recs)
