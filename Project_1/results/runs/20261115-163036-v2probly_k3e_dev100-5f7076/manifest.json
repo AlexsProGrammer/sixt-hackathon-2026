@@ -1,0 +1,134 @@
+{
+  "contract_version": 1,
+  "field_contract_version": 2,
+  "run_id": "bc52b25b92d8",
+  "mode": "llm",
+  "pipeline": {
+    "workers": 4,
+    "samples": 3,
+    "temperature": 0.7,
+    "chunk_chars": 45000,
+    "overlap_chars": 3000,
+    "batch_size": 10,
+    "uq_method": "k_entropy",
+    "sampling": "mixed",
+    "model": "baidu/ernie-5.5-flash-preview:free",
+    "prompt_version": "v4"
+  },
+  "uq": {
+    "method": "k_entropy",
+    "expected_k": 3,
+    "probly_version": "0.9.1"
+  },
+  "fingerprint": {
+    "input_sha256": "f5cb419acc3020338c661fb225d9219e048792e8846867565d06ee2a7d1d44a0",
+    "pipeline_sha256": "d4593f60bc46b5ac94d31945afa5515fb1b9b82a71687b8c078223d46df6c17e",
+    "endpoint_host": "openrouter.ai",
+    "code_sha256": "e97e628673f0f5b58cad0ff243bb6b736a38cc79544e31c2d64d2966d20c55e8",
+    "prompt_version": "v4",
+    "fingerprint_sha256": "3eaef0dd65621a7adc784af3af2782505b3679b83f2a269a590bee95d997d829"
+  },
+  "segments": [
+    {
+      "run_id": "d82d3ed683e7",
+      "n_requested": 100,
+      "requests": 120,
+      "resumed_from_disk": 0
+    },
+    {
+      "run_id": "78699976fc5c",
+      "n_requested": 100,
+      "requests": 3,
+      "resumed_from_disk": 20
+    },
+    {
+      "run_id": "bc52b25b92d8",
+      "n_requested": 100,
+      "requests": 3,
+      "resumed_from_disk": 20
+    }
+  ],
+  "n_requested": 100,
+  "n_written": 20,
+  "n_skipped_resumed": 20,
+  "n_failed": 80,
+  "failed_doc_ids": [
+    "extractbench:short/ca_rad_crossover_outpatient_p5",
+    "extractbench:short/census_statab_employment",
+    "extractbench:short/cfpb_closing-disclosure_H25E",
+    "extractbench:short/h5Filing-45884-1",
+    "extractbench:short/h5Filing-49070-1",
+    "extractbench:short/nport__bullfinch_fund_inc",
+    "extractbench:short/sched_i__the_women_s_foundation_of_colorado_inc_ty2024",
+    "extractbench:short/texas_facilities_commission_purchase_order_shelton-keller",
+    "extractbench:short/we-energies-sample-bill",
+    "cuad:LohaCompanyltd_20191209_F-1_EX-10.16_11917878_EX-10.16_Supply Agreement",
+    "cuad:CENTRACKINTERNATIONALINC_10_29_1999-EX-10.3-WEB SITE HOSTING AGREEMENT",
+    "cuad:HERTZGLOBALHOLDINGS,INC_07_07_2016-EX-10.4-INTELLECTUAL PROPERTY AGREEMENT",
+    "cuad:CYBERIANOUTPOSTINC_07_09_1998-EX-10.13-PROMOTION AGREEMENT",
+    "cuad:HealthcareIntegratedTechnologiesInc_20190812_8-K_EX-10.1_11776966_EX-10.1_Reseller Agreement",
+    "cuad:CytodynInc_20200109_10-Q_EX-10.5_11941634_EX-10.5_License Agreement",
+    "cuad:NICELTD_06_26_2003-EX-4.5-OUTSOURCING AGREEMENT",
+    "cuad:ImpresseCorp_20000322_S-1A_EX-10.11_5199234_EX-10.11_Co-Branding Agreement",
+    "cuad:ASPIRITYHOLDINGSLLC_05_07_2012-EX-10.6-OUTSOURCING AGREEMENT",
+    "cuad:RareElementResourcesLtd_20171019_SC 13D_EX-99.4_10897534_EX-99.4_Intellectual Property Agreement",
+    "cuad:VARIABLESEPARATEACCOUNT_04_30_2014-EX-13.C-UNCONDITIONAL CAPITAL MAINTENANCE AGREEMENT",
+    "cuad:INTERNATIONALFASTFOODCORP_04_04_1997-EX-99-FRANCHISE AGREEMENT",
+    "cuad:PACIFICSYSTEMSCONTROLTECHNOLOGYINC_08_24_2000-EX-10.53-SPONSORSHIP AGREEMENT",
+    "cuad:N2KINC_10_16_1997-EX-10.16-SPONSORSHIP AGREEMENT",
+    "cuad:FerroglobePlc_20150624_F-4A_EX-10.20_9154746_EX-10.20_Outsourcing Agreement",
+    "cuad:PrecheckHealthServicesInc_20200320_8-K_EX-99.2_12070169_EX-99.2_Distributor Agreement",
+    "cuad:BANGIINC_05_25_2005-EX-10-Premium Managed Hosting Agreement",
+    "cuad:GULFSOUTHMEDICALSUPPLYINC_12_24_1997-EX-4-AFFILIATE AGREEMENT",
+    "cuad:BELLICUMPHARMACEUTICALS,INC_05_07_2019-EX-10.1-Supply Agreement",
+    "cuad:XLITECHNOLOGIES,INC_12_11_2015-EX-10.1-Sponsorship Agreement",
+    "cuad:TcPipelinesLp_20160226_10-K_EX-99.12_9454048_EX-99.12_Transportation Agreement",
+    "cuad:AMBASSADOREYEWEARGROUPINC_11_17_1997-EX-10.28-ENDORSEMENT AGREEMENT",
+    "cuad:UsioInc_20040428_SB-2_EX-10.11_1723988_EX-10.11_Affiliate Agreement 2",
+    "cuad:VAPOTHERM, INC. - Manufacturing and Supply Agreement",
+    "cuad:LIGHTBRIDGECORP_11_23_2015-EX-10.26-STRATEGIC ALLIANCE AGREEMENT",
+    "cuad:HYPERIONSOFTWARECORP_09_28_1994-EX-10.47-EXCLUSIVE DISTRIBUTOR AGREEMENT",
+    "cuad:RMRGROUPINC_01_22_2020-EX-99.1-JOINT FILING AGREEMENT",
+    "cuad:Apollo Endosurgery - Manufacturing and Supply Agreement",
+    "cuad:DYNAMEXINC_06_06_1996-EX-10.4-TRANSPORTATION SERVICES AGREEMENT",
+    "cuad:ULTRAGENYXPHARMACEUTICALINC_12_23_2013-EX-10.9-SUPPLY AGREEMENT",
+    "cuad:GIGGLESN_HUGS,INC_06_23_2016-EX-10.2-STRATEGIC ALLIANCE AGREEMENT",
+    "cuad:Quaker Chemical Corporation - NON COMPETITION AND NON SOLICITATION AGREEMENT",
+    "cuad:HertzGroupRealtyTrustInc_20190920_S-11A_EX-10.8_11816941_EX-10.8_Trademark License Agreement",
+    "cuad:KENTUCKYUTILITIESCO_03_25_2003-EX-10.65-TRANSPORTATION AGREEMENT",
+    "cuad:MEDALISTDIVERSIFIEDREIT,INC_05_18_2020-EX-10.1-CONSULTING AGREEMENT",
+    "cuad:Microgenics Corporation - Collaborative Development and Commercialization Agreement",
+    "cuad:SigaTechnologiesInc_20190603_8-K_EX-10.1_11695818_EX-10.1_Promotion Agreement",
+    "cuad:VgrabCommunicationsInc_20200129_10-K_EX-10.33_11958828_EX-10.33_Development Agreement",
+    "cuad:DIVERSINETCORP_03_01_2012-EX-4-RESELLER AGREEMENT",
+    "cuad:BloomEnergyCorp_20180321_DRSA (on S-1)_EX-10_11240356_EX-10_Maintenance Agreement",
+    "cuad:NeuroboPharmaceuticalsInc_20190903_S-4_EX-10.36_11802165_EX-10.36_Manufacturing Agreement_ Supply Agreement"
+  ],
+  "n_abstained_after_errors": 0,
+  "abstained_after_error_doc_ids": [],
+  "run_complete": false,
+  "requests": 3,
+  "cache_hits": 573,
+  "requests_by_model": {
+    "baidu/ernie-5.5-flash-preview:free": 3
+  },
+  "cache_hits_by_model": {
+    "baidu/ernie-5.5-flash-preview:free": 573
+  },
+  "routes_used": {},
+  "text_sources": {},
+  "models_used": [
+    "baidu/ernie-5.5-flash-preview:free"
+  ],
+  "input_kinds": [],
+  "prompt_versions": [],
+  "selector_sha256": null,
+  "elapsed_seconds": 43.39,
+  "stopped_429": true,
+  "on_error": "fail",
+  "warnings": [
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Rate limit exceeded: free-models-per-day-high-balance. \",\"code\":429,\"metadata\":{\"headers\":{\"X-RateLimit-Limit\":\"1000\",\"X-RateLimit-Remaining\":\"0\",\"X-RateLimit-Reset\":\"179478720000",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Rate limit exceeded: free-models-per-day-high-balance. \",\"code\":429,\"metadata\":{\"headers\":{\"X-RateLimit-Limit\":\"1000\",\"X-RateLimit-Remaining\":\"0\",\"X-RateLimit-Reset\":\"179478720000",
+    "baidu/ernie-5.5-flash-preview:free: HTTP 429: {\"error\":{\"message\":\"Rate limit exceeded: free-models-per-day-high-balance. \",\"code\":429,\"metadata\":{\"headers\":{\"X-RateLimit-Limit\":\"1000\",\"X-RateLimit-Remaining\":\"0\",\"X-RateLimit-Reset\":\"179478720000"
+  ]
+}

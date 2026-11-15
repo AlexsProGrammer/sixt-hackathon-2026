@@ -1,0 +1,159 @@
+{
+  "at_threshold_0": {
+    "threshold": 0.0,
+    "n_fields": 1041,
+    "accepted": 29,
+    "correct": 22,
+    "wrong": 6,
+    "hallucinated": 1,
+    "missed": 623,
+    "true_null": 389,
+    "precision": 0.7586206896551724,
+    "recall": 0.03379416282642089,
+    "coverage": 0.043010752688172046,
+    "accepted_rate": 0.027857829010566763,
+    "hallucination_rate": 0.002564102564102564
+  },
+  "headline": {
+    "target_precision": 0.99,
+    "coverage_at_target_precision": 0.0,
+    "threshold_at_target": null,
+    "reached_target": false
+  },
+  "coverage_at_precision": {
+    "0.99": 0.0,
+    "0.95": 0.0,
+    "0.9": 0.0,
+    "0.8": 0.039938556067588324
+  },
+  "business": {
+    "review_cost": 1.0,
+    "error_cost": 100.0,
+    "threshold": null,
+    "saving": 0.0,
+    "saving_pct": 0.0
+  },
+  "schema_validity": 0.9,
+  "by_source": {
+    "extractbench": {
+      "threshold": 0.0,
+      "n_fields": 1041,
+      "accepted": 29,
+      "correct": 22,
+      "wrong": 6,
+      "hallucinated": 1,
+      "missed": 623,
+      "true_null": 389,
+      "precision": 0.7586206896551724,
+      "recall": 0.03379416282642089,
+      "coverage": 0.043010752688172046,
+      "accepted_rate": 0.027857829010566763,
+      "hallucination_rate": 0.002564102564102564
+    }
+  },
+  "by_condition": {
+    "perception:P1": {
+      "threshold": 0.0,
+      "n_fields": 3,
+      "accepted": 0,
+      "correct": 0,
+      "wrong": 0,
+      "hallucinated": 0,
+      "missed": 3,
+      "true_null": 0,
+      "precision": 1.0,
+      "recall": 0.0,
+      "coverage": 0.0,
+      "accepted_rate": 0.0,
+      "hallucination_rate": 0.0
+    },
+    "perception:P2": {
+      "threshold": 0.0,
+      "n_fields": 881,
+      "accepted": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "missed": 560,
+      "true_null": 320,
+      "precision": 0.0,
+      "recall": 0.0,
+      "coverage": 0.0017825311942959,
+      "accepted_rate": 0.0011350737797956867,
+      "hallucination_rate": 0.0
+    },
+    "perception:P3": {
+      "threshold": 0.0,
+      "n_fields": 506,
+      "accepted": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "missed": 331,
+      "true_null": 174,
+      "precision": 0.0,
+      "recall": 0.0,
+      "coverage": 0.0030120481927710845,
+      "accepted_rate": 0.001976284584980237,
+      "hallucination_rate": 0.0
+    }
+  },
+  "curve": [
+    {
+      "threshold": 0.42061983571430506,
+      "n_fields": 1041,
+      "accepted": 29,
+      "correct": 22,
+      "wrong": 6,
+      "hallucinated": 1,
+      "missed": 623,
+      "true_null": 389,
+      "precision": 0.7586206896551724,
+      "recall": 0.03379416282642089,
+      "coverage": 0.043010752688172046,
+      "accepted_rate": 0.027857829010566763,
+      "hallucination_rate": 0.002564102564102564
+    },
+    {
+      "threshold": 1.0,
+      "n_fields": 1041,
+      "accepted": 26,
+      "correct": 22,
+      "wrong": 4,
+      "hallucinated": 0,
+      "missed": 625,
+      "true_null": 390,
+      "precision": 0.8461538461538461,
+      "recall": 0.03379416282642089,
+      "coverage": 0.039938556067588324,
+      "accepted_rate": 0.024975984630163303,
+      "hallucination_rate": 0.0
+    }
+  ],
+  "at_threshold": {
+    "threshold": 0.99,
+    "n_fields": 1041,
+    "accepted": 26,
+    "correct": 22,
+    "wrong": 4,
+    "hallucinated": 0,
+    "missed": 625,
+    "true_null": 390,
+    "precision": 0.8461538461538461,
+    "recall": 0.03379416282642089,
+    "coverage": 0.039938556067588324,
+    "accepted_rate": 0.024975984630163303,
+    "hallucination_rate": 0.0
+  },
+  "declared": {
+    "threshold": 0.99,
+    "precision": 0.8461538461538461,
+    "coverage": 0.039938556067588324,
+    "hallucination_rate": 0.0,
+    "accepted": 26,
+    "wrong": 4,
+    "hallucinated": 0,
+    "band": 0.8,
+    "net_saving_pct": -0.35926993275696445
+  }
+}

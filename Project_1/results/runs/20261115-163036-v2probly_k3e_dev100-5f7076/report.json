@@ -1,0 +1,400 @@
+{
+  "n_docs": 20,
+  "n_groups": 14,
+  "n_fields": 1041,
+  "outcomes": {
+    "correct": 22,
+    "wrong": 6,
+    "hallucinated": 1,
+    "missed": 623,
+    "true_null": 389
+  },
+  "predictions": {
+    "n": 29,
+    "correct": 22,
+    "wrong": 6,
+    "hallucinated": 1,
+    "precision": 0.7586206896551724,
+    "wilson95_err_upper": 0.4210795221832869
+  },
+  "by_source_kind_grounded": [
+    {
+      "key": "extractbench / number / True",
+      "n": 7,
+      "correct": 6,
+      "wrong": 0,
+      "hallucinated": 1,
+      "precision": 0.8571428571428571,
+      "wilson95_err_upper": 0.5131345033190299
+    },
+    {
+      "key": "extractbench / json / True",
+      "n": 3,
+      "correct": 1,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.3333333333333333,
+      "wilson95_err_upper": 0.9385096847238393
+    },
+    {
+      "key": "extractbench / string / True",
+      "n": 19,
+      "correct": 15,
+      "wrong": 4,
+      "hallucinated": 0,
+      "precision": 0.7894736842105263,
+      "wilson95_err_upper": 0.43334714240266087
+    }
+  ],
+  "by_confidence": [
+    {
+      "key": "0.42",
+      "n": 3,
+      "correct": 0,
+      "wrong": 2,
+      "hallucinated": 1,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "1.00",
+      "n": 26,
+      "correct": 22,
+      "wrong": 4,
+      "hallucinated": 0,
+      "precision": 0.8461538461538461,
+      "wilson95_err_upper": 0.3353158441831357
+    }
+  ],
+  "by_family_field_grounded": [
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / payer_federal_id",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / recipient_name",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / recipient_tax_id",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / account_number",
+      "n": 3,
+      "correct": 2,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.6666666666666666,
+      "wilson95_err_upper": 0.7923450448735121
+    }
+  ],
+  "by_route": [
+    {
+      "key": "pdf_text_good",
+      "n": 4,
+      "correct": 4,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.48990002040399916
+    },
+    {
+      "key": "pdf_text_damaged",
+      "n": 25,
+      "correct": 18,
+      "wrong": 6,
+      "hallucinated": 1,
+      "precision": 0.72,
+      "wilson95_err_upper": 0.47576971896558296
+    }
+  ],
+  "whitelist_params": {
+    "min_n": 3,
+    "min_groups": 1,
+    "evidence": "grounded_text",
+    "conf": 0.0
+  },
+  "whitelist": {
+    "min_n": 3,
+    "min_groups": 1,
+    "evidence": "grounded_text",
+    "conf": 0.0,
+    "n_fields": 1041,
+    "booked": 0,
+    "wrong": 0,
+    "wilson95_err_upper": null,
+    "families": 0,
+    "groups": 0,
+    "net_e20": 0.0,
+    "net_e100": 0.0,
+    "net_e500": 0.0
+  },
+  "whitelist_grid": [
+    {
+      "min_n": 3,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 5,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 3,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 5,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 3,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 5,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 3,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 5,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 1041,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    }
+  ],
+  "missed_savings": {
+    "params": {
+      "min_n": 3,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "conf": 0.0
+    },
+    "correct_not_booked": 22,
+    "by_reason": {
+      "cell_too_small": 22
+    },
+    "by_family": {
+      "Form 1099-B Proceeds From Broker and Barter E": {
+        "cell_too_small": 13
+      },
+      "stem:13f": {
+        "cell_too_small": 4
+      },
+      "Schedule K-1 (Form 1120S) Shareholder's Share": {
+        "cell_too_small": 3
+      },
+      "Schedule K-1 (Form 1065) Partner's Share of I": {
+        "cell_too_small": 2
+      }
+    }
+  }
+}
