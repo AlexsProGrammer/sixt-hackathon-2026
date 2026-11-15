@@ -1,0 +1,81 @@
+{
+  "contract_version": 1,
+  "field_contract_version": 2,
+  "run_id": "520d08b8a75b",
+  "mode": "llm",
+  "pipeline": {
+    "workers": 4,
+    "samples": 1,
+    "temperature": 0.7,
+    "chunk_chars": 45000,
+    "overlap_chars": 3000,
+    "batch_size": 10,
+    "uq_method": "k1_grounded",
+    "sampling": "mixed",
+    "model": "baidu/ernie-5.5-flash-preview:free",
+    "prompt_version": "v4"
+  },
+  "uq": {
+    "method": "k1_grounded",
+    "expected_k": 1,
+    "probly_version": "0.9.1"
+  },
+  "fingerprint": {
+    "input_sha256": "a1216a6c5afdd3b9fcb4e8def4c1d38285ef2cb088a9c6d2f92e8b103467e808",
+    "pipeline_sha256": "bfea34f84bbf067618b8259fb81df01c773fbaae056161071df1a483637cda74",
+    "endpoint_host": "openrouter.ai",
+    "code_sha256": "3b4d4e906fdba372be40537083481f08e3e92c30b5f6a4823f57e450701b604e",
+    "prompt_version": "v4",
+    "fingerprint_sha256": "425bc8cc34cbfdd35c66a0201e1864179b75321f7bfb2cc4a4705ad112027c18"
+  },
+  "segments": [
+    {
+      "run_id": "cfd7fbbe52e4",
+      "n_requested": 12,
+      "requests": 49,
+      "resumed_from_disk": 0
+    },
+    {
+      "run_id": "520d08b8a75b",
+      "n_requested": 12,
+      "requests": 1,
+      "resumed_from_disk": 11
+    }
+  ],
+  "n_requested": 12,
+  "n_written": 12,
+  "n_skipped_resumed": 11,
+  "n_failed": 0,
+  "failed_doc_ids": [],
+  "n_abstained_after_errors": 0,
+  "abstained_after_error_doc_ids": [],
+  "run_complete": true,
+  "requests": 1,
+  "cache_hits": 5,
+  "requests_by_model": {
+    "baidu/ernie-5.5-flash-preview:free": 1
+  },
+  "cache_hits_by_model": {
+    "baidu/ernie-5.5-flash-preview:free": 5
+  },
+  "routes_used": {
+    "pdf_text_damaged": 1
+  },
+  "text_sources": {
+    "pdftotext": 1
+  },
+  "models_used": [
+    "baidu/ernie-5.5-flash-preview:free"
+  ],
+  "input_kinds": [
+    "text"
+  ],
+  "prompt_versions": [
+    "v4"
+  ],
+  "selector_sha256": null,
+  "elapsed_seconds": 4.38,
+  "stopped_429": false,
+  "on_error": "fail",
+  "warnings": []
+}

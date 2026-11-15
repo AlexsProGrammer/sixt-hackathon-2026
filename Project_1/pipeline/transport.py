@@ -16,6 +16,7 @@ import email.utils
 import hashlib
 import json
 import os
+import sys
 import tempfile
 import threading
 import time
@@ -193,13 +194,15 @@ def _use_json_mode(model: str, json_mode: bool | None) -> bool:
 
 
 def post_chat(cfg: dict, messages: list[dict], temperature: float, *, model: str | None = None,
-              timeout: float = TIMEOUT_S, json_mode: bool | None = None) -> str:
+              timeout: float | None = None, json_mode: bool | None = None) -> str:
     """One HTTP request to `model` (default cfg["LLM_MODEL"]). Returns the assistant text.
     Uses response_format={"type": "json_object"} when enabled (default) and falls back automatically if a model
     rejects response_format with HTTP 400.
     Raises TransportError with a kind, status and a redacted body excerpt (max 200 chars) only.
     Usage and elapsed seconds of the call are available through last_call_meta() in the same thread."""
     url, key, model = resolve_endpoint(cfg, model)
+    if timeout is None:
+        timeout = _env_float("LLM_TIMEOUT_S", TIMEOUT_S)
     use_json = _use_json_mode(model, json_mode)
     payload_dict: dict = {"model": model, "temperature": temperature, "messages": messages}
     if use_json:
@@ -293,6 +296,8 @@ def call_with_retry(cfg: dict, messages: list[dict], temperature: float, state: 
                     raise TransportError("rate_limited", "HTTP 429, wait budget exhausted; run stopped",
                                          status=429) from None
                 raise
+            print(f"[retry {attempt + 1}/{max_retries}] {effective_model}: {e}; sleeping {wait:.1f}s",
+                  file=sys.stderr, flush=True)
             sleep(wait)
             attempt += 1
 

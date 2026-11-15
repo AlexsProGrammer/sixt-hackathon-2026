@@ -1,0 +1,591 @@
+{
+  "n_docs": 11,
+  "n_groups": 11,
+  "n_fields": 254,
+  "outcomes": {
+    "correct": 29,
+    "wrong": 22,
+    "hallucinated": 12,
+    "missed": 70,
+    "true_null": 121
+  },
+  "predictions": {
+    "n": 63,
+    "correct": 29,
+    "wrong": 22,
+    "hallucinated": 12,
+    "precision": 0.4603174603174603,
+    "wilson95_err_upper": 0.656913345835743
+  },
+  "by_source_kind_grounded": [
+    {
+      "key": "extractbench / string / True",
+      "n": 6,
+      "correct": 6,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.3903430336530645
+    },
+    {
+      "key": "extractbench / number / True",
+      "n": 1,
+      "correct": 1,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.7934567085261071
+    },
+    {
+      "key": "extractbench / json / True",
+      "n": 1,
+      "correct": 1,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.7934567085261071
+    },
+    {
+      "key": "cuad / span / True",
+      "n": 55,
+      "correct": 21,
+      "wrong": 22,
+      "hallucinated": 12,
+      "precision": 0.38181818181818183,
+      "wilson95_err_upper": 0.7348423368258477
+    }
+  ],
+  "by_confidence": [
+    {
+      "key": "0.95",
+      "n": 7,
+      "correct": 7,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.35433884297520657
+    },
+    {
+      "key": "0.97",
+      "n": 4,
+      "correct": 4,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.48990002040399916
+    },
+    {
+      "key": "0.99",
+      "n": 4,
+      "correct": 4,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.48990002040399916
+    },
+    {
+      "key": "0.88",
+      "n": 1,
+      "correct": 1,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.7934567085261071
+    },
+    {
+      "key": "0.82",
+      "n": 1,
+      "correct": 1,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.7934567085261071
+    },
+    {
+      "key": "0.98",
+      "n": 4,
+      "correct": 3,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.75,
+      "wilson95_err_upper": 0.6993639475573634
+    },
+    {
+      "key": "0.80",
+      "n": 2,
+      "correct": 1,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.5,
+      "wilson95_err_upper": 0.905471345199134
+    },
+    {
+      "key": "0.60",
+      "n": 3,
+      "correct": 1,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.3333333333333333,
+      "wilson95_err_upper": 0.9385096847238393
+    },
+    {
+      "key": "0.70",
+      "n": 2,
+      "correct": 0,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.45",
+      "n": 2,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 1,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.75",
+      "n": 2,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 1,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.55",
+      "n": 5,
+      "correct": 1,
+      "wrong": 3,
+      "hallucinated": 1,
+      "precision": 0.2,
+      "wilson95_err_upper": 0.9637768390302125
+    },
+    {
+      "key": "0.85",
+      "n": 8,
+      "correct": 2,
+      "wrong": 2,
+      "hallucinated": 4,
+      "precision": 0.25,
+      "wilson95_err_upper": 0.9285223111419724
+    },
+    {
+      "key": "0.50",
+      "n": 7,
+      "correct": 1,
+      "wrong": 1,
+      "hallucinated": 5,
+      "precision": 0.14285714285714285,
+      "wilson95_err_upper": 0.9743210440510253
+    },
+    {
+      "key": "0.90",
+      "n": 11,
+      "correct": 3,
+      "wrong": 8,
+      "hallucinated": 0,
+      "precision": 0.2727272727272727,
+      "wilson95_err_upper": 0.9025411942607853
+    }
+  ],
+  "by_family_field_grounded": [
+    {
+      "key": "cuad / Document Name",
+      "n": 4,
+      "correct": 4,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.48990002040399916
+    },
+    {
+      "key": "cuad / Anti-Assignment",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "cuad / Effective Date",
+      "n": 4,
+      "correct": 3,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.75,
+      "wilson95_err_upper": 0.6993639475573634
+    },
+    {
+      "key": "cuad / Termination For Convenience",
+      "n": 3,
+      "correct": 2,
+      "wrong": 0,
+      "hallucinated": 1,
+      "precision": 0.6666666666666666,
+      "wilson95_err_upper": 0.7923450448735121
+    },
+    {
+      "key": "cuad / Agreement Date",
+      "n": 4,
+      "correct": 2,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.5,
+      "wilson95_err_upper": 0.8499642911798285
+    },
+    {
+      "key": "cuad / Exclusivity",
+      "n": 3,
+      "correct": 1,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.3333333333333333,
+      "wilson95_err_upper": 0.9385096847238393
+    },
+    {
+      "key": "cuad / Governing Law",
+      "n": 3,
+      "correct": 0,
+      "wrong": 3,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "cuad / Ip Ownership Assignment",
+      "n": 3,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 2,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "cuad / Post-Termination Services",
+      "n": 3,
+      "correct": 0,
+      "wrong": 3,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "cuad / Parties",
+      "n": 4,
+      "correct": 0,
+      "wrong": 4,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    }
+  ],
+  "by_route": [
+    {
+      "key": "pdf_text_damaged",
+      "n": 6,
+      "correct": 6,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.3903430336530645
+    },
+    {
+      "key": "pdf_text_good",
+      "n": 2,
+      "correct": 2,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.6576280471103807
+    },
+    {
+      "key": "cuad",
+      "n": 55,
+      "correct": 21,
+      "wrong": 22,
+      "hallucinated": 12,
+      "precision": 0.38181818181818183,
+      "wilson95_err_upper": 0.7348423368258477
+    }
+  ],
+  "whitelist_params": {
+    "min_n": 3,
+    "min_groups": 1,
+    "evidence": "grounded_text",
+    "conf": 0.0
+  },
+  "whitelist": {
+    "min_n": 3,
+    "min_groups": 1,
+    "evidence": "grounded_text",
+    "conf": 0.0,
+    "n_fields": 254,
+    "booked": 5,
+    "wrong": 1,
+    "wilson95_err_upper": 0.6244717358814612,
+    "families": 1,
+    "groups": 4,
+    "net_e20": -0.05905511811023622,
+    "net_e100": -0.37401574803149606,
+    "net_e500": -1.9488188976377954
+  },
+  "whitelist_grid": [
+    {
+      "min_n": 3,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 254,
+      "booked": 5,
+      "wrong": 1,
+      "wilson95_err_upper": 0.6244717358814612,
+      "families": 1,
+      "groups": 4,
+      "net_e20": -0.05905511811023622,
+      "net_e100": -0.37401574803149606,
+      "net_e500": -1.9488188976377954
+    },
+    {
+      "min_n": 5,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 254,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 254,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 254,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 3,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 254,
+      "booked": 5,
+      "wrong": 1,
+      "wilson95_err_upper": 0.6244717358814612,
+      "families": 1,
+      "groups": 4,
+      "net_e20": -0.05905511811023622,
+      "net_e100": -0.37401574803149606,
+      "net_e500": -1.9488188976377954
+    },
+    {
+      "min_n": 5,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 254,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 254,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 254,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 3,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 254,
+      "booked": 5,
+      "wrong": 1,
+      "wilson95_err_upper": 0.6244717358814612,
+      "families": 1,
+      "groups": 4,
+      "net_e20": -0.05905511811023622,
+      "net_e100": -0.37401574803149606,
+      "net_e500": -1.9488188976377954
+    },
+    {
+      "min_n": 5,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 254,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 254,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 254,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 3,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 254,
+      "booked": 5,
+      "wrong": 1,
+      "wilson95_err_upper": 0.6244717358814612,
+      "families": 1,
+      "groups": 4,
+      "net_e20": -0.05905511811023622,
+      "net_e100": -0.37401574803149606,
+      "net_e500": -1.9488188976377954
+    },
+    {
+      "min_n": 5,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 254,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 254,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 254,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    }
+  ],
+  "missed_savings": {
+    "params": {
+      "min_n": 3,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "conf": 0.0
+    },
+    "correct_not_booked": 25,
+    "by_reason": {
+      "cell_too_small": 20,
+      "cell_has_errors": 5
+    },
+    "by_family": {
+      "cuad": {
+        "cell_too_small": 12,
+        "cell_has_errors": 5
+      },
+      "stem:nport": {
+        "cell_too_small": 4
+      },
+      "Schedule K-1 (Form 1120S) Shareholder's Share": {
+        "cell_too_small": 2
+      },
+      "Product Spec Sheet / Datasheet — rated specif": {
+        "cell_too_small": 2
+      }
+    }
+  }
+}

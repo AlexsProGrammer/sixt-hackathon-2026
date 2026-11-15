@@ -932,6 +932,8 @@ def run_file(
             if rec["doc_id"] in done:
                 skipped += 1
                 continue
+            if config.mode == "llm":
+                print(f"[{i + 1}/{len(recs)}] {rec['doc_id']}...", file=sys.stderr, flush=True)
             try:
                 res = extract_document(rec, config, ctx)
             except Exception as e:
