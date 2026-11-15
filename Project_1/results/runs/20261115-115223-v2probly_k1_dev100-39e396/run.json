@@ -1,0 +1,68 @@
+{
+  "run_id": "20261115-115223-v2probly_k1_dev100-39e396",
+  "name": "v2probly_k1_dev100",
+  "split": "dev",
+  "created_at": "2026-11-15T11:52:23",
+  "tags": [
+    "batch",
+    "v2"
+  ],
+  "git": {
+    "commit": "7013e3092165c26fdfd7679f21b578c68f18129c",
+    "dirty": false
+  },
+  "status": "incomplete",
+  "selection": {
+    "kind": "input",
+    "input": "data/unified/dev.jsonl",
+    "limit": 100,
+    "n_available": 540,
+    "n_docs": 100,
+    "ids_sha256": "ad811a51b4492f6aa598af21527cbc7b40fbec1a939c572f0f04900546240174"
+  },
+  "input": {
+    "n_docs": 100,
+    "kind": "ref",
+    "input_ref": "results/runs/20261115-115223-v2probly_k1_dev100-39e396/selection.jsonl",
+    "input_sha256": "e6b4b1f48e6e2759c0032a16d6d23d96a2ed782e6799d6b1ea32382d78fc194b",
+    "n_gold": 100
+  },
+  "mode": "llm",
+  "models": [
+    "baidu/ernie-5.5-flash-preview:free"
+  ],
+  "n_requested": 100,
+  "finished_at": "2026-11-15T13:29:44",
+  "n_written": 99,
+  "summary": {
+    "threshold": 0.99,
+    "n_docs": 99,
+    "n_fields": 5210,
+    "accepted": 91,
+    "correct": 91,
+    "wrong": 0,
+    "hallucinated": 0,
+    "precision": 1.0,
+    "coverage": 0.027701674277016742,
+    "net_saving_pct_e20": 0.017466410748560462,
+    "net_saving_pct_e100": 0.017466410748560462,
+    "net_saving_pct_e500": 0.017466410748560462,
+    "best_threshold_e100": 0.95,
+    "best_threshold_net_e100": 0.01804222648752399,
+    "by_source": {
+      "extractbench": {
+        "n_fields": 5210,
+        "accepted": 91,
+        "correct": 91,
+        "wrong": 0,
+        "hallucinated": 0,
+        "precision": 1.0,
+        "coverage": 0.027701674277016742,
+        "net_saving_pct_e100": 0.017466410748560462
+      }
+    },
+    "scored_at": "2026-11-15T13:29:51"
+  },
+  "fields_contract_version": 1,
+  "n_field_rows": 5150
+}

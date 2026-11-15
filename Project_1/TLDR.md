@@ -60,8 +60,9 @@ cd Project_1
 
 ```bash
 # 1. Resume only failed/unwritten docs in the same run folder
+#    (If the run used --limit / --random / --source / --route, use results/runs/<RUN_DIR_NAME>/selection.jsonl for --data)
 .venv/bin/python 4_extract.py \
-  --data data/splits/smoke.jsonl \
+  --data <DATASET> \
   --run-dir results/runs/<RUN_DIR_NAME> \
   --run-name <RUN_NAME> \
   --mode llm --workers 4 --resume

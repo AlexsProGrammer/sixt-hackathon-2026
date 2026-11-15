@@ -1,0 +1,760 @@
+{
+  "n_docs": 97,
+  "n_groups": 68,
+  "n_fields": 5150,
+  "outcomes": {
+    "correct": 247,
+    "wrong": 40,
+    "hallucinated": 6,
+    "missed": 2940,
+    "true_null": 1917
+  },
+  "predictions": {
+    "n": 293,
+    "correct": 247,
+    "wrong": 40,
+    "hallucinated": 6,
+    "precision": 0.8430034129692833,
+    "wilson95_err_upper": 0.20305897489368177
+  },
+  "by_source_kind_grounded": [
+    {
+      "key": "extractbench / number / True",
+      "n": 44,
+      "correct": 41,
+      "wrong": 2,
+      "hallucinated": 1,
+      "precision": 0.9318181818181818,
+      "wilson95_err_upper": 0.18225321336617192
+    },
+    {
+      "key": "extractbench / json / True",
+      "n": 23,
+      "correct": 14,
+      "wrong": 8,
+      "hallucinated": 1,
+      "precision": 0.6086956521739131,
+      "wilson95_err_upper": 0.5921482039625401
+    },
+    {
+      "key": "extractbench / string / True",
+      "n": 226,
+      "correct": 192,
+      "wrong": 30,
+      "hallucinated": 4,
+      "precision": 0.8495575221238938,
+      "wilson95_err_upper": 0.20287213894546907
+    }
+  ],
+  "by_confidence": [
+    {
+      "key": "0.99",
+      "n": 90,
+      "correct": 90,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.04093706842168078
+    },
+    {
+      "key": "0.95",
+      "n": 34,
+      "correct": 34,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.10151790621961015
+    },
+    {
+      "key": "0.97",
+      "n": 34,
+      "correct": 34,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.10151790621961015
+    },
+    {
+      "key": "0.88",
+      "n": 2,
+      "correct": 2,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.6576280471103807
+    },
+    {
+      "key": "0.98",
+      "n": 34,
+      "correct": 33,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.9705882352941176,
+      "wilson95_err_upper": 0.1491590221634482
+    },
+    {
+      "key": "0.85",
+      "n": 8,
+      "correct": 7,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.875,
+      "wilson95_err_upper": 0.4708948057698615
+    },
+    {
+      "key": "0.60",
+      "n": 4,
+      "correct": 3,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.75,
+      "wilson95_err_upper": 0.6993639475573634
+    },
+    {
+      "key": "0.38",
+      "n": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.65",
+      "n": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.40",
+      "n": 1,
+      "correct": 0,
+      "wrong": 0,
+      "hallucinated": 1,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.72",
+      "n": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.58",
+      "n": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.56",
+      "n": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.20",
+      "n": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.28",
+      "n": 1,
+      "correct": 0,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.80",
+      "n": 9,
+      "correct": 7,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.7777777777777778,
+      "wilson95_err_upper": 0.5474166563271946
+    },
+    {
+      "key": "0.50",
+      "n": 4,
+      "correct": 2,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.5,
+      "wilson95_err_upper": 0.8499642911798285
+    },
+    {
+      "key": "0.35",
+      "n": 2,
+      "correct": 0,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.75",
+      "n": 5,
+      "correct": 1,
+      "wrong": 4,
+      "hallucinated": 0,
+      "precision": 0.2,
+      "wilson95_err_upper": 0.9637768390302125
+    },
+    {
+      "key": "0.45",
+      "n": 4,
+      "correct": 0,
+      "wrong": 3,
+      "hallucinated": 1,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "0.55",
+      "n": 7,
+      "correct": 1,
+      "wrong": 5,
+      "hallucinated": 1,
+      "precision": 0.14285714285714285,
+      "wilson95_err_upper": 0.9743210440510253
+    },
+    {
+      "key": "0.90",
+      "n": 38,
+      "correct": 31,
+      "wrong": 4,
+      "hallucinated": 3,
+      "precision": 0.8157894736842105,
+      "wilson95_err_upper": 0.33419168341511346
+    },
+    {
+      "key": "0.70",
+      "n": 10,
+      "correct": 2,
+      "wrong": 8,
+      "hallucinated": 0,
+      "precision": 0.2,
+      "wilson95_err_upper": 0.9433190520193067
+    }
+  ],
+  "by_family_field_grounded": [
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / payer_federal_id",
+      "n": 13,
+      "correct": 13,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.22810184305529166
+    },
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / recipient_name",
+      "n": 13,
+      "correct": 13,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.22810184305529166
+    },
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / payer_name",
+      "n": 11,
+      "correct": 11,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.2588400172488141
+    },
+    {
+      "key": "Schedule K-1 (Form 1120S) Shareholder's Share / box_1_ordinary_business_income",
+      "n": 5,
+      "correct": 5,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.43449149475208104
+    },
+    {
+      "key": "Schedule K-1 (Form 1120S) Shareholder's Share / shareholder_name",
+      "n": 4,
+      "correct": 4,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.48990002040399916
+    },
+    {
+      "key": "Schedule K-1 (Form 1065) Partner's Share of I / capital_current_year_increase_decrease",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "Schedule K-1 (Form 1065) Partner's Share of I / box_1_ordinary_business_income",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "Schedule K-1 (Form 1120S) Shareholder's Share / irs_center",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "Schedule K-1 (Form 1120S) Shareholder's Share / shareholder_stock_ownership_pct",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "stem:13f / filing_manager_name",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "stem:13f / report_type",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "stem:13f / table_entry_total",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "stem:13f / table_value_total_usd",
+      "n": 3,
+      "correct": 3,
+      "wrong": 0,
+      "hallucinated": 0,
+      "precision": 1.0,
+      "wilson95_err_upper": 0.5615060804490177
+    },
+    {
+      "key": "Schedule K-1 (Form 1120S) Shareholder's Share / box_15_amt_items",
+      "n": 6,
+      "correct": 5,
+      "wrong": 1,
+      "hallucinated": 0,
+      "precision": 0.8333333333333334,
+      "wilson95_err_upper": 0.563509436563646
+    },
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / account_number",
+      "n": 14,
+      "correct": 12,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.8571428571428571,
+      "wilson95_err_upper": 0.399419077638637
+    },
+    {
+      "key": "Form 1099-B Proceeds From Broker and Barter E / recipient_tax_id",
+      "n": 13,
+      "correct": 11,
+      "wrong": 2,
+      "hallucinated": 0,
+      "precision": 0.8461538461538461,
+      "wilson95_err_upper": 0.4223517050863101
+    },
+    {
+      "key": "Schedule K-1 (Form 1120S) Shareholder's Share / corporation_name",
+      "n": 7,
+      "correct": 4,
+      "wrong": 3,
+      "hallucinated": 0,
+      "precision": 0.5714285714285714,
+      "wilson95_err_upper": 0.7495457695909742
+    },
+    {
+      "key": "Schedule K-1 (Form 1065) Partner's Share of I / partner_name",
+      "n": 3,
+      "correct": 0,
+      "wrong": 3,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "Schedule K-1 (Form 1065) Partner's Share of I / capital_account_method",
+      "n": 3,
+      "correct": 0,
+      "wrong": 0,
+      "hallucinated": 3,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "Schedule K-1 (Form 1065) Partner's Share of I / box_14_self_employment_earnings",
+      "n": 3,
+      "correct": 0,
+      "wrong": 3,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    },
+    {
+      "key": "Schedule K-1 (Form 1065) Partner's Share of I / box_17_amt_items",
+      "n": 4,
+      "correct": 0,
+      "wrong": 4,
+      "hallucinated": 0,
+      "precision": 0.0,
+      "wilson95_err_upper": 1.0
+    }
+  ],
+  "by_route": [
+    {
+      "key": "pdf_text_good",
+      "n": 116,
+      "correct": 112,
+      "wrong": 4,
+      "hallucinated": 0,
+      "precision": 0.9655172413793104,
+      "wilson95_err_upper": 0.08532082045501174
+    },
+    {
+      "key": "pdf_text_damaged",
+      "n": 177,
+      "correct": 135,
+      "wrong": 36,
+      "hallucinated": 6,
+      "precision": 0.7627118644067796,
+      "wilson95_err_upper": 0.30512431906300275
+    }
+  ],
+  "whitelist_params": {
+    "min_n": 3,
+    "min_groups": 1,
+    "evidence": "grounded_text",
+    "conf": 0.0
+  },
+  "whitelist": {
+    "min_n": 3,
+    "min_groups": 1,
+    "evidence": "grounded_text",
+    "conf": 0.0,
+    "n_fields": 5150,
+    "booked": 0,
+    "wrong": 0,
+    "wilson95_err_upper": null,
+    "families": 0,
+    "groups": 0,
+    "net_e20": 0.0,
+    "net_e100": 0.0,
+    "net_e500": 0.0
+  },
+  "whitelist_grid": [
+    {
+      "min_n": 3,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 5,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 3,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 5,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 3,
+      "evidence": "grounded_text",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 3,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 5,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 1,
+      "evidence": "none",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 3,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 5,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 10,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    },
+    {
+      "min_n": 20,
+      "min_groups": 3,
+      "evidence": "none",
+      "n_fields": 5150,
+      "booked": 0,
+      "wrong": 0,
+      "wilson95_err_upper": null,
+      "families": 0,
+      "groups": 0,
+      "net_e20": 0.0,
+      "net_e100": 0.0,
+      "net_e500": 0.0
+    }
+  ],
+  "missed_savings": {
+    "params": {
+      "min_n": 3,
+      "min_groups": 1,
+      "evidence": "grounded_text",
+      "conf": 0.0
+    },
+    "correct_not_booked": 247,
+    "by_reason": {
+      "cell_too_small": 247
+    },
+    "by_family": {
+      "Form 1099-B Proceeds From Broker and Barter E": {
+        "cell_too_small": 60
+      },
+      "ClosingDisclosureTRID": {
+        "cell_too_small": 43
+      },
+      "CCCMarketValuationReport": {
+        "cell_too_small": 32
+      },
+      "Schedule K-1 (Form 1120S) Shareholder's Share": {
+        "cell_too_small": 28
+      },
+      "RRCW1Extraction": {
+        "cell_too_small": 25
+      },
+      "RRCW14ReviewExtraction": {
+        "cell_too_small": 17
+      },
+      "Schedule K-1 (Form 1065) Partner's Share of I": {
+        "cell_too_small": 15
+      },
+      "stem:13f": {
+        "cell_too_small": 14
+      },
+      "MitchellVehicleValuationReport": {
+        "cell_too_small": 10
+      },
+      "Product Spec Sheet / Datasheet — rated specif": {
+        "cell_too_small": 3
+      }
+    }
+  }
+}
