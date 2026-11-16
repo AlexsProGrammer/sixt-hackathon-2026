@@ -1,0 +1,69 @@
+{
+  "run_id": "20261115-181935-v2probly_k3ac_dev100-bc79d9",
+  "name": "v2probly_k3ac_dev100",
+  "split": "dev",
+  "created_at": "2026-11-15T18:19:35",
+  "tags": [
+    "batch",
+    "v2"
+  ],
+  "git": {
+    "commit": "4580825ddb868ce334eef7b25f1f70f98270c003",
+    "dirty": false
+  },
+  "status": "incomplete",
+  "selection": {
+    "kind": "input",
+    "input": "data/unified/dev.jsonl",
+    "random": 100,
+    "seed": 13,
+    "n_available": 540,
+    "n_docs": 100,
+    "ids_sha256": "3595313bc24e7bc2dfd30ea0da72df80849adf5341cfe6a9ed80b4a580116d49"
+  },
+  "input": {
+    "n_docs": 100,
+    "kind": "copy",
+    "input_sha256": "e0930933f8cb209ecd1c846d0af0a515f0dd1e925c0e97cabb9fbe3a3faa98d6",
+    "input_ref": "/home/alexs/Documents/Alexs/Programming/sixt-hackathon-2026/Project_1/results/runs/20261115-181935-v2probly_k3ac_dev100-bc79d9/selection.jsonl",
+    "n_gold": 100
+  },
+  "mode": "llm",
+  "models": [
+    "baidu/ernie-5.5-flash-preview:free"
+  ],
+  "n_requested": 100,
+  "finished_at": "2026-11-15T18:20:24",
+  "n_written": 20,
+  "summary": {
+    "threshold": 0.99,
+    "n_docs": 20,
+    "n_fields": 1041,
+    "accepted": 0,
+    "correct": 0,
+    "wrong": 0,
+    "hallucinated": 0,
+    "precision": null,
+    "coverage": 0.0,
+    "net_saving_pct_e20": 0.0,
+    "net_saving_pct_e100": 0.0,
+    "net_saving_pct_e500": 0.0,
+    "best_threshold_e100": 0.8,
+    "best_threshold_net_e100": 0.021133525456292025,
+    "by_source": {
+      "extractbench": {
+        "n_fields": 1041,
+        "accepted": 0,
+        "correct": 0,
+        "wrong": 0,
+        "hallucinated": 0,
+        "precision": null,
+        "coverage": 0.0,
+        "net_saving_pct_e100": 0.0
+      }
+    },
+    "scored_at": "2026-11-15T18:20:25"
+  },
+  "fields_contract_version": 1,
+  "n_field_rows": 1041
+}
